@@ -1,19 +1,12 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { activityRoutes, activityCategoryRoutes } from '@/plugins/routes'
-import type { ActivityCategoryModel } from '@/models/ActivityCategoryModel'
+import { activityRoutes } from '@/plugins/routes'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
+import CategorySelector from '@/components/CategorySelector.vue'
 import { ArrowLeft, Loader2, AlertCircle } from 'lucide-vue-next'
 
 const router = useRouter()
@@ -21,17 +14,14 @@ const router = useRouter()
 const name = ref('')
 const address = ref('')
 const media = ref('')
-const categoryId = ref<string>('')
+const categoryId = ref<number | null>(null)
+const managerIds = ref<number[]>([])
 const latitude = ref<string>('')
 const longitude = ref<string>('')
-const categories = ref<ActivityCategoryModel[]>([])
 const loading = ref(false)
 const error = ref('')
 
-onMounted(async () => {
-  const { data } = await activityCategoryRoutes.list(1)
-  categories.value = data.data
-})
+import MultiUserSelector from '@/components/MultiUserSelector.vue'
 
 async function handleSubmit() {
   error.value = ''
@@ -40,12 +30,13 @@ async function handleSubmit() {
     await activityRoutes.create({
       name: name.value,
       address: address.value,
-      activity_category_id: categoryId.value ? Number(categoryId.value) : null,
+      activity_category_id: categoryId.value,
+      manager_ids: managerIds.value,
       media: media.value || null,
       latitude: latitude.value ? Number(latitude.value) : null,
       longitude: longitude.value ? Number(longitude.value) : null,
     })
-    router.push({ name: 'activities' })
+    router.push({ name: 'admin-activities' })
   } catch (e: any) {
     error.value = e.response?.data?.message ?? 'Failed to create activity'
   } finally {
@@ -84,23 +75,19 @@ async function handleSubmit() {
 
           <div class="space-y-2">
             <Label for="category">Category</Label>
-            <Select v-model="categoryId">
-              <SelectTrigger id="category">
-                <SelectValue placeholder="Select a category" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem v-for="cat in categories" :key="cat.id" :value="String(cat.id)">
-                  {{ cat.name }}
-                </SelectItem>
-              </SelectContent>
-            </Select>
+            <CategorySelector v-model="categoryId" placeholder="Select a category" />
+          </div>
+
+          <div class="space-y-2">
+            <Label>Managers</Label>
+            <MultiUserSelector v-model="managerIds" />
           </div>
 
           <div class="space-y-2">
             <Label for="media">Media URL</Label>
             <Input id="media" v-model="media" type="url" placeholder="https://…" />
           </div>
-          
+
           <div class="grid grid-cols-2 gap-4">
             <div class="space-y-2">
               <Label for="latitude">Latitude</Label>

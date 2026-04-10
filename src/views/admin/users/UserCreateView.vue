@@ -42,7 +42,7 @@ async function handleSubmit() {
 
   try {
     await userRoutes.create(form.value)
-    router.push({ name: 'users' })
+    router.push({ name: 'admin-users' })
   } catch (err: any) {
     error.value = err.response?.data?.message || 'Failed to create user'
     if (err.response?.data?.errors) {

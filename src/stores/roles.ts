@@ -16,7 +16,7 @@ export const useRoleStore = defineStore('roles', () => {
     error.value = null
     try {
       const { data } = await roleRoutes.list()
-      roles.value = data
+      roles.value = data.data
     } catch (err: any) {
       error.value = 'Failed to load roles'
     } finally {

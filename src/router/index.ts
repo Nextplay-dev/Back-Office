@@ -11,84 +11,122 @@ const router = createRouter({
       meta: { public: true },
     },
     {
-      path: '/404',
-      name: 'not-found',
-      component: () => import('@/views/NotFoundView.vue'),
-      meta: { public: true },
+      path: '/',
+      name: 'dashboard',
+      component: () => import('@/views/DashboardView.vue'),
+      meta: { requiresAuth: true },
     },
     {
       path: '/',
-      redirect: '/admin/dashboard',
-    },
-    {
-      path: '/admin',
       component: () => import('@/components/layout/AppLayout.vue'),
       meta: { requiresAuth: true },
       children: [
         {
-          path: 'dashboard',
-          name: 'dashboard',
-          component: () => import('@/views/admin/DashboardView.vue'),
+          path: 'my',
+          children: [
+            {
+              path: 'dashboard',
+              name: 'my-dashboard',
+              component: () => import('@/views/my/MyDashboardView.vue'),
+              meta: { permissions: ['activity.view'] },
+            },
+            {
+              path: 'activities/:id/overview',
+              name: 'my-activity-overview',
+              component: () => import('@/views/my/MyActivityOverview.vue'),
+              meta: { permissions: ['activity.view'] },
+            },
+          ]
         },
         {
-          path: 'activities',
-          name: 'activities',
-          component: () => import('@/views/admin/activities/ActivitiesView.vue'),
-          meta: { permissions: ['activity.view'] },
-        },
-        {
-          path: 'activities/create',
-          name: 'activities-create',
-          component: () => import('@/views/admin/activities/ActivityCreateView.vue'),
-          meta: { permissions: ['activity.create'] },
-        },
-        {
-          path: 'activities/:id/edit',
-          name: 'activities-edit',
-          component: () => import('@/views/admin/activities/ActivityEditView.vue'),
-          meta: { permissions: ['activity.update'] },
-        },
-        {
-          path: 'categories',
-          name: 'categories',
-          component: () => import('@/views/admin/categories/CategoriesView.vue'),
-          meta: { permissions: ['activity-category.update'] },
-        },
-        {
-          path: 'categories/create',
-          name: 'categories-create',
-          component: () => import('@/views/admin/categories/CategoryCreateView.vue'),
-          meta: { permissions: ['activity-category.create'] },
-        },
-        {
-          path: 'categories/:id/edit',
-          name: 'categories-edit',
-          component: () => import('@/views/admin/categories/CategoryEditView.vue'),
-          meta: { permissions: ['activity-category.update'] },
-        },
-        {
-          path: 'users',
-          name: 'users',
-          component: () => import('@/views/admin/users/UsersView.vue'),
-          meta: { permissions: ['user.view'] },
-        },
-        {
-          path: 'users/create',
-          name: 'users-create',
-          component: () => import('@/views/admin/users/UserCreateView.vue'),
-          meta: { permissions: ['user.create'] },
-        },
-        {
-          path: 'users/:id/edit',
-          name: 'users-edit',
-          component: () => import('@/views/admin/users/UserEditView.vue'),
-          meta: { permissions: ['user.update'] },
-        },
+          path: 'admin',
+          children: [
+            {
+              path: 'dashboard',
+              name: 'admin-dashboard',
+              component: () => import('@/views/admin/AdminDashboardView.vue'),
+              meta: { permissions: ['back-office.administration.dashboard'] },
+            },
+            {
+              path: 'activities',
+              name: 'admin-activities',
+              component: () => import('@/views/admin/activities/ActivitiesView.vue'),
+              meta: { permissions: ['back-office.administration.activities'] },
+            },
+            {
+              path: 'activities/create',
+              name: 'admin-activities-create',
+              component: () => import('@/views/admin/activities/ActivityCreateView.vue'),
+              meta: { permissions: ['activity.create'] },
+            },
+            {
+              path: 'activities/:id/edit',
+              name: 'admin-activities-edit',
+              component: () => import('@/views/admin/activities/ActivityEditView.vue'),
+              meta: { permissions: ['activity.view', 'activity.update'] },
+            },
+            {
+              path: 'categories',
+              name: 'admin-categories',
+              component: () => import('@/views/admin/categories/CategoriesView.vue'),
+              meta: { permissions: ['back-office.administration.categories'] },
+            },
+            {
+              path: 'categories/create',
+              name: 'admin-categories-create',
+              component: () => import('@/views/admin/categories/CategoryCreateView.vue'),
+              meta: { permissions: ['activity-category.create'] },
+            },
+            {
+              path: 'categories/:id/edit',
+              name: 'admin-categories-edit',
+              component: () => import('@/views/admin/categories/CategoryEditView.vue'),
+              meta: { permissions: ['activity-category.update'] },
+            },
+            {
+              path: 'users',
+              name: 'admin-users',
+              component: () => import('@/views/admin/users/UsersView.vue'),
+              meta: { permissions: ['back-office.administration.users'] },
+            },
+            {
+              path: 'users/create',
+              name: 'admin-users-create',
+              component: () => import('@/views/admin/users/UserCreateView.vue'),
+              meta: { permissions: ['user.create'] },
+            },
+            {
+              path: 'users/:id/edit',
+              name: 'admin-users-edit',
+              component: () => import('@/views/admin/users/UserEditView.vue'),
+              meta: { permissions: ['user.update'] },
+            },
+            {
+              path: 'roles',
+              name: 'admin-roles',
+              component: () => import('@/views/admin/roles/RolesView.vue'),
+              meta: { permissions: ['back-office.administration.roles'] },
+            },
+            {
+              path: 'roles/create',
+              name: 'admin-roles-create',
+              component: () => import('@/views/admin/roles/RoleEditView.vue'),
+              meta: { permissions: ['role.create'] },
+            },
+            {
+              path: 'roles/:id/edit',
+              name: 'admin-roles-edit',
+              component: () => import('@/views/admin/roles/RoleEditView.vue'),
+              meta: { permissions: ['role.update'] },
+            },
+          ]
+        }
       ],
     },
     {
       path: '/:pathMatch(.*)*',
-      redirect: { name: 'not-found' },
+      name: 'not-found',
+      component: () => import('@/views/NotFoundView.vue')
     },
   ],
 })

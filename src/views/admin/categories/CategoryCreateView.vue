@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { ArrowLeft, Loader2, AlertCircle } from 'lucide-vue-next'
+import IconSelector from '@/components/IconSelector.vue'
 
 const router = useRouter()
 
@@ -25,7 +26,7 @@ async function handleSubmit() {
       icon: icon.value || null,
       color: color.value || null,
     })
-    router.push({ name: 'categories' })
+    router.push({ name: 'admin-categories' })
   } catch (e: any) {
     error.value = e.response?.data?.message ?? 'Failed to create category'
   } finally {
@@ -58,8 +59,9 @@ async function handleSubmit() {
           </div>
 
           <div class="space-y-2">
-            <Label for="icon">Icon (Emoji or character)</Label>
-            <Input id="icon" v-model="icon" placeholder="e.g. ⚽" maxlength="2" />
+            <Label for="icon">Icon</Label>
+            <IconSelector v-model="icon" :color="color" />
+            <p class="text-[10px] text-muted-foreground uppercase font-semibold tracking-wider">Search for icons from Material Design and Ionicons</p>
           </div>
 
           <div class="space-y-2">

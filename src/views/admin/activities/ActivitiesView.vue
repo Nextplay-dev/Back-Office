@@ -26,7 +26,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
-import { Plus, Search, Pencil, Trash2, ChevronLeft, ChevronRight, Loader2 } from 'lucide-vue-next'
+import { Plus, Search, Pencil, Trash2, ChevronLeft, ChevronRight, Loader2, Eye } from 'lucide-vue-next'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -77,56 +77,49 @@ onMounted(loadActivities)
   <div class="space-y-4">
     <div class="flex items-center justify-between gap-4">
       <div>
-        <h2 class="text-xl font-bold">Activities</h2>
-        <p class="text-sm text-muted-foreground">{{ total }} total</p>
+        <h2 class="text-xl font-bold">{{ $t('views.activities.title') }}</h2>
+        <p class="text-sm text-muted-foreground">{{ $t('views.activities.subtitle', { count: total }) }}</p>
       </div>
-      <Button v-if="authStore.canAccess('activity.create')" @click="router.push({ name: 'activities-create' })">
-        <Plus class="mr-2 h-4 w-4" /> New Activity
+      <Button v-if="authStore.canAccess('activity.create')" @click="router.push({ name: 'admin-activities-create' })">
+        <Plus class="mr-2 h-4 w-4" /> {{ $t('views.activities.new') }}
       </Button>
     </div>
 
     <div class="relative max-w-sm">
       <Search class="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-      <Input v-model="search" placeholder="Search activities…" class="pl-9" />
+      <Input v-model="search" :placeholder="$t('views.activities.list.searchPlaceholder')" class="pl-9" />
     </div>
 
     <div class="rounded-xl border border-border bg-card shadow-sm overflow-hidden">
       <Table>
         <TableHeader>
           <TableRow class="bg-muted/30">
-            <TableHead class="w-12">#</TableHead>
-            <TableHead>Name</TableHead>
-            <TableHead>Category</TableHead>
-            <TableHead>Address</TableHead>
-            <TableHead>Coordinates</TableHead>
-            <TableHead class="text-center">Tournaments</TableHead>
-            <TableHead class="text-right">Actions</TableHead>
+            <TableHead class="w-12">{{ $t('views.activities.list.table.id') }}</TableHead>
+            <TableHead>{{ $t('views.activities.list.table.name') }}</TableHead>
+            <TableHead>{{ $t('views.activities.list.table.category') }}</TableHead>
+            <TableHead>{{ $t('views.activities.list.table.address') }}</TableHead>
+            <TableHead>{{ $t('views.activities.list.table.coordinates') }}</TableHead>
+            <TableHead class="text-center">{{ $t('views.activities.list.table.tournaments') }}</TableHead>
+            <TableHead class="text-right">{{ $t('views.activities.list.table.actions') }}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           <TableRow v-if="loading">
-            <TableCell colspan="6" class="py-12 text-center text-muted-foreground">
+            <TableCell colspan="7" class="py-12 text-center text-muted-foreground">
               <Loader2 class="mx-auto h-6 w-6 animate-spin" />
             </TableCell>
           </TableRow>
           <TableRow v-else-if="!activities.length">
-            <TableCell colspan="6" class="py-12 text-center text-muted-foreground text-sm">
-              No activities found.
+            <TableCell colspan="7" class="py-12 text-center text-muted-foreground text-sm">
+              {{ $t('views.activities.list.noActivities') }}
             </TableCell>
           </TableRow>
-          <TableRow
-            v-for="activity in activities"
-            :key="activity.id"
-            class="hover:bg-muted/20 transition-colors"
-          >
+          <TableRow v-for="activity in activities" :key="activity.id" class="hover:bg-muted/20 transition-colors">
             <TableCell class="font-mono text-xs text-muted-foreground">{{ activity.id }}</TableCell>
             <TableCell class="font-medium">{{ activity.name }}</TableCell>
             <TableCell>
-              <Badge
-                v-if="activity.category"
-                variant="secondary"
-                :style="activity.category.color ? { backgroundColor: activity.category.color + '22', color: activity.category.color } : {}"
-              >
+              <Badge v-if="activity.category" variant="secondary"
+                :style="activity.category.color ? { backgroundColor: activity.category.color + '22', color: activity.category.color } : {}">
                 {{ activity.category.name }}
               </Badge>
               <span v-else class="text-muted-foreground text-sm">—</span>
@@ -143,15 +136,15 @@ onMounted(loadActivities)
             </TableCell>
             <TableCell class="text-right">
               <div class="flex justify-end gap-2">
-                <Button
-                  v-if="authStore.hasPermission('activity.update')"
-                  size="sm"
-                  variant="ghost"
-                  @click="router.push({ name: 'activities-edit', params: { id: activity.id } })"
-                >
+                <Button v-if="authStore.canAccess('activity.update')" size="sm" variant="ghost"
+                  @click="router.push({ name: 'admin-activities-edit', params: { id: activity.id } })">
                   <Pencil class="h-4 w-4" />
                 </Button>
-                <AlertDialog v-if="authStore.hasPermission('activity.delete')">
+                <Button v-else size="sm" variant="ghost"
+                  @click="router.push({ name: 'admin-activities-edit', params: { id: activity.id } })">
+                  <Eye class="h-4 w-4" />
+                </Button>
+                <AlertDialog v-if="authStore.canAccess('activity.delete')">
                   <AlertDialogTrigger as-child>
                     <Button size="sm" variant="ghost" class="text-destructive hover:text-destructive">
                       <Trash2 class="h-4 w-4" />
@@ -159,19 +152,17 @@ onMounted(loadActivities)
                   </AlertDialogTrigger>
                   <AlertDialogContent>
                     <AlertDialogHeader>
-                      <AlertDialogTitle>Delete activity?</AlertDialogTitle>
+                      <AlertDialogTitle>{{ $t('views.activities.list.delete.title') }}</AlertDialogTitle>
                       <AlertDialogDescription>
-                        "{{ activity.name }}" will be permanently deleted.
+                        {{ $t('views.activities.list.delete.description', { name: activity.name }) }}
                       </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                      <AlertDialogCancel>Cancel</AlertDialogCancel>
-                      <AlertDialogAction
-                        class="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                        @click="deleteActivity(activity.id)"
-                      >
+                      <AlertDialogCancel>{{ $t('common.actions.cancel') }}</AlertDialogCancel>
+                      <AlertDialogAction class="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                        @click="deleteActivity(activity.id)">
                         <Loader2 v-if="deletingId === activity.id" class="mr-2 h-4 w-4 animate-spin" />
-                        Delete
+                        {{ $t('common.actions.delete') }}
                       </AlertDialogAction>
                     </AlertDialogFooter>
                   </AlertDialogContent>
@@ -184,22 +175,13 @@ onMounted(loadActivities)
     </div>
 
     <div class="flex items-center justify-between text-sm text-muted-foreground">
-      <span>Page {{ currentPage }} of {{ lastPage }}</span>
+      <span>{{ $t('views.users.list.pagination.info', { current: currentPage, last: lastPage }) }}</span>
       <div class="flex gap-2">
-        <Button
-          variant="outline"
-          size="sm"
-          :disabled="currentPage <= 1"
-          @click="currentPage--; loadActivities()"
-        >
+        <Button variant="outline" size="sm" :disabled="currentPage <= 1" @click="currentPage--; loadActivities()">
           <ChevronLeft class="h-4 w-4" />
         </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          :disabled="currentPage >= lastPage"
-          @click="currentPage++; loadActivities()"
-        >
+        <Button variant="outline" size="sm" :disabled="currentPage >= lastPage"
+          @click="currentPage++; loadActivities()">
           <ChevronRight class="h-4 w-4" />
         </Button>
       </div>

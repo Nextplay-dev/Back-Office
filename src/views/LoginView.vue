@@ -32,7 +32,7 @@ async function handleLogin() {
 </script>
 
 <template>
-  <div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-secondary/30 to-primary/5 p-4">
+  <div class="min-h-screen flex items-center justify-center bg-linear-to-br from-background via-secondary/30 to-primary/5 p-4">
     <div class="w-full max-w-md space-y-6">
       <div class="flex flex-col items-center gap-3">
         <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary shadow-lg shadow-primary/30">
@@ -40,19 +40,19 @@ async function handleLogin() {
         </div>
         <div class="text-center">
           <h1 class="text-2xl font-bold tracking-tight">NextPlay</h1>
-          <p class="text-sm text-muted-foreground">Back Office</p>
+          <p class="text-sm text-muted-foreground">{{ $t('common.actions.view') }}</p>
         </div>
       </div>
 
       <Card class="shadow-xl border-border/50">
         <CardHeader class="space-y-1">
-          <CardTitle class="text-xl">Sign in</CardTitle>
-          <CardDescription>Enter your admin credentials to continue</CardDescription>
+          <CardTitle class="text-xl">{{ $t('views.login.title') }}</CardTitle>
+          <CardDescription>{{ $t('views.login.subtitle') }}</CardDescription>
         </CardHeader>
         <CardContent>
           <form class="space-y-4" @submit.prevent="handleLogin">
             <div class="space-y-2">
-              <Label for="email">Email</Label>
+              <Label for="email">{{ $t('views.login.email') }}</Label>
               <Input
                 id="email"
                 v-model="email"
@@ -65,7 +65,7 @@ async function handleLogin() {
             </div>
 
             <div class="space-y-2">
-              <Label for="password">Password</Label>
+              <Label for="password">{{ $t('views.login.password') }}</Label>
               <Input
                 id="password"
                 v-model="password"
@@ -87,7 +87,7 @@ async function handleLogin() {
 
             <Button type="submit" class="w-full" :disabled="loading">
               <Loader2 v-if="loading" class="mr-2 h-4 w-4 animate-spin" />
-              {{ loading ? 'Signing in…' : 'Sign in' }}
+              {{ loading ? $t('views.login.submitting') : $t('views.login.submit') }}
             </Button>
           </form>
         </CardContent>

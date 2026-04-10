@@ -82,29 +82,29 @@ onMounted(loadUsers)
   <div class="space-y-4">
     <div class="flex items-center justify-between gap-4">
       <div>
-        <h2 class="text-xl font-bold">Users</h2>
-        <p class="text-sm text-muted-foreground">{{ total }} total users registered</p>
+        <h2 class="text-xl font-bold">{{ $t('views.users.title') }}</h2>
+        <p class="text-sm text-muted-foreground">{{ $t('views.users.subtitle', { count: total }) }}</p>
       </div>
-      <Button v-if="authStore.canAccess('user.create')" @click="router.push({ name: 'users-create' })">
-        <Plus class="mr-2 h-4 w-4" /> New User
+      <Button v-if="authStore.canAccess('user.create')" @click="router.push({ name: 'admin-users-create' })">
+        <Plus class="mr-2 h-4 w-4" /> {{ $t('views.users.new') }}
       </Button>
     </div>
 
     <div class="relative max-w-sm">
       <Search class="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-      <Input v-model="search" placeholder="Search users by name or email…" class="pl-9" />
+      <Input v-model="search" :placeholder="$t('views.users.list.searchPlaceholder')" class="pl-9" />
     </div>
 
     <div class="rounded-xl border border-border bg-card shadow-sm overflow-hidden">
       <Table>
         <TableHeader>
           <TableRow class="bg-muted/30">
-            <TableHead class="w-12">#</TableHead>
-            <TableHead>User</TableHead>
-            <TableHead>Email</TableHead>
-            <TableHead>Roles</TableHead>
-            <TableHead>Joined</TableHead>
-            <TableHead class="text-right">Actions</TableHead>
+            <TableHead class="w-12">{{ $t('views.users.list.table.id') }}</TableHead>
+            <TableHead>{{ $t('views.users.list.table.user') }}</TableHead>
+            <TableHead>{{ $t('views.users.list.table.email') }}</TableHead>
+            <TableHead>{{ $t('views.users.list.table.roles') }}</TableHead>
+            <TableHead>{{ $t('views.users.list.table.joined') }}</TableHead>
+            <TableHead class="text-right">{{ $t('views.users.list.table.actions') }}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -115,7 +115,7 @@ onMounted(loadUsers)
           </TableRow>
           <TableRow v-else-if="!users.length">
             <TableCell colspan="6" class="py-12 text-center text-muted-foreground text-sm">
-              No users found.
+              {{ $t('views.users.list.noUsers') }}
             </TableCell>
           </TableRow>
           <TableRow v-for="user in users" :key="user.id" class="hover:bg-muted/20 transition-colors">
@@ -153,7 +153,7 @@ onMounted(loadUsers)
                   v-if="authStore.canAccess('user.update')"
                   size="sm"
                   variant="ghost"
-                  @click="router.push({ name: 'users-edit', params: { id: user.id } })"
+                  @click="router.push({ name: 'admin-users-edit', params: { id: user.id } })"
                 >
                   <Edit2 class="h-4 w-4" />
                 </Button>
@@ -165,17 +165,17 @@ onMounted(loadUsers)
                   </AlertDialogTrigger>
                   <AlertDialogContent>
                     <AlertDialogHeader>
-                      <AlertDialogTitle>Delete user?</AlertDialogTitle>
+                      <AlertDialogTitle>{{ $t('views.users.list.delete.title') }}</AlertDialogTitle>
                       <AlertDialogDescription>
-                        User "{{ user.name }}" and all their associated data will be permanently deleted.
+                        {{ $t('views.users.list.delete.description', { name: user.name }) }}
                       </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <AlertDialogCancel>{{ $t('common.actions.cancel') }}</AlertDialogCancel>
                       <AlertDialogAction class="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                         @click="deleteUser(user.id)">
                         <Loader2 v-if="deletingId === user.id" class="mr-2 h-4 w-4 animate-spin" />
-                        Delete
+                        {{ $t('common.actions.delete') }}
                       </AlertDialogAction>
                     </AlertDialogFooter>
                   </AlertDialogContent>
@@ -188,7 +188,7 @@ onMounted(loadUsers)
     </div>
 
     <div class="flex items-center justify-between text-sm text-muted-foreground">
-      <span>Page {{ currentPage }} of {{ lastPage }}</span>
+      <span>{{ $t('views.users.list.pagination.info', { current: currentPage, last: lastPage }) }}</span>
       <div class="flex gap-2">
         <Button variant="outline" size="sm" :disabled="currentPage <= 1" @click="currentPage--; loadUsers()">
           <ChevronLeft class="h-4 w-4" />

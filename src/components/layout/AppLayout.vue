@@ -15,11 +15,11 @@ onMounted(async () => {
 </script>
 
 <template>
-  <SidebarProvider>
+  <SidebarProvider class="h-screen overflow-hidden">
     <AppSidebar />
-    <SidebarInset>
+    <SidebarInset class="flex flex-col h-screen overflow-hidden">
       <AppHeader />
-      <main class="flex-1 overflow-auto p-6">
+      <main class="flex-1 overflow-y-auto p-6 scroll-smooth custom-scrollbar">
         <RouterView />
       </main>
     </SidebarInset>

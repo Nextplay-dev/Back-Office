@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
+import { watchDebounced } from '@vueuse/core'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { activityCategoryRoutes } from '@/plugins/routes'
 import type { ActivityCategoryModel } from '@/models/ActivityCategoryModel'
 import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 import {
   Table,
   TableBody,
@@ -24,11 +26,13 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
-import { Plus, Pencil, Trash2, ChevronLeft, ChevronRight, Loader2 } from 'lucide-vue-next'
+import { Plus, Pencil, Trash2, ChevronLeft, ChevronRight, Loader2, Search } from 'lucide-vue-next'
+import CategoryIcon from '@/components/CategoryIcon.vue'
 
 const router = useRouter()
 const authStore = useAuthStore()
 
+const search = ref('')
 const categories = ref<ActivityCategoryModel[]>([])
 const currentPage = ref(1)
 const lastPage = ref(1)
@@ -36,10 +40,15 @@ const total = ref(0)
 const loading = ref(false)
 const deletingId = ref<number | null>(null)
 
+watchDebounced(search, () => {
+  currentPage.value = 1
+  loadCategories()
+}, { debounce: 300 })
+
 async function loadCategories() {
   loading.value = true
   try {
-    const { data } = await activityCategoryRoutes.list(currentPage.value)
+    const { data } = await activityCategoryRoutes.list(currentPage.value, search.value)
     categories.value = data.data
     lastPage.value = data.meta.last_page
     total.value = data.meta.total
@@ -65,23 +74,29 @@ onMounted(loadCategories)
   <div class="space-y-4">
     <div class="flex items-center justify-between gap-4">
       <div>
-        <h2 class="text-xl font-bold">Categories</h2>
-        <p class="text-sm text-muted-foreground">{{ total }} total</p>
+        <h2 class="text-xl font-bold">{{ $t('views.categories.title') }}</h2>
+        <p class="text-sm text-muted-foreground">{{ $t('views.categories.subtitle', { count: total }) }}</p>
       </div>
-      <Button v-if="authStore.canAccess('activity-category.create')" @click="router.push({ name: 'categories-create' })">
-        <Plus class="mr-2 h-4 w-4" /> New Category
+      <Button v-if="authStore.canAccess('activity-category.create')"
+        @click="router.push({ name: 'admin-categories-create' })">
+        <Plus class="mr-2 h-4 w-4" /> {{ $t('views.categories.new') }}
       </Button>
+    </div>
+
+    <div class="relative max-w-sm">
+      <Search class="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+      <Input v-model="search" :placeholder="$t('views.categories.list.searchPlaceholder')" class="pl-9 h-9" />
     </div>
 
     <div class="rounded-xl border border-border bg-card shadow-sm overflow-hidden">
       <Table>
         <TableHeader>
           <TableRow class="bg-muted/30">
-            <TableHead class="w-12">#</TableHead>
-            <TableHead>Icon</TableHead>
-            <TableHead>Name</TableHead>
-            <TableHead>Color</TableHead>
-            <TableHead class="text-right">Actions</TableHead>
+            <TableHead class="w-12">{{ $t('views.categories.list.table.id') }}</TableHead>
+            <TableHead>{{ $t('views.categories.list.table.icon') }}</TableHead>
+            <TableHead>{{ $t('views.categories.list.table.name') }}</TableHead>
+            <TableHead>{{ $t('views.categories.list.table.color') }}</TableHead>
+            <TableHead class="text-right">{{ $t('views.categories.list.table.actions') }}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -92,40 +107,29 @@ onMounted(loadCategories)
           </TableRow>
           <TableRow v-else-if="!categories.length">
             <TableCell colspan="5" class="py-12 text-center text-muted-foreground text-sm">
-              No categories found.
+              {{ $t('views.categories.list.noCategories') }}
             </TableCell>
           </TableRow>
-          <TableRow
-            v-for="category in categories"
-            :key="category.id"
-            class="hover:bg-muted/20 transition-colors"
-          >
+          <TableRow v-for="category in categories" :key="category.id" class="hover:bg-muted/20 transition-colors">
             <TableCell class="font-mono text-xs text-muted-foreground">{{ category.id }}</TableCell>
             <TableCell>
-               <div v-if="category.icon" class="h-8 w-8 flex items-center justify-center rounded-lg bg-muted text-lg">
-                 {{ category.icon }}
-               </div>
-               <span v-else class="text-muted-foreground text-sm">—</span>
+              <div v-if="category.icon" class="h-8 w-8 flex items-center justify-center rounded-lg bg-muted">
+                <CategoryIcon :icon="category.icon" :color="category.color" size="20" />
+              </div>
+              <span v-else class="text-muted-foreground text-sm">—</span>
             </TableCell>
             <TableCell class="font-medium">{{ category.name }}</TableCell>
             <TableCell>
               <div class="flex items-center gap-2">
-                <div
-                    v-if="category.color"
-                    class="h-4 w-4 rounded-full border border-border"
-                    :style="{ backgroundColor: category.color }"
-                ></div>
+                <div v-if="category.color" class="h-4 w-4 rounded-full border border-border"
+                  :style="{ backgroundColor: category.color }"></div>
                 <span class="text-sm font-mono text-muted-foreground">{{ category.color || '—' }}</span>
               </div>
             </TableCell>
             <TableCell class="text-right">
               <div class="flex justify-end gap-2">
-                <Button
-                  v-if="authStore.canAccess('activity-category.update')"
-                  size="sm"
-                  variant="ghost"
-                  @click="router.push({ name: 'categories-edit', params: { id: category.id } })"
-                >
+                <Button v-if="authStore.canAccess('activity-category.update')" size="sm" variant="ghost"
+                  @click="router.push({ name: 'admin-categories-edit', params: { id: category.id } })">
                   <Pencil class="h-4 w-4" />
                 </Button>
                 <AlertDialog v-if="authStore.canAccess('activity-category.delete')">
@@ -136,19 +140,17 @@ onMounted(loadCategories)
                   </AlertDialogTrigger>
                   <AlertDialogContent>
                     <AlertDialogHeader>
-                      <AlertDialogTitle>Delete category?</AlertDialogTitle>
+                      <AlertDialogTitle>{{ $t('views.categories.list.delete.title') }}</AlertDialogTitle>
                       <AlertDialogDescription>
-                        "{{ category.name }}" will be permanently deleted.
+                        {{ $t('views.categories.list.delete.description', { name: category.name }) }}
                       </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                      <AlertDialogCancel>Cancel</AlertDialogCancel>
-                      <AlertDialogAction
-                        class="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                        @click="deleteCategory(category.id)"
-                      >
+                      <AlertDialogCancel>{{ $t('common.actions.cancel') }}</AlertDialogCancel>
+                      <AlertDialogAction class="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                        @click="deleteCategory(category.id)">
                         <Loader2 v-if="deletingId === category.id" class="mr-2 h-4 w-4 animate-spin" />
-                        Delete
+                        {{ $t('common.actions.delete') }}
                       </AlertDialogAction>
                     </AlertDialogFooter>
                   </AlertDialogContent>
@@ -161,22 +163,13 @@ onMounted(loadCategories)
     </div>
 
     <div class="flex items-center justify-between text-sm text-muted-foreground">
-      <span>Page {{ currentPage }} of {{ lastPage }}</span>
+      <span>{{ $t('views.users.list.pagination.info', { current: currentPage, last: lastPage }) }}</span>
       <div class="flex gap-2">
-        <Button
-          variant="outline"
-          size="sm"
-          :disabled="currentPage <= 1"
-          @click="currentPage--; loadCategories()"
-        >
+        <Button variant="outline" size="sm" :disabled="currentPage <= 1" @click="currentPage--; loadCategories()">
           <ChevronLeft class="h-4 w-4" />
         </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          :disabled="currentPage >= lastPage"
-          @click="currentPage++; loadCategories()"
-        >
+        <Button variant="outline" size="sm" :disabled="currentPage >= lastPage"
+          @click="currentPage++; loadCategories()">
           <ChevronRight class="h-4 w-4" />
         </Button>
       </div>

@@ -2,7 +2,7 @@ import apiClient from '@/plugins/api'
 import type { ActivityModel } from '@/models/ActivityModel'
 import type { ActivityCategoryModel } from '@/models/ActivityCategoryModel'
 import type { UserModel } from '@/models/UserModel'
-import type { RoleModel } from '@/models/RoleModel'
+import type { RoleModel, PermissionModel } from '@/models/RoleModel'
 import type { PaginatedModel } from '@/models/PaginatedModel'
 
 export type ActivityPayload = {
@@ -12,6 +12,7 @@ export type ActivityPayload = {
   media: string | null
   latitude?: number | null
   longitude?: number | null
+  manager_ids?: number[]
 }
 
 export type ActivityCategoryPayload = {
@@ -26,6 +27,11 @@ export type UserPayload = {
   password?: string
   password_confirmation?: string
   roles?: string[]
+}
+
+export type RolePayload = {
+  name: string
+  permissions?: number[]
 }
 
 export const authRoutes = {
@@ -54,11 +60,27 @@ export const activityRoutes = {
   delete: (id: number) => apiClient.delete(`/v1/activities/${id}`),
 }
 
+export const myActivityRoutes = {
+  list: (page = 1, search?: string) => {
+    const params: Record<string, string | number> = { page }
+    if (search) params['filter[name]'] = search
+    return apiClient.get<PaginatedModel<ActivityModel>>('/v1/my-activities', { params })
+  },
+
+  get: (id: number) => apiClient.get<ActivityModel>(`/v1/my-activities/${id}`),
+
+  update: (id: number, payload: Partial<ActivityPayload>) =>
+    apiClient.put<ActivityModel>(`/v1/my-activities/${id}`, payload),
+}
+
 export const activityCategoryRoutes = {
-  list: (page = 1) =>
-    apiClient.get<PaginatedModel<ActivityCategoryModel>>('/v1/activity-categories', {
-      params: { page },
-    }),
+  list: (page = 1, search?: string) => {
+    const params: Record<string, string | number> = { page }
+    if (search) params['filter[name]'] = search
+    return apiClient.get<PaginatedModel<ActivityCategoryModel>>('/v1/activity-categories', {
+      params,
+    })
+  },
 
   get: (id: number) =>
     apiClient.get<ActivityCategoryModel>(`/v1/activity-categories/${id}`),
@@ -90,5 +112,22 @@ export const userRoutes = {
 }
 
 export const roleRoutes = {
-  list: () => apiClient.get<RoleModel[]>('/v1/roles'),
+  list: (page = 1, search?: string) => {
+    const params: Record<string, string | number> = { page }
+    if (search) params['filter[name]'] = search
+    return apiClient.get<PaginatedModel<RoleModel>>('/v1/roles', { params })
+  },
+
+  get: (id: number) => apiClient.get<RoleModel>(`/v1/roles/${id}`),
+
+  create: (payload: RolePayload) => apiClient.post<RoleModel>('/v1/roles', payload),
+
+  update: (id: number, payload: RolePayload) =>
+    apiClient.put<RoleModel>(`/v1/roles/${id}`, payload),
+
+  delete: (id: number) => apiClient.delete(`/v1/roles/${id}`),
+}
+
+export const permissionRoutes = {
+  list: () => apiClient.get<PermissionModel[]>('/v1/permissions'),
 }

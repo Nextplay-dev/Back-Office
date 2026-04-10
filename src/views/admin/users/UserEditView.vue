@@ -66,7 +66,7 @@ async function handleSubmit() {
 
   try {
     await userRoutes.update(Number(route.params.id), payload)
-    router.push({ name: 'users' })
+    router.push({ name: 'admin-users' })
   } catch (err: any) {
     error.value = err.response?.data?.message || 'Failed to update user'
     if (err.response?.data?.errors) {
@@ -97,7 +97,7 @@ onMounted(loadUser)
         <ArrowLeft class="h-4 w-4" />
       </Button>
       <div>
-        <h2 class="text-xl font-bold">Edit User</h2>
+        <h2 class="text-xl font-bold">{{ $t('views.users.edit') }}</h2>
         <p class="text-sm text-muted-foreground">#{{ userId }}</p>
       </div>
     </div>
@@ -109,8 +109,8 @@ onMounted(loadUser)
     <form v-else @submit.prevent="handleSubmit" class="max-w-2xl">
       <Card>
         <CardHeader>
-          <CardTitle>User Account</CardTitle>
-          <CardDescription>Update user information or change roles.</CardDescription>
+          <CardTitle>{{ $t('views.users.details') }}</CardTitle>
+          <CardDescription>{{ $t('views.users.detailsSubtitle') }}</CardDescription>
         </CardHeader>
         <CardContent class="space-y-4">
           <div v-if="error"
@@ -120,32 +120,32 @@ onMounted(loadUser)
 
           <div class="grid grid-cols-2 gap-4">
             <div class="space-y-2">
-              <Label for="name">Full Name</Label>
-              <Input id="name" v-model="form.name" placeholder="John Doe" required />
+              <Label for="name">{{ $t('views.users.name') }}</Label>
+              <Input id="name" v-model="form.name" :placeholder="$t('common.placeholders.name')" required />
               <p v-if="errors.name" class="text-xs text-destructive">{{ errors.name[0] }}</p>
             </div>
             <div class="space-y-2">
-              <Label for="email">Email Address</Label>
-              <Input id="email" type="email" v-model="form.email" placeholder="john@example.com" required />
+              <Label for="email">{{ $t('views.users.email') }}</Label>
+              <Input id="email" type="email" v-model="form.email" :placeholder="$t('common.placeholders.email')" required />
               <p v-if="errors.email" class="text-xs text-destructive">{{ errors.email[0] }}</p>
             </div>
           </div>
 
           <div class="p-4 rounded-lg bg-muted/40 border space-y-4">
             <div class="space-y-1">
-              <h4 class="text-sm font-semibold">Security Settings</h4>
-              <p class="text-xs text-muted-foreground">Leave password fields empty to keep current password.</p>
+              <h4 class="text-sm font-semibold">{{ $t('views.users.security') }}</h4>
+              <p class="text-xs text-muted-foreground">{{ $t('views.users.securitySubtitle') }}</p>
             </div>
             <div class="grid grid-cols-2 gap-4">
               <div class="space-y-2">
-                <Label for="password">New Password</Label>
-                <Input id="password" type="password" v-model="form.password" placeholder="••••••••" />
+                <Label for="password">{{ $t('views.users.newPassword') }}</Label>
+                <Input id="password" type="password" v-model="form.password" :placeholder="$t('common.placeholders.password')" />
                 <p v-if="errors.password" class="text-xs text-destructive">{{ errors.password[0] }}</p>
               </div>
               <div class="space-y-2">
-                <Label for="password_confirmation">Confirm New Password</Label>
+                <Label for="password_confirmation">{{ $t('views.users.confirmPassword') }}</Label>
                 <Input id="password_confirmation" type="password" v-model="form.password_confirmation"
-                  placeholder="••••••••" />
+                  :placeholder="$t('common.placeholders.password')" />
                 <p v-if="errors.password_confirmation" class="text-xs text-destructive">{{
                   errors.password_confirmation[0] }}</p>
               </div>
@@ -153,11 +153,12 @@ onMounted(loadUser)
           </div>
 
           <div class="space-y-3 pt-2">
-            <Label>Roles & Permissions</Label>
+            <Label>{{ $t('views.users.roles') }}</Label>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div v-for="role in roleStore.roles" :key="role.id"
                 class="flex items-start space-x-3 space-y-0 rounded-md border p-4 shadow-sm">
-                <Checkbox :id="String(role.id)" :model-value="form.roles.includes(role.name)" @update:model-value="(val) => handleRoleChange(role.name, val as boolean)" />
+                <Checkbox :id="String(role.id)" :model-value="form.roles.includes(role.name)"
+                  @update:model-value="(val) => handleRoleChange(role.name, val as boolean)" />
                 <div class="grid gap-1.5 leading-none">
                   <label :for="String(role.id)"
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 capitalize">
@@ -171,12 +172,12 @@ onMounted(loadUser)
         </CardContent>
         <CardFooter class="flex justify-end gap-3 border-t bg-muted/30 px-6 py-4">
           <Button variant="ghost" type="button" :disabled="loading" @click="router.back()">
-            Cancel
+            {{ $t('common.actions.cancel') }}
           </Button>
           <Button type="submit" :disabled="loading" class="bg-primary">
             <Loader2 v-if="loading" class="mr-2 h-4 w-4 animate-spin" />
             <Save v-else class="mr-2 h-4 w-4" />
-            Update User
+            {{ $t('common.actions.saveChanges') }}
           </Button>
         </CardFooter>
       </Card>

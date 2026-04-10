@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { ArrowLeft, Loader2, AlertCircle } from 'lucide-vue-next'
+import IconSelector from '@/components/IconSelector.vue'
 
 const router = useRouter()
 const route = useRoute()
@@ -40,7 +41,7 @@ async function handleSubmit() {
       icon: icon.value || null,
       color: color.value || null,
     })
-    router.push({ name: 'categories' })
+    router.push({ name: 'admin-categories' })
   } catch (e: any) {
     error.value = e.response?.data?.message ?? 'Failed to update category'
   } finally {
@@ -56,7 +57,7 @@ async function handleSubmit() {
         <ArrowLeft class="h-4 w-4" />
       </Button>
       <div>
-        <h2 class="text-xl font-bold">Edit Category</h2>
+        <h2 class="text-xl font-bold">{{ $t('views.categories.edit') }}</h2>
         <p class="text-sm text-muted-foreground">#{{ categoryId }}</p>
       </div>
     </div>
@@ -67,22 +68,23 @@ async function handleSubmit() {
 
     <Card v-else>
       <CardHeader>
-        <CardTitle class="text-base">Category Details</CardTitle>
+        <CardTitle class="text-base">{{ $t('views.categories.details') }}</CardTitle>
       </CardHeader>
       <CardContent>
         <form class="space-y-5" @submit.prevent="handleSubmit">
           <div class="space-y-2">
-            <Label for="name">Name *</Label>
+            <Label for="name">{{ $t('views.categories.name') }} *</Label>
             <Input id="name" v-model="name" required />
           </div>
 
           <div class="space-y-2">
-            <Label for="icon">Icon (Emoji or character)</Label>
-            <Input id="icon" v-model="icon" placeholder="e.g. ⚽" maxlength="2" />
+            <Label for="icon">{{ $t('views.categories.icon') }}</Label>
+            <IconSelector v-model="icon" :color="color" />
+            <p class="text-[10px] text-muted-foreground uppercase font-semibold tracking-wider">{{ $t('views.categories.iconHelp') }}</p>
           </div>
 
           <div class="space-y-2">
-            <Label for="color">Color</Label>
+            <Label for="color">{{ $t('views.categories.color') }}</Label>
             <div class="flex gap-2">
               <Input id="color" v-model="color" type="color" class="w-12 h-10 p-1" />
               <Input v-model="color" placeholder="#RRGGBB" maxlength="7" />
@@ -98,10 +100,10 @@ async function handleSubmit() {
           </div>
 
           <div class="flex justify-end gap-3 pt-2">
-            <Button type="button" variant="outline" @click="router.back()">Cancel</Button>
+            <Button type="button" variant="outline" @click="router.back()">{{ $t('common.actions.cancel') }}</Button>
             <Button type="submit" :disabled="saving">
               <Loader2 v-if="saving" class="mr-2 h-4 w-4 animate-spin" />
-              Save Changes
+              {{ $t('common.actions.saveChanges') }}
             </Button>
           </div>
         </form>
