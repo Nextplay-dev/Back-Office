@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, watch, computed } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { userRoutes } from '@/plugins/routes'
 import type { UserModel } from '@/models/UserModel'
 import { Button } from '@/components/ui/button'
