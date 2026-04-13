@@ -53,8 +53,8 @@ async function handleLogout() {
     </RouterLink>
 
     <SidebarContent>
-      <SidebarAdminGroup />
       <SidebarMyActivitiesGroup />
+      <SidebarAdminGroup />
     </SidebarContent>
 
     <SidebarFooter class="p-2">

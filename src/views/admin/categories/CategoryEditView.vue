@@ -8,7 +8,9 @@ import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { ArrowLeft, Loader2, AlertCircle } from 'lucide-vue-next'
 import IconSelector from '@/components/IconSelector.vue'
+import { useMyActivitiesStore } from '@/stores/myActivities'
 
+const myActivitiesStore = useMyActivitiesStore();
 const router = useRouter()
 const route = useRoute()
 const categoryId = Number(route.params.id)
@@ -41,6 +43,7 @@ async function handleSubmit() {
       icon: icon.value || null,
       color: color.value || null,
     })
+    myActivitiesStore.fetchActivities(true);
     router.push({ name: 'admin-categories' })
   } catch (e: any) {
     error.value = e.response?.data?.message ?? 'Failed to update category'
@@ -80,7 +83,8 @@ async function handleSubmit() {
           <div class="space-y-2">
             <Label for="icon">{{ $t('views.categories.icon') }}</Label>
             <IconSelector v-model="icon" :color="color" />
-            <p class="text-[10px] text-muted-foreground uppercase font-semibold tracking-wider">{{ $t('views.categories.iconHelp') }}</p>
+            <p class="text-[10px] text-muted-foreground uppercase font-semibold tracking-wider">{{
+              $t('views.categories.iconHelp') }}</p>
           </div>
 
           <div class="space-y-2">
@@ -91,10 +95,8 @@ async function handleSubmit() {
             </div>
           </div>
 
-          <div
-            v-if="error"
-            class="flex items-center gap-2 rounded-lg border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive"
-          >
+          <div v-if="error"
+            class="flex items-center gap-2 rounded-lg border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">
             <AlertCircle class="h-4 w-4 shrink-0" />
             {{ error }}
           </div>

@@ -41,6 +41,15 @@ export const useAuthStore = defineStore('auth', () => {
     user.value = data.user
   }
 
+  async function loginWithToken(newToken: string) {
+    setToken(newToken)
+    const me = await fetchMe()
+    if (!me.permissions?.includes('back-office.access')) {
+      logout()
+      throw { response: { data: { message: 'User is not allowed to access the back-office' } } }
+    }
+  }
+
   async function logout() {
     try {
       await apiClient.post('/v1/auth/logout')
@@ -60,5 +69,5 @@ export const useAuthStore = defineStore('auth', () => {
     return permissions.some((p) => hasPermission(p))
   }
 
-  return { token, user, isAuthenticated, setToken, clearAuth, fetchMe, login, logout, hasPermission, canAccess }
+  return { token, user, isAuthenticated, setToken, clearAuth, fetchMe, login, loginWithToken, logout, hasPermission, canAccess }
 })

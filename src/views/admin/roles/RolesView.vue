@@ -38,6 +38,13 @@ const total = ref(0)
 const search = ref('')
 const loading = ref(false)
 const deletingId = ref<number | null>(null)
+const canManageRole = (role: RoleModel) => {
+  if (role.is_locked) return false
+  const currentUser = authStore.user
+  if (!currentUser) return false
+  if (currentUser.roles?.includes('admin')) return true
+  return currentUser.highest_role_weight > role.weight
+}
 
 async function loadRoles() {
   loading.value = true
@@ -139,7 +146,7 @@ onMounted(loadRoles)
               </div>
             </TableCell>
             <TableCell class="text-right">
-              <div v-if="!role.is_locked" class="flex justify-end gap-2">
+              <div v-if="canManageRole(role)" class="flex justify-end gap-2">
                 <Button
                   v-if="authStore.canAccess('role.update')"
                   size="sm"

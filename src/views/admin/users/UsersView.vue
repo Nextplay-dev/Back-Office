@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted, watch, computed } from 'vue'
 import { userRoutes } from '@/plugins/routes'
 import type { UserModel } from '@/models/UserModel'
 import { Button } from '@/components/ui/button'
@@ -25,7 +25,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
-import { Search, Trash2, Edit2, Plus, ChevronLeft, ChevronRight, Loader2, Mail } from 'lucide-vue-next'
+import { Search, Trash2, Edit2, Plus, ChevronLeft, ChevronRight, Loader2, Mail, Eye } from 'lucide-vue-next'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 
@@ -39,6 +39,14 @@ const total = ref(0)
 const search = ref('')
 const loading = ref(false)
 const deletingId = ref<number | null>(null)
+
+const canManageUser = (targetUser: UserModel) => {
+  const currentUser = authStore.user
+  if (!currentUser) return false
+  if (currentUser.id === targetUser.id) return true
+  if (currentUser.roles?.includes('admin')) return true
+  return currentUser.highest_role_weight > targetUser.highest_role_weight
+}
 
 async function loadUsers() {
   loading.value = true
@@ -149,15 +157,15 @@ onMounted(loadUsers)
             </TableCell>
             <TableCell class="text-right">
               <div class="flex justify-end gap-2">
-                <Button
-                  v-if="authStore.canAccess('user.update')"
-                  size="sm"
-                  variant="ghost"
-                  @click="router.push({ name: 'admin-users-edit', params: { id: user.id } })"
-                >
+                <Button v-if="authStore.canAccess('user.update') && canManageUser(user)" size="sm" variant="ghost"
+                  @click="router.push({ name: 'admin-users-edit', params: { id: user.id } })">
                   <Edit2 class="h-4 w-4" />
                 </Button>
-                <AlertDialog v-if="authStore.canAccess('user.delete')">
+                <Button v-else size="sm" variant="ghost"
+                  @click="router.push({ name: 'admin-users-edit', params: { id: user.id } })">
+                  <Eye class="h-4 w-4" />
+                </Button>
+                <AlertDialog v-if="authStore.canAccess('user.delete') && canManageUser(user)">
                   <AlertDialogTrigger as-child>
                     <Button size="sm" variant="ghost" class="text-destructive hover:text-destructive">
                       <Trash2 class="h-4 w-4" />

@@ -10,8 +10,10 @@ import CategorySelector from '@/components/CategorySelector.vue'
 import MultiUserSelector from '@/components/MultiUserSelector.vue'
 import { ArrowLeft, Loader2, AlertCircle } from 'lucide-vue-next'
 import { useAuthStore } from '@/stores/auth'
+import { useMyActivitiesStore } from '@/stores/myActivities'
 
 const authStore = useAuthStore();
+const myActivitiesStore = useMyActivitiesStore();
 const router = useRouter()
 const route = useRoute()
 const activityId = Number(route.params.id)
@@ -66,6 +68,7 @@ async function handleSubmit() {
       latitude: latitude.value ? Number(latitude.value) : null,
       longitude: longitude.value ? Number(longitude.value) : null,
     })
+    myActivitiesStore.fetchActivities(true);
     router.push({ name: 'admin-activities' })
   } catch (e: any) {
     error.value = e.response?.data?.message ?? 'Failed to update activity'

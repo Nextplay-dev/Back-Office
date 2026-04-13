@@ -65,8 +65,10 @@ export default {
     selected: '{count} Sélectionnés',
     searchPermissions: 'Rechercher des permissions...',
     form: {
-      newSubtitle: 'Définissez un nouvel ensemble de permissions',
-      editSubtitle: 'ID du rôle : #{id}',
+      newSubtitle: 'Créer un nouveau rôle avec des permissions et un poids hiérarchique.',
+      editSubtitle: 'Mise à jour du rôle ID : {id}',
+      weight: 'Poids du rôle',
+      weightHelp: 'Un poids plus élevé signifie plus d\'autorité. Vous ne pouvez gérer que les rôles ayant un poids inférieur au vôtre.'
     },
     list: {
       searchPlaceholder: 'Rechercher des rôles par nom...',
@@ -96,6 +98,9 @@ export default {
     detailsSubtitle: 'Mettre à jour les informations de l\'utilisateur ou changer les rôles.',
     security: 'Paramètres de Sécurité',
     securitySubtitle: 'Laissez les champs de mot de passe vides pour conserver le mot de passe actuel.',
+    form: {
+      accountSubtitle: 'Créez un nouveau compte pour l\'application ou le back-office.',
+    },
     name: 'Nom complet',
     email: 'Adresse Email',
     newPassword: 'Nouveau mot de passe',

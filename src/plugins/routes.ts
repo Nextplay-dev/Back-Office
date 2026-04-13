@@ -32,6 +32,7 @@ export type UserPayload = {
 export type RolePayload = {
   name: string
   permissions?: number[]
+  weight?: number
 }
 
 export const authRoutes = {

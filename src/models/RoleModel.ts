@@ -2,6 +2,7 @@ export interface RoleModel {
   id: number
   name: string
   is_locked: boolean
+  weight: number
   permissions?: PermissionModel[]
 }
 

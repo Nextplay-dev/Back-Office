@@ -47,5 +47,18 @@ export default {
     loading: 'Recherche d\'utilisateurs...',
     noResults: 'Aucun utilisateur trouvé pour "{query}"',
     selectedCount: '{count} Gestionnaires Sélectionnés',
+  },
+  roleSelector: {
+    unauthorizedTitle: 'Rôle non autorisé',
+    unauthorizedDescription: 'Vous ne pouvez pas attribuer ce rôle car il contient des permissions que vous ne possédez pas.',
+    permissionsIncluded: '{count} permissions incluses',
+    clickToView: 'Cliquer pour voir les détails',
+    modalDescription: 'Consultez le poids du rôle et les permissions incluses avant de l\'attribuer.',
+    includedPermissions: 'Permissions incluses',
+    noPermissions: 'Ce rôle ne contient aucune permission.',
+    noPermissionsMatch: 'Aucune permission ne correspond à votre recherche.',
+    permissions: 'Permissions',
+    weight: 'Poids',
+    system: 'Système',
   }
 }

@@ -65,8 +65,10 @@ export default {
     selected: '{count} Selected',
     searchPermissions: 'Search permissions...',
     form: {
-      newSubtitle: 'Define a new set of permissions',
-      editSubtitle: 'Role ID: #{id}',
+      newSubtitle: 'Create a new role with specific permissions and hierarchy weight.',
+      editSubtitle: 'Updating role ID: {id}',
+      weight: 'Role weight',
+      weightHelp: 'Higher weight means more authority. You can only manage roles with weights lower than your own.'
     },
     list: {
       searchPlaceholder: 'Search roles by name...',
@@ -96,6 +98,9 @@ export default {
     detailsSubtitle: 'Update user information or change roles.',
     security: 'Security Settings',
     securitySubtitle: 'Leave password fields empty to keep current password.',
+    form: {
+      accountSubtitle: 'Create a new account for the application or back-office.',
+    },
     name: 'Full Name',
     email: 'Email Address',
     newPassword: 'New Password',

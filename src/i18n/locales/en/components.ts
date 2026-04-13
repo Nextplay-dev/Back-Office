@@ -47,5 +47,18 @@ export default {
     loading: 'Searching for users...',
     noResults: 'No users found for "{query}"',
     selectedCount: '{count} Managers Selected',
+  },
+  roleSelector: {
+    unauthorizedTitle: 'Unauthorized Role',
+    unauthorizedDescription: 'You cannot assign this role because it contains permissions that you do not hold.',
+    permissionsIncluded: '{count} permissions included',
+    clickToView: 'Click to view details',
+    modalDescription: 'Review the role weight and the permissions included before assigning it.',
+    includedPermissions: 'Included permissions',
+    noPermissions: 'This role does not include any permissions.',
+    noPermissionsMatch: 'No permissions match your search.',
+    permissions: 'Permissions',
+    weight: 'Weight',
+    system: 'System',
   }
 }

@@ -12,6 +12,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
+import { useAuthStore } from '@/stores/auth'
 import {
   Eye,
   Plus,
@@ -19,11 +20,12 @@ import {
   Trash2,
   Circle,
   ShieldAlert,
-  Search
+  Search,
+  Lock
 } from 'lucide-vue-next'
 
-type ActionType = 'view' | 'create' | 'update' | 'delete' | 'administration' | 'other'
-type ColoredPermission = { id: number, name: string, actionType: ActionType }
+export type ActionType = 'view' | 'create' | 'update' | 'delete' | 'administration' | 'other'
+export type ColoredPermission = { id: number, name: string, actionType: ActionType }
 
 interface Props {
   modelValue: number[]
@@ -34,7 +36,12 @@ const emit = defineEmits(['update:modelValue'])
 
 const { t, te } = useI18n()
 const permissionStore = usePermissionStore()
+const authStore = useAuthStore()
 const search = ref('')
+
+const isPermissionDisabled = (permissionName: string) => {
+  return !authStore.hasPermission(permissionName)
+}
 
 const ACTION_CONFIG: Record<ActionType, { label: string, icon: any, color: string }> = {
   view: { label: 'view', icon: Eye, color: 'text-blue-500 bg-blue-500/10' },
@@ -55,7 +62,13 @@ const formatCategory = (category: string) => {
 const filteredPermissions = computed(() => {
   const query = search.value.toLowerCase()
   return permissionStore.permissions
-    .filter(p => !query || p.name.toLowerCase().includes(query))
+    .filter(p => {
+      if (!query) return true
+      const rawName = p.name.toLowerCase()
+      const translationKey = 'permissions.' + p.name
+      const translatedName = (te(translationKey) ? t(translationKey) : p.name).toLowerCase()
+      return rawName.includes(query) || translatedName.includes(query)
+    })
     .map(p => {
       const parts = p.name.split('.')
       const action = parts.pop()
@@ -99,7 +112,9 @@ const groupedPermissions = computed(() => {
   }, {} as Record<string, ColoredPermission[]>)
 })
 
-function handleToggle(id: number, checked: boolean) {
+function handleToggle(id: number, checked: boolean, disabled: boolean = false) {
+  if (disabled) return
+
   const newSelection = checked
     ? [...props.modelValue, id]
     : props.modelValue.filter(pid => pid !== id)
@@ -110,7 +125,7 @@ onMounted(() => permissionStore.fetchAll())
 </script>
 
 <template>
-  <div class="space-y-8 pr-6">
+  <div class="space-y-8 pr-2 sm:pr-6">
     <div v-if="permissionStore.loading" class="flex items-center justify-center py-12">
       <Loader2 class="h-8 w-8 animate-spin text-primary" />
     </div>
@@ -123,48 +138,60 @@ onMounted(() => permissionStore.fetchAll())
         </div>
       </div>
 
-    <TooltipProvider>
+    <TooltipProvider :delay-duration="300">
       <div v-for="(perms, category) in groupedPermissions" :key="category" class="space-y-3">
         <h3 class="text-sm font-semibold uppercase tracking-wider text-muted-foreground/70 px-1">
           {{ formatCategory(category) }}
         </h3>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
           <div v-for="permission in perms" :key="permission.id"
-            class="group relative flex items-center gap-3 p-3 rounded-xl border transition-all duration-200 cursor-pointer"
+            class="group relative flex items-center gap-3 p-3 rounded-xl border transition-all duration-200"
             :class="[
               modelValue.includes(permission.id)
                 ? 'border-primary bg-primary/5 shadow-sm ring-1 ring-primary/20'
-                : 'border-border/40 bg-card hover:border-border hover:bg-muted/30'
-            ]" @click="handleToggle(permission.id, !modelValue.includes(permission.id))">
+                : 'border-border/40 bg-card hover:border-border hover:bg-muted/30',
+              isPermissionDisabled(permission.name) ? 'opacity-50 cursor-not-allowed bg-muted/20 border-border/20 grayscale-[0.5]' : 'cursor-pointer'
+            ]" @click="handleToggle(permission.id, !modelValue.includes(permission.id), isPermissionDisabled(permission.name))">
 
-            <Checkbox :id="`perm-${permission.id}`" :model-value="modelValue.includes(permission.id)"
-              class="transition-transform group-active:scale-90" />
+            <div class="relative flex items-center">
+              <Checkbox :id="`perm-${permission.id}`" :model-value="modelValue.includes(permission.id)"
+                :disabled="isPermissionDisabled(permission.name)"
+                class="transition-transform group-active:scale-90" />
+              <div v-if="isPermissionDisabled(permission.name)" class="absolute -top-1 -right-1 bg-background rounded-full p-0.5 shadow-sm border border-border/50">
+                <Lock class="h-2 w-2 text-muted-foreground" />
+              </div>
+            </div>
 
             <component :is="ACTION_CONFIG[permission.actionType].icon" class="h-4 w-4 shrink-0 transition-colors"
               :class="modelValue.includes(permission.id) ? 'text-primary' : 'text-muted-foreground/60'" />
 
-            <Tooltip>
-              <TooltipTrigger as-child>
-                <label :for="`perm-${permission.id}`" @click.stop
-                  class="text-sm font-medium leading-none cursor-pointer flex-1 truncate transition-colors"
-                  :class="modelValue.includes(permission.id) ? 'text-primary' : 'text-foreground/80'">
-                  {{ te('permissions.' + permission.name) ? t('permissions.' + permission.name) :
-                    permission.name }}
-                </label>
-              </TooltipTrigger>
-              <TooltipContent side="top" class="bg-foreground text-background font-mono text-[11px] py-1 px-2">
-                <p>
-                  {{ te('permissions.' + permission.name) ? t('permissions.' + permission.name) :
-                    permission.name }}
-                </p>
-                <p class="text-muted-foreground">
-                  {{ permission.name }}
-                </p>
-              </TooltipContent>
-            </Tooltip>
+            <div class="flex min-w-0 flex-1 flex-col gap-1">
+              <Tooltip>
+                <TooltipTrigger as-child>
+                  <label :for="`perm-${permission.id}`" @click.stop
+                    class="truncate text-sm font-medium leading-tight transition-colors"
+                    :class="[
+                      modelValue.includes(permission.id) ? 'text-primary' : 'text-foreground/80',
+                      isPermissionDisabled(permission.name) ? 'cursor-not-allowed' : 'cursor-pointer'
+                    ]">
+                    {{ te('permissions.' + permission.name) ? t('permissions.' + permission.name) :
+                      permission.name }}
+                  </label>
+                </TooltipTrigger>
+                <TooltipContent side="top" class="bg-foreground text-background font-mono text-[11px] py-1 px-2">
+                  <p>
+                    {{ te('permissions.' + permission.name) ? t('permissions.' + permission.name) :
+                      permission.name }}
+                  </p>
+                  <p class="text-muted-foreground">
+                    {{ permission.name }}
+                  </p>
+                </TooltipContent>
+              </Tooltip>
+            </div>
 
             <Badge variant="secondary"
-              class="h-5 px-1.5 text-[10px] uppercase tracking-tighter font-bold rounded-md border-transparent transition-opacity"
+              class="h-5 shrink-0 rounded-md border-transparent px-1.5 text-[10px] font-bold uppercase tracking-tighter transition-opacity"
               :class="[
                 ACTION_CONFIG[permission.actionType].color,
                 modelValue.includes(permission.id) ? 'opacity-100' : 'opacity-40 group-hover:opacity-100'

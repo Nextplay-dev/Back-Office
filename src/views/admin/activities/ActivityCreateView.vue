@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import CategorySelector from '@/components/CategorySelector.vue'
 import { ArrowLeft, Loader2, AlertCircle } from 'lucide-vue-next'
 
+const myActivitiesStore = useMyActivitiesStore();
 const router = useRouter()
 
 const name = ref('')
@@ -22,6 +23,7 @@ const loading = ref(false)
 const error = ref('')
 
 import MultiUserSelector from '@/components/MultiUserSelector.vue'
+import { useMyActivitiesStore } from '@/stores/myActivities'
 
 async function handleSubmit() {
   error.value = ''
@@ -36,6 +38,7 @@ async function handleSubmit() {
       latitude: latitude.value ? Number(latitude.value) : null,
       longitude: longitude.value ? Number(longitude.value) : null,
     })
+    myActivitiesStore.fetchActivities(true);
     router.push({ name: 'admin-activities' })
   } catch (e: any) {
     error.value = e.response?.data?.message ?? 'Failed to create activity'

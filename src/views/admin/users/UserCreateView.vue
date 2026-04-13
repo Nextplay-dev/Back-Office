@@ -11,6 +11,8 @@ import { useRoleStore } from '@/stores/roles'
 import { ArrowLeft, Loader2, Save } from 'lucide-vue-next'
 import { onMounted } from 'vue'
 
+import RoleSelector from '@/components/RoleSelector.vue'
+
 const router = useRouter()
 const roleStore = useRoleStore()
 const loading = ref(false)
@@ -52,16 +54,6 @@ async function handleSubmit() {
     loading.value = false
   }
 }
-
-function handleRoleChange(roleName: string, checked: boolean) {
-  if (checked) {
-    if (!form.value.roles.includes(roleName)) {
-      form.value.roles.push(roleName)
-    }
-  } else {
-    form.value.roles = form.value.roles.filter(r => r !== roleName)
-  }
-}
 </script>
 
 <template>
@@ -71,15 +63,15 @@ function handleRoleChange(roleName: string, checked: boolean) {
         <ArrowLeft class="h-4 w-4" />
       </Button>
       <div>
-        <h2 class="text-xl font-bold">New User</h2>
+        <h2 class="text-xl font-bold">{{ $t('views.users.new') }}</h2>
       </div>
     </div>
 
-    <form @submit.prevent="handleSubmit" class="max-w-2xl">
+    <form @submit.prevent="handleSubmit" class="max-w-2xl pb-12">
       <Card>
         <CardHeader>
-          <CardTitle>User Account</CardTitle>
-          <CardDescription>Create a new account for the application or back-office.</CardDescription>
+          <CardTitle>{{ $t('views.users.details') }}</CardTitle>
+          <CardDescription>{{ $t('views.users.form.accountSubtitle') }}</CardDescription>
         </CardHeader>
         <CardContent class="space-y-4">
           <div v-if="error"
@@ -89,58 +81,46 @@ function handleRoleChange(roleName: string, checked: boolean) {
 
           <div class="grid grid-cols-2 gap-4">
             <div class="space-y-2">
-              <Label for="name">Full Name</Label>
-              <Input id="name" v-model="form.name" placeholder="John Doe" required />
+              <Label for="name">{{ $t('views.users.name') }}</Label>
+              <Input id="name" v-model="form.name" :placeholder="$t('common.placeholders.name')" required />
               <p v-if="errors.name" class="text-xs text-destructive">{{ errors.name[0] }}</p>
             </div>
             <div class="space-y-2">
-              <Label for="email">Email Address</Label>
-              <Input id="email" type="email" v-model="form.email" placeholder="john@example.com" required />
+              <Label for="email">{{ $t('views.users.email') }}</Label>
+              <Input id="email" type="email" v-model="form.email" :placeholder="$t('common.placeholders.email')" required />
               <p v-if="errors.email" class="text-xs text-destructive">{{ errors.email[0] }}</p>
             </div>
           </div>
 
           <div class="grid grid-cols-2 gap-4">
             <div class="space-y-2">
-              <Label for="password">Password</Label>
-              <Input id="password" type="password" v-model="form.password" placeholder="••••••••" required />
+              <Label for="password">{{ $t('views.users.password') }}</Label>
+              <Input id="password" type="password" v-model="form.password" :placeholder="$t('common.placeholders.password')" required />
               <p v-if="errors.password" class="text-xs text-destructive">{{ errors.password[0] }}</p>
             </div>
             <div class="space-y-2">
-              <Label for="password_confirmation">Confirm Password</Label>
+              <Label for="password_confirmation">{{ $t('views.users.confirmPassword') }}</Label>
               <Input id="password_confirmation" type="password" v-model="form.password_confirmation"
-                placeholder="••••••••" required />
+                :placeholder="$t('common.placeholders.password')" required />
               <p v-if="errors.password_confirmation" class="text-xs text-destructive">{{ errors.password_confirmation[0]
               }}</p>
             </div>
           </div>
 
           <div class="space-y-3 pt-2">
-            <Label>Roles & Permissions</Label>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div v-for="role in roleStore.roles" :key="role.id"
-                class="flex items-start space-x-3 space-y-0 rounded-md border p-4 shadow-sm">
-                <Checkbox :id="String(role.id)" :model-value="form.roles.includes(role.name)"
-                  @update:model-value="(val) => handleRoleChange(role.name, val as boolean)" />
-                <div class="grid gap-1.5 leading-none">
-                  <label :for="String(role.id)"
-                    class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 capitalize">
-                    {{ role.name }}
-                  </label>
-                </div>
-              </div>
-            </div>
+            <Label>{{ $t('views.users.roles') }}</Label>
+            <RoleSelector v-model="form.roles" />
             <p v-if="errors.roles" class="text-xs text-destructive mt-1">{{ errors.roles[0] }}</p>
           </div>
         </CardContent>
         <CardFooter class="flex justify-end gap-3 border-t bg-muted/30 px-6 py-4">
           <Button variant="ghost" type="button" :disabled="loading" @click="router.back()">
-            Cancel
+            {{ $t('common.actions.cancel') }}
           </Button>
           <Button type="submit" :disabled="loading" class="bg-primary">
             <Loader2 v-if="loading" class="mr-2 h-4 w-4 animate-spin" />
             <Save v-else class="mr-2 h-4 w-4" />
-            Create User
+            {{ $t('common.actions.create') }}
           </Button>
         </CardFooter>
       </Card>

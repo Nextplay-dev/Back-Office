@@ -23,6 +23,7 @@ const errors = ref<Record<string, string[]>>({})
 
 const form = ref({
   name: '',
+  weight: 0,
   selectedPermissionIds: [] as number[]
 })
 
@@ -32,6 +33,7 @@ async function loadData() {
     if (isEditing.value && roleId) {
       const { data: rData } = await roleRoutes.get(roleId)
       form.value.name = rData.name
+      form.value.weight = rData.weight
       form.value.selectedPermissionIds = rData.permissions?.map(p => p.id) || []
     }
   } catch (err: any) {
@@ -48,6 +50,7 @@ async function handleSubmit() {
 
   const payload: RolePayload = {
     name: form.value.name,
+    weight: form.value.weight,
     permissions: form.value.selectedPermissionIds
   }
 
@@ -72,7 +75,7 @@ onMounted(loadData)
 </script>
 
 <template>
-  <div class="mx-auto max-w-4xl space-y-6">
+  <div class="mx-auto max-w-8xl space-y-6">
     <div class="flex items-center gap-4">
       <Button variant="ghost" size="icon" @click="router.back()">
         <ArrowLeft class="h-4 w-4" />
@@ -95,7 +98,7 @@ onMounted(loadData)
         {{ error }}
       </div>
 
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start pb-12">
         <Card class="lg:col-span-1 lg:sticky lg:top-8 h-fit rounded-2xl border-none shadow-sm overflow-hidden py-0">
           <CardHeader class="bg-primary/5 py-6">
             <CardTitle class="text-base flex items-center gap-2">
@@ -111,8 +114,15 @@ onMounted(loadData)
                 class="rounded-xl" />
               <p v-if="errors.name" class="text-xs text-destructive">{{ errors.name[0] }}</p>
             </div>
+            <div class="space-y-2">
+              <Label for="weight">{{ $t('views.roles.form.weight') }}</Label>
+              <Input id="weight" type="number" v-model.number="form.weight" min="0" max="100" required
+                class="rounded-xl" />
+              <p class="text-[10px] text-muted-foreground">{{ $t('views.roles.form.weightHelp') }}</p>
+              <p v-if="errors.weight" class="text-xs text-destructive">{{ errors.weight[0] }}</p>
+            </div>
           </CardContent>
-          <CardFooter class="bg-muted/30 pt-4 flex justify-end gap-3 border-t py-6">
+          <CardFooter class="bg-muted/30 pt-4 flex flex-wrap justify-end gap-3 border-t py-6">
             <Button variant="ghost" type="button" :disabled="loading" @click="router.back()">{{
               $t('common.actions.cancel') }}</Button>
             <Button type="submit" :disabled="loading" class="rounded-xl">
