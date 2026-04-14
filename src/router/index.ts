@@ -50,31 +50,37 @@ const router = createRouter({
             },
             {
               path: 'venues/:id/resources/:resourceId',
-              component: () => import('@/views/my/resources/ResourceDetailView.vue'),
-              meta: { permissions: ['my-venue.view'] },
               children: [
                 {
                   path: '',
                   name: 'my-resource-detail',
-                  redirect: { name: 'my-resource-edit' }
-                },
-                {
-                  path: 'edit',
-                  name: 'my-resource-edit',
-                  component: () => import('@/views/my/resources/components/ResourceEdit.vue'),
+                  component: () => import('@/views/my/resources/ResourceDetailView.vue'),
                   props: true
                 },
                 {
-                  path: 'availability',
-                  name: 'my-resource-availability',
-                  component: () => import('@/views/my/resources/components/ResourceAvailability.vue'),
-                  props: true
-                },
-                {
-                  path: 'exceptions',
-                  name: 'my-resource-exceptions',
-                  component: () => import('@/views/my/resources/components/ResourceExceptions.vue'),
-                  props: true
+                  path: 'config',
+                  component: () => import('@/views/my/resources/ResourceEditView.vue'),
+                  meta: { permissions: ['my-venue.view'] },
+                  children: [
+                    {
+                      path: '',
+                      name: 'my-resource-edit',
+                      component: () => import('@/views/my/resources/components/ResourceEdit.vue'),
+                      props: true
+                    },
+                    {
+                      path: 'availability',
+                      name: 'my-resource-availability',
+                      component: () => import('@/views/my/resources/components/ResourceAvailability.vue'),
+                      props: true
+                    },
+                    {
+                      path: 'exceptions',
+                      name: 'my-resource-exceptions',
+                      component: () => import('@/views/my/resources/components/ResourceExceptions.vue'),
+                      props: true
+                    }
+                  ]
                 }
               ]
             },

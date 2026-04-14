@@ -225,6 +225,18 @@ export default {
         availability: 'Availability',
         exceptions: 'Exceptions',
       },
+      dashboard: {
+        title: 'Resource Dashboard',
+        config: 'Configuration',
+        stats: {
+          capacity: 'Capacity',
+          type: 'Resource Type',
+        },
+        calendar: {
+          title: 'Booking Calendar',
+          today: 'Today',
+        }
+      },
       general: {
         title: 'Resource Details',
         name: 'Resource Name',

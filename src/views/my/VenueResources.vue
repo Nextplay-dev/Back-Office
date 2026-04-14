@@ -34,7 +34,7 @@ import {
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Boxes, Plus, Pencil, Trash2, Loader2 } from 'lucide-vue-next'
+import { Boxes, Plus, Pencil, Trash2, Loader2, Calendar as CalendarIcon } from 'lucide-vue-next'
 import { toast } from 'vue-sonner'
 
 const route = useRoute()
@@ -151,7 +151,11 @@ onMounted(fetchResources)
         </TableHeader>
         <TableBody>
           <TableRow v-for="resource in resources" :key="resource.id" class="hover:bg-muted/20 transition-colors">
-            <TableCell class="font-medium">{{ resource.name }}</TableCell>
+            <TableCell class="font-medium">
+              <button class="hover:underline text-left" @click="router.push({ name: 'my-resource-detail', params: { id: venueId, resourceId: resource.id } })">
+                {{ resource.name }}
+              </button>
+            </TableCell>
             <TableCell>
               <Badge variant="secondary" class="capitalize">
                 {{ resource.type }}
@@ -161,6 +165,9 @@ onMounted(fetchResources)
             <TableCell class="text-right">
               <div class="flex justify-end gap-2">
                 <Button variant="ghost" size="sm" @click="router.push({ name: 'my-resource-detail', params: { id: venueId, resourceId: resource.id } })">
+                  <CalendarIcon class="h-4 w-4" />
+                </Button>
+                <Button variant="ghost" size="sm" @click="router.push({ name: 'my-resource-edit', params: { id: venueId, resourceId: resource.id } })">
                   <Pencil class="h-4 w-4" />
                 </Button>
                 

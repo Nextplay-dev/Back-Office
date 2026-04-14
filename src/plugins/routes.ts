@@ -60,7 +60,7 @@ export const authRoutes = {
   login: (email: string, password: string) =>
     apiClient.post<{ token: string; user: UserModel }>('/v1/auth/login', { email, password }),
 
-  me: () => apiClient.get<UserModel>('/v1/auth/me'),
+  me: () => apiClient.get<UserModel>('/v1/me'),
 
   logout: () => apiClient.post('/v1/auth/logout'),
 }
@@ -153,6 +153,7 @@ export const resourceRoutes = {
   update: (id: number, payload: Partial<ResourcePayload>) =>
     apiClient.put<ResourceModel>(`/v1/resources/${id}`, payload),
   delete: (id: number) => apiClient.delete(`/v1/resources/${id}`),
+  bookings: (id: number) => apiClient.get<any[]>(`/v1/resources/${id}/bookings`),
 }
 
 export const availabilityRoutes = {

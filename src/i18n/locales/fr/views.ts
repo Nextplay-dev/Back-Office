@@ -225,6 +225,18 @@ export default {
         availability: 'Disponibilité',
         exceptions: 'Exceptions',
       },
+      dashboard: {
+        title: 'Tableau de bord de la ressource',
+        config: 'Configuration',
+        stats: {
+          capacity: 'Capacité',
+          type: 'Type de ressource',
+        },
+        calendar: {
+          title: 'Calendrier des réservations',
+          today: "Aujourd'hui",
+        }
+      },
       general: {
         title: 'Détails de la Ressource',
         name: 'Nom de la Ressource',
