@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
 import { useAuthStore } from '@/stores/auth'
-import { useMyActivitiesStore } from '@/stores/myVenues'
+import { useMyVenuesStore } from '@/stores/myVenues'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import CategoryIcon from '@/components/CategoryIcon.vue'
@@ -16,16 +16,16 @@ import { useRouter } from 'vue-router'
 
 const router = useRouter()
 const authStore = useAuthStore()
-const myActivitiesStore = useMyActivitiesStore()
+const myVenuesStore = useMyVenuesStore()
 
 onMounted(async () => {
   try {
-    await myActivitiesStore.fetchActivities()
-    if (myActivitiesStore.activities.length === 1) {
-      return router.push({ name: 'my-venue-overview', params: { id: myActivitiesStore.activities[0].id } })
+    await myVenuesStore.fetchVenues()
+    if (myVenuesStore.venues.length === 1) {
+      return router.push({ name: 'my-venue-overview', params: { id: myVenuesStore.venues[0].id } })
     }
   } catch (e) {
-    console.error('Failed to fetch dashboard activities', e)
+    console.error('Failed to fetch dashboard venues', e)
   }
 })
 </script>
@@ -48,31 +48,31 @@ onMounted(async () => {
       <div class="flex items-center justify-between">
         <h2 class="text-xl font-bold flex items-center gap-2">
           <Dumbbell class="h-5 w-5 text-primary" />
-          {{ $t('views.dashboard.my.assignedActivities') }}
+          {{ $t('views.dashboard.my.assignedVenues') }}
         </h2>
         <Badge variant="secondary" class="rounded-full px-3">
-          {{ $t('views.dashboard.my.activitiesCount', { count: myActivitiesStore.activities.length }) }}
+          {{ $t('views.dashboard.my.venuesCount', { count: myVenuesStore.venues.length }) }}
         </Badge>
       </div>
 
       <!-- Loading State -->
-      <div v-if="myActivitiesStore.loading" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div v-if="myVenuesStore.loading" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <Card v-for="i in 3" :key="i" class="rounded-3xl border-none shadow-sm animate-pulse h-48 bg-muted/50" />
       </div>
 
       <!-- Empty State -->
-      <div v-else-if="myActivitiesStore.activities.length === 0"
+      <div v-else-if="myVenuesStore.venues.length === 0"
         class="flex flex-col items-center justify-center py-20 bg-muted/20 rounded-3xl border-2 border-dashed border-muted">
         <div class="h-16 w-16 rounded-full bg-muted flex items-center justify-center mb-4 text-muted-foreground">
           <Dumbbell class="h-8 w-8" />
         </div>
-        <h3 class="font-bold text-lg">{{ $t('views.dashboard.my.noActivities.title') }}</h3>
-        <p class="text-sm text-muted-foreground">{{ $t('views.dashboard.my.noActivities.description') }}</p>
+        <h3 class="font-bold text-lg">{{ $t('views.dashboard.my.noVenues.title') }}</h3>
+        <p class="text-sm text-muted-foreground">{{ $t('views.dashboard.my.noVenues.description') }}</p>
       </div>
 
       <!-- Venue Cards -->
       <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <RouterLink v-for="venue in myActivitiesStore.activities" :key="venue.id"
+        <RouterLink v-for="venue in myVenuesStore.venues" :key="venue.id"
           :to="{ name: 'my-venue-overview', params: { id: venue.id } }" class="group">
           <Card
             class="h-full rounded-3xl border-none shadow-sm overflow-hidden group-hover:shadow-xl group-hover:-translate-y-1 transition-all duration-300">
@@ -111,7 +111,7 @@ onMounted(async () => {
                 <div class="flex items-center gap-1.5 ml-auto">
                   <Calendar class="h-3.5 w-3.5" />
                   <span class="text-[10px] font-black uppercase">{{ new Date(venue.created_at).getFullYear()
-                  }}</span>
+                    }}</span>
                 </div>
               </div>
             </CardContent>

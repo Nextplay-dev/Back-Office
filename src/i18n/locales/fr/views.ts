@@ -13,9 +13,9 @@ export default {
       subtitle: "Voici ce qui se passe sur NextPlay.",
       quickActions: 'Actions Rapides',
       actions: {
-        addVenue: 'Ajouter une Activité',
+        addVenue: 'Ajouter un Établissement',
         addCategory: 'Ajouter une Catégorie',
-        allActivities: 'Toutes les Activités',
+        allVenues: 'Tous les Établissements',
         allUsers: 'Tous les Utilisateurs',
       },
       stats: {
@@ -24,23 +24,23 @@ export default {
     },
     manager: {
       title: 'Tableau de bord Manager',
-      subtitle: 'Surveillez vos activités et tournois assignés.',
+      subtitle: 'Surveillez vos établissements et tournois assignés.',
     },
     my: {
       title: 'Bon retour, {name} !',
-      subtitle: 'Gérez vos activités et restez au courant de vos événements.',
-      assignedActivities: 'Mes Activités Assignées',
-      activitiesCount: '{count} Activités',
-      noActivities: {
-        title: 'Aucune activité pour le moment',
-        description: "Vous n'avez pas encore été assigné comme gestionnaire d'activités.",
+      subtitle: 'Gérez vos établissements et restez au courant de vos événements.',
+      assignedVenues: 'Mes Établissements Assignés',
+      venuesCount: '{count} Établissements',
+      noVenues: {
+        title: 'Aucun établissement pour le moment',
+        description: "Vous n'avez pas encore été assigné comme gestionnaire d'un établissement.",
       }
     },
     myVenueOverview: {
-      loading: 'Chargement de la présentation de l\'activité...',
+      loading: 'Chargement de la présentation de l\'établissement...',
       navigate: 'Naviguer',
-      about: 'À propos de cette activité',
-      description: 'Bienvenue dans l\'aperçu administratif de {name}. En tant que gestionnaire, vous avez accès à des outils spécialisés pour superviser la participation, les tournois et le contenu de l\'activité.',
+      about: 'À propos de cet établissement',
+      description: 'Bienvenue dans l\'aperçu administratif de {name}. En tant que gestionnaire, vous avez accès à des outils spécialisés pour superviser la participation, les tournois et le contenu de l\'établissement.',
       stats: {
         tournaments: 'Tournois',
         managers: 'Gestionnaires',
@@ -126,14 +126,14 @@ export default {
       }
     }
   },
-  activities: {
-    title: 'Activités',
+  venues: {
+    title: 'Établissements',
     subtitle: '{count} au total',
-    new: 'Nouvelle Activité',
-    edit: 'Modifier l\'Activité',
+    new: 'Nouvel Établissement',
+    edit: 'Modifier l\'Établissement',
     list: {
-      searchPlaceholder: 'Rechercher des activités...',
-      noActivities: 'Aucune activité trouvée.',
+      searchPlaceholder: 'Rechercher des établissements...',
+      noVenues: 'Aucun établissement trouvé.',
       table: {
         id: '#',
         name: 'Nom',
@@ -144,11 +144,15 @@ export default {
         actions: 'Actions',
       },
       delete: {
-        title: 'Supprimer l\'activité ?',
-        description: '"{name}" sera supprimée définitivement.',
+        title: 'Supprimer l\'établissement ?',
+        description: '"{name}" sera supprimé définitivement.',
       },
     },
-    details: 'Détails de l\'activité',
+    details: 'Détails de l\'Établissement',
+    form: {
+      newSubtitle: 'Créer un nouvel établissement',
+      editSubtitle: 'Modifier les détails de l\'établissement',
+    },
     name: 'Nom',
     address: 'Adresse',
     category: 'Catégorie',
@@ -182,6 +186,10 @@ export default {
       },
     },
     details: 'Détails de la catégorie',
+    form: {
+      newSubtitle: 'Créer une nouvelle catégorie',
+      editSubtitle: 'Modifier les détails de la catégorie',
+    },
     name: 'Nom',
     namePlaceholder: 'Ex: Football',
     icon: 'Icône',
