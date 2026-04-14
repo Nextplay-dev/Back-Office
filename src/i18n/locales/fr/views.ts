@@ -13,7 +13,7 @@ export default {
       subtitle: "Voici ce qui se passe sur NextPlay.",
       quickActions: 'Actions Rapides',
       actions: {
-        addActivity: 'Ajouter une Activité',
+        addVenue: 'Ajouter une Activité',
         addCategory: 'Ajouter une Catégorie',
         allActivities: 'Toutes les Activités',
         allUsers: 'Tous les Utilisateurs',
@@ -36,7 +36,7 @@ export default {
         description: "Vous n'avez pas encore été assigné comme gestionnaire d'activités.",
       }
     },
-    myActivityOverview: {
+    myVenueOverview: {
       loading: 'Chargement de la présentation de l\'activité...',
       navigate: 'Naviguer',
       about: 'À propos de cette activité',

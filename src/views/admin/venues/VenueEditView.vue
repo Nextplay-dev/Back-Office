@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import { activityRoutes } from '@/plugins/routes'
+import { venueRoutes } from '@/plugins/routes'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -10,13 +10,13 @@ import CategorySelector from '@/components/CategorySelector.vue'
 import MultiUserSelector from '@/components/MultiUserSelector.vue'
 import { ArrowLeft, Loader2, AlertCircle } from 'lucide-vue-next'
 import { useAuthStore } from '@/stores/auth'
-import { useMyActivitiesStore } from '@/stores/myActivities'
+import { useMyVenuesStore } from '@/stores/myVenues'
 
 const authStore = useAuthStore();
-const myActivitiesStore = useMyActivitiesStore();
+const myVenuesStore = useMyVenuesStore();
 const router = useRouter()
 const route = useRoute()
-const activityId = Number(route.params.id)
+const venueId = Number(route.params.id)
 
 const name = ref('')
 const address = ref('')
@@ -31,25 +31,25 @@ const saving = ref(false)
 const error = ref('')
 
 const readonly = computed(() => {
-  return !authStore.hasPermission('activity.update')
+  return !authStore.hasPermission('venue.update')
 })
 
 const canUpdateManagers = computed(() => {
-  return authStore.hasPermission('activity.managers.update')
+  return authStore.hasPermission('venue.managers.update')
 })
 
 onMounted(async () => {
   loading.value = true
   try {
-    const { data: activity } = await activityRoutes.get(activityId)
-    name.value = activity.name
-    address.value = activity.address
-    media.value = activity.media ?? ''
-    categoryId.value = activity.category_id ? Number(activity.category_id) : null
-    managerIds.value = activity.managers?.map((m: any) => m.id)
-    initialManagers.value = activity.managers || []
-    latitude.value = activity.latitude ? String(activity.latitude) : ''
-    longitude.value = activity.longitude ? String(activity.longitude) : ''
+    const { data: venue } = await venueRoutes.get(venueId)
+    name.value = venue.name
+    address.value = venue.address
+    media.value = venue.media ?? ''
+    categoryId.value = venue.category_id ? Number(venue.category_id) : null
+    managerIds.value = venue.managers?.map((m: any) => m.id)
+    initialManagers.value = venue.managers || []
+    latitude.value = venue.latitude ? String(venue.latitude) : ''
+    longitude.value = venue.longitude ? String(venue.longitude) : ''
   } finally {
     loading.value = false
   }
@@ -59,19 +59,19 @@ async function handleSubmit() {
   error.value = ''
   saving.value = true
   try {
-    await activityRoutes.update(activityId, {
+    await venueRoutes.update(venueId, {
       name: name.value,
       address: address.value,
-      activity_category_id: categoryId.value,
+      venue_category_id: categoryId.value,
       manager_ids: managerIds.value,
       media: media.value || null,
       latitude: latitude.value ? Number(latitude.value) : null,
       longitude: longitude.value ? Number(longitude.value) : null,
     })
-    myActivitiesStore.fetchActivities(true);
-    router.push({ name: 'admin-activities' })
+    myVenuesStore.fetchVenues(true);
+    router.push({ name: 'admin-venues' })
   } catch (e: any) {
-    error.value = e.response?.data?.message ?? 'Failed to update activity'
+    error.value = e.response?.data?.message ?? 'Failed to update venue'
   } finally {
     saving.value = false
   }
@@ -85,8 +85,8 @@ async function handleSubmit() {
         <ArrowLeft class="h-4 w-4" />
       </Button>
       <div>
-        <h2 class="text-xl font-bold">{{ $t('views.activities.edit') }}</h2>
-        <p class="text-sm text-muted-foreground">#{{ activityId }}</p>
+        <h2 class="text-xl font-bold">{{ $t('views.venues.edit') }}</h2>
+        <p class="text-sm text-muted-foreground">#{{ venueId }}</p>
       </div>
     </div>
 
@@ -96,47 +96,47 @@ async function handleSubmit() {
 
     <Card v-else>
       <CardHeader>
-        <CardTitle class="text-base">{{ $t('views.activities.details') }}</CardTitle>
+        <CardTitle class="text-base">{{ $t('views.venues.details') }}</CardTitle>
       </CardHeader>
       <CardContent>
         <form class="space-y-5" @submit.prevent="handleSubmit">
           <div class="space-y-2">
-            <Label for="name">{{ $t('views.activities.name') }} *</Label>
+            <Label for="name">{{ $t('views.venues.name') }} *</Label>
             <Input id="name" v-model="name" required :readonly="readonly" />
           </div>
 
           <div class="space-y-2">
-            <Label for="address">{{ $t('views.activities.address') }} *</Label>
+            <Label for="address">{{ $t('views.venues.address') }} *</Label>
             <Input id="address" v-model="address" required :readonly="readonly" />
           </div>
 
           <div class="space-y-2">
-            <Label for="category">{{ $t('views.activities.category') }}</Label>
-            <CategorySelector v-model="categoryId" :placeholder="$t('views.activities.categoryPlaceholder')"
+            <Label for="category">{{ $t('views.venues.category') }}</Label>
+            <CategorySelector v-model="categoryId" :placeholder="$t('views.venues.categoryPlaceholder')"
               :readonly="readonly" />
           </div>
 
           <div class="space-y-2" v-if="managerIds">
-            <Label>{{ $t('views.activities.managers') }}</Label>
+            <Label>{{ $t('views.venues.managers') }}</Label>
             <MultiUserSelector v-model="managerIds" :initial-users="initialManagers" :readonly="!canUpdateManagers" />
           </div>
 
           <div class="space-y-2">
-            <Label for="media">{{ $t('views.activities.media') }}</Label>
-            <Input id="media" v-model="media" type="url" :placeholder="$t('views.activities.mediaPlaceholder')"
+            <Label for="media">{{ $t('views.venues.media') }}</Label>
+            <Input id="media" v-model="media" type="url" :placeholder="$t('views.venues.mediaPlaceholder')"
               :readonly="readonly" />
           </div>
 
           <div class="grid grid-cols-2 gap-4">
             <div class="space-y-2">
-              <Label for="latitude">{{ $t('views.activities.latitude') }}</Label>
+              <Label for="latitude">{{ $t('views.venues.latitude') }}</Label>
               <Input id="latitude" v-model="latitude" type="number" step="any"
-                :placeholder="$t('views.activities.latitudePlaceholder')" :readonly="readonly" />
+                :placeholder="$t('views.venues.latitudePlaceholder')" :readonly="readonly" />
             </div>
             <div class="space-y-2">
-              <Label for="longitude">{{ $t('views.activities.longitude') }}</Label>
+              <Label for="longitude">{{ $t('views.venues.longitude') }}</Label>
               <Input id="longitude" v-model="longitude" type="number" step="any"
-                :placeholder="$t('views.activities.longitudePlaceholder')" :readonly="readonly" />
+                :placeholder="$t('views.venues.longitudePlaceholder')" :readonly="readonly" />
             </div>
           </div>
 

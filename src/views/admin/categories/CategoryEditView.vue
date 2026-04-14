@@ -1,16 +1,16 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import { activityCategoryRoutes } from '@/plugins/routes'
+import { categoryRoutes } from '@/plugins/routes'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { ArrowLeft, Loader2, AlertCircle } from 'lucide-vue-next'
 import IconSelector from '@/components/IconSelector.vue'
-import { useMyActivitiesStore } from '@/stores/myActivities'
+import { useMyVenuesStore } from '@/stores/myVenues'
 
-const myActivitiesStore = useMyActivitiesStore();
+const myVenuesStore = useMyVenuesStore();
 const router = useRouter()
 const route = useRoute()
 const categoryId = Number(route.params.id)
@@ -25,7 +25,7 @@ const error = ref('')
 onMounted(async () => {
   loading.value = true
   try {
-    const { data } = await activityCategoryRoutes.get(categoryId)
+    const { data } = await categoryRoutes.get(categoryId)
     name.value = data.name
     icon.value = data.icon ?? ''
     color.value = data.color ?? '#6564DB'
@@ -38,12 +38,12 @@ async function handleSubmit() {
   error.value = ''
   saving.value = true
   try {
-    await activityCategoryRoutes.update(categoryId, {
+    await categoryRoutes.update(categoryId, {
       name: name.value,
       icon: icon.value || null,
       color: color.value || null,
     })
-    myActivitiesStore.fetchActivities(true);
+    myVenuesStore.fetchVenues(true);
     router.push({ name: 'admin-categories' })
   } catch (e: any) {
     error.value = e.response?.data?.message ?? 'Failed to update category'

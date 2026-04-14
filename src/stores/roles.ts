@@ -8,9 +8,9 @@ export const useRoleStore = defineStore('roles', () => {
   const loading = ref(false)
   const error = ref<string | null>(null)
 
-  async function fetchRoles() {
+  async function fetchRoles(force: boolean = false) {
     // If roles are already loaded, don't fetch again
-    if (roles.value.length > 0) return
+    if (roles.value.length > 0 && !force) return
 
     loading.value = true
     error.value = null

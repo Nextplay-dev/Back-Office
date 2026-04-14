@@ -3,8 +3,8 @@ import { ref, onMounted } from 'vue'
 import { watchDebounced } from '@vueuse/core'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
-import { activityCategoryRoutes } from '@/plugins/routes'
-import type { ActivityCategoryModel } from '@/models/ActivityCategoryModel'
+import { categoryRoutes } from '@/plugins/routes'
+import type { CategoryModel } from '@/models/CategoryModel'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
@@ -33,7 +33,7 @@ const router = useRouter()
 const authStore = useAuthStore()
 
 const search = ref('')
-const categories = ref<ActivityCategoryModel[]>([])
+const categories = ref<CategoryModel[]>([])
 const currentPage = ref(1)
 const lastPage = ref(1)
 const total = ref(0)
@@ -48,7 +48,7 @@ watchDebounced(search, () => {
 async function loadCategories() {
   loading.value = true
   try {
-    const { data } = await activityCategoryRoutes.list(currentPage.value, search.value)
+    const { data } = await categoryRoutes.list(currentPage.value, search.value)
     categories.value = data.data
     lastPage.value = data.meta.last_page
     total.value = data.meta.total
@@ -60,7 +60,7 @@ async function loadCategories() {
 async function deleteCategory(id: number) {
   deletingId.value = id
   try {
-    await activityCategoryRoutes.delete(id)
+    await categoryRoutes.delete(id)
     await loadCategories()
   } finally {
     deletingId.value = null
@@ -77,8 +77,7 @@ onMounted(loadCategories)
         <h2 class="text-xl font-bold">{{ $t('views.categories.title') }}</h2>
         <p class="text-sm text-muted-foreground">{{ $t('views.categories.subtitle', { count: total }) }}</p>
       </div>
-      <Button v-if="authStore.canAccess('activity-category.create')"
-        @click="router.push({ name: 'admin-categories-create' })">
+      <Button v-if="authStore.canAccess('category.create')" @click="router.push({ name: 'admin-categories-create' })">
         <Plus class="mr-2 h-4 w-4" /> {{ $t('views.categories.new') }}
       </Button>
     </div>
@@ -128,11 +127,11 @@ onMounted(loadCategories)
             </TableCell>
             <TableCell class="text-right">
               <div class="flex justify-end gap-2">
-                <Button v-if="authStore.canAccess('activity-category.update')" size="sm" variant="ghost"
+                <Button v-if="authStore.canAccess('category.update')" size="sm" variant="ghost"
                   @click="router.push({ name: 'admin-categories-edit', params: { id: category.id } })">
                   <Pencil class="h-4 w-4" />
                 </Button>
-                <AlertDialog v-if="authStore.canAccess('activity-category.delete')">
+                <AlertDialog v-if="authStore.canAccess('category.delete')">
                   <AlertDialogTrigger as-child>
                     <Button size="sm" variant="ghost" class="text-destructive hover:text-destructive">
                       <Trash2 class="h-4 w-4" />

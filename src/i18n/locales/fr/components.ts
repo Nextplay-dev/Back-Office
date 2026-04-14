@@ -8,7 +8,7 @@ export default {
     users: 'Utilisateurs',
     roles: 'Rôles',
     myActivities: 'Mes Activités',
-    myActivityOverview: 'Présentation',
+    myVenueOverview: 'Présentation',
   },
   header: {
     backOffice: 'Back Office',

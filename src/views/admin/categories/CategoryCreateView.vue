@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { activityCategoryRoutes } from '@/plugins/routes'
+import { categoryRoutes } from '@/plugins/routes'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -21,7 +21,7 @@ async function handleSubmit() {
   error.value = ''
   loading.value = true
   try {
-    await activityCategoryRoutes.create({
+    await categoryRoutes.create({
       name: name.value,
       icon: icon.value || null,
       color: color.value || null,
@@ -43,7 +43,7 @@ async function handleSubmit() {
       </Button>
       <div>
         <h2 class="text-xl font-bold">New Category</h2>
-        <p class="text-sm text-muted-foreground">Define a new activity category</p>
+        <p class="text-sm text-muted-foreground">Define a new venue category</p>
       </div>
     </div>
 

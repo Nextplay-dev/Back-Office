@@ -23,7 +23,7 @@ const authStore = useAuthStore()
 
 const adminNavItems = [
   { title: 'Dashboard', icon: LayoutDashboard, name: 'admin-dashboard', permission: 'back-office.administration.dashboard' },
-  { title: 'Activities', icon: Dumbbell, name: 'admin-activities', permission: 'back-office.administration.activities' },
+  { title: 'Venues', icon: Dumbbell, name: 'admin-venues', permission: 'back-office.administration.venues' },
   { title: 'Categories', icon: Tag, name: 'admin-categories', permission: 'back-office.administration.categories' },
   { title: 'Users', icon: Users, name: 'admin-users', permission: 'back-office.administration.users' },
   { title: 'Roles', icon: Shield, name: 'admin-roles', permission: 'back-office.administration.roles' },
@@ -56,7 +56,8 @@ function isActive(name: string) {
                 class="h-6 w-6 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 group-hover:bg-primary/20 transition-colors">
                 <component :is="item.icon" class="h-3.5 w-3.5 text-primary" />
               </div>
-              <span class="font-semibold text-sm">{{ $t('components.sidebar.' + item.name.replace('admin-', '')) }}</span>
+              <span class="font-semibold text-sm">{{ $t('components.sidebar.' + item.name.replace('admin-', ''))
+                }}</span>
             </RouterLink>
           </SidebarMenuButton>
         </SidebarMenuItem>

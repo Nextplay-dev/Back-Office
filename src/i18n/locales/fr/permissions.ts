@@ -9,7 +9,7 @@ export default {
       roles: 'Gérer les Rôles',
     }
   },
-  activity: {
+  venue: {
     view: 'Voir les Activités',
     create: 'Créer une Activité',
     update: 'Modifier une Activité',
@@ -19,7 +19,7 @@ export default {
     },
     delete: 'Supprimer une Activité',
   },
-  'activity-category': {
+  'venue-category': {
     view: 'Voir les Catégories',
     create: 'Créer une Catégorie',
     update: 'Modifier une Catégorie',
@@ -52,7 +52,7 @@ export default {
     view: 'Voir Mon Profil',
     update: 'Modifier Mon Profil',
   },
-  'my-activity': {
+  'my-venue': {
     view: 'Voir Mes Activités Assignées',
     update: 'Modifier Mes Activités Assignées',
   }

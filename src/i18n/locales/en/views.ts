@@ -13,9 +13,9 @@ export default {
       subtitle: "Here's what's happening on NextPlay.",
       quickActions: 'Quick Actions',
       actions: {
-        addActivity: 'Add Activity',
+        addVenue: 'Add Venue',
         addCategory: 'Add Category',
-        allActivities: 'All Activities',
+        allVenues: 'All Venues',
         allUsers: 'All Users',
       },
       stats: {
@@ -24,23 +24,23 @@ export default {
     },
     manager: {
       title: 'Manager Dashboard',
-      subtitle: 'Oversee your assigned activities and tournaments.',
+      subtitle: 'Oversee your assigned venues and tournaments.',
     },
     my: {
       title: 'Welcome back, {name}!',
-      subtitle: 'Manage your activities and stay on top of your events.',
-      assignedActivities: 'My Assigned Activities',
-      activitiesCount: '{count} Activities',
-      noActivities: {
-        title: 'No activities yet',
-        description: "You haven't been assigned as a manager to any activity.",
+      subtitle: 'Manage your venues and stay on top of your events.',
+      assignedVenues: 'My Assigned Venues',
+      venuesCount: '{count} Venues',
+      noVenues: {
+        title: 'No venues yet',
+        description: "You haven't been assigned as a manager to any venue.",
       }
     },
-    myActivityOverview: {
-      loading: 'Loading activity presentation...',
+    myVenueOverview: {
+      loading: 'Loading venue presentation...',
       navigate: 'Navigate',
-      about: 'About this activity',
-      description: 'Welcome to the administrative overview of {name}. As a manager, you have access to specialized tools to oversee participation, tournaments, and activity content.',
+      about: 'About this venue',
+      description: 'Welcome to the administrative overview of {name}. As a manager, you have access to specialized tools to oversee participation, tournaments, and venue content.',
       stats: {
         tournaments: 'Tournaments',
         managers: 'Managers',
@@ -126,14 +126,14 @@ export default {
       }
     }
   },
-  activities: {
-    title: 'Activities',
+  venues: {
+    title: 'Venues',
     subtitle: '{count} total',
-    new: 'New Activity',
-    edit: 'Edit Activity',
+    new: 'New Venue',
+    edit: 'Edit Venue',
     list: {
-      searchPlaceholder: 'Search activities...',
-      noActivities: 'No activities found.',
+      searchPlaceholder: 'Search venues...',
+      noVenues: 'No venues found.',
       table: {
         id: '#',
         name: 'Name',
@@ -144,14 +144,14 @@ export default {
         actions: 'Actions',
       },
       delete: {
-        title: 'Delete activity?',
+        title: 'Delete venue?',
         description: '"{name}" will be permanently deleted.',
       },
     },
-    details: 'Activity Details',
+    details: 'Venue Details',
     form: {
-      newSubtitle: 'Create a new activity',
-      editSubtitle: 'Edit activity details',
+      newSubtitle: 'Create a new venue',
+      editSubtitle: 'Edit venue details',
     },
     name: 'Name',
     address: 'Address',

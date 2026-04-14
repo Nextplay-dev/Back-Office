@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
 import { useAuthStore } from '@/stores/auth'
-import { useMyActivitiesStore } from '@/stores/myActivities'
+import { useMyActivitiesStore } from '@/stores/myVenues'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import CategoryIcon from '@/components/CategoryIcon.vue'
@@ -22,7 +22,7 @@ onMounted(async () => {
   try {
     await myActivitiesStore.fetchActivities()
     if (myActivitiesStore.activities.length === 1) {
-      return router.push({ name: 'my-activity-overview', params: { id: myActivitiesStore.activities[0].id } })
+      return router.push({ name: 'my-venue-overview', params: { id: myActivitiesStore.activities[0].id } })
     }
   } catch (e) {
     console.error('Failed to fetch dashboard activities', e)
@@ -43,7 +43,7 @@ onMounted(async () => {
       </p>
     </div>
 
-    <!-- Activity Section -->
+    <!-- Venue Section -->
     <div class="space-y-4">
       <div class="flex items-center justify-between">
         <h2 class="text-xl font-bold flex items-center gap-2">
@@ -70,30 +70,30 @@ onMounted(async () => {
         <p class="text-sm text-muted-foreground">{{ $t('views.dashboard.my.noActivities.description') }}</p>
       </div>
 
-      <!-- Activity Cards -->
+      <!-- Venue Cards -->
       <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <RouterLink v-for="activity in myActivitiesStore.activities" :key="activity.id"
-          :to="{ name: 'my-activity-overview', params: { id: activity.id } }" class="group">
+        <RouterLink v-for="venue in myActivitiesStore.activities" :key="venue.id"
+          :to="{ name: 'my-venue-overview', params: { id: venue.id } }" class="group">
           <Card
             class="h-full rounded-3xl border-none shadow-sm overflow-hidden group-hover:shadow-xl group-hover:-translate-y-1 transition-all duration-300">
             <div class="h-32 relative bg-slate-900">
-              <img v-if="activity.media" :src="activity.media" class="w-full h-full object-cover opacity-60"
-                alt="Activity media" />
+              <img v-if="venue.media" :src="venue.media" class="w-full h-full object-cover opacity-60"
+                alt="Venue media" />
               <div v-else
                 class="w-full h-full bg-linear-to-br from-primary/30 to-slate-950 flex items-center justify-center">
                 <Dumbbell class="h-10 w-10 text-white/20" />
               </div>
               <div class="absolute top-4 left-4">
-                <Badge v-if="activity.category" class="bg-white/20 backdrop-blur-md border-white/30 text-white gap-2">
-                  <CategoryIcon :icon="activity.category.icon" :color="activity.category.color" class="h-3 w-3" />
-                  {{ activity.category.name }}
+                <Badge v-if="venue.category" class="bg-white/20 backdrop-blur-md border-white/30 text-white gap-2">
+                  <CategoryIcon :icon="venue.category.icon" :color="venue.category.color" class="h-3 w-3" />
+                  {{ venue.category.name }}
                 </Badge>
               </div>
             </div>
             <CardHeader class="pb-2">
               <CardTitle
                 class="text font-black group-hover:text-primary transition-colors flex items-center justify-between">
-                {{ activity.name }}
+                {{ venue.name }}
                 <ArrowRight
                   class="h-4 w-4 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all text-primary" />
               </CardTitle>
@@ -102,16 +102,16 @@ onMounted(async () => {
               <div class="flex items-center gap-4 text-muted-foreground">
                 <div class="flex items-center gap-1.5">
                   <Trophy class="h-3.5 w-3.5" />
-                  <span class="text-xs font-bold">{{ activity.tournaments_count || 0 }}</span>
+                  <span class="text-xs font-bold">{{ venue.tournaments_count || 0 }}</span>
                 </div>
                 <div class="flex items-center gap-1.5">
                   <UsersIcon class="h-3.5 w-3.5" />
-                  <span class="text-xs font-bold">{{ activity.managers?.length || 0 }}</span>
+                  <span class="text-xs font-bold">{{ venue.managers?.length || 0 }}</span>
                 </div>
                 <div class="flex items-center gap-1.5 ml-auto">
                   <Calendar class="h-3.5 w-3.5" />
-                  <span class="text-[10px] font-black uppercase">{{ new Date(activity.created_at).getFullYear()
-                    }}</span>
+                  <span class="text-[10px] font-black uppercase">{{ new Date(venue.created_at).getFullYear()
+                  }}</span>
                 </div>
               </div>
             </CardContent>

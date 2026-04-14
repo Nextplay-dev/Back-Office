@@ -1,15 +1,17 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { activityRoutes } from '@/plugins/routes'
+import { venueRoutes } from '@/plugins/routes'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import CategorySelector from '@/components/CategorySelector.vue'
 import { ArrowLeft, Loader2, AlertCircle } from 'lucide-vue-next'
+import MultiUserSelector from '@/components/MultiUserSelector.vue'
+import { useMyVenuesStore } from '@/stores/myVenues'
 
-const myActivitiesStore = useMyActivitiesStore();
+const myVenuesStore = useMyVenuesStore();
 const router = useRouter()
 
 const name = ref('')
@@ -22,26 +24,24 @@ const longitude = ref<string>('')
 const loading = ref(false)
 const error = ref('')
 
-import MultiUserSelector from '@/components/MultiUserSelector.vue'
-import { useMyActivitiesStore } from '@/stores/myActivities'
 
 async function handleSubmit() {
   error.value = ''
   loading.value = true
   try {
-    await activityRoutes.create({
+    await venueRoutes.create({
       name: name.value,
       address: address.value,
-      activity_category_id: categoryId.value,
+      venue_category_id: categoryId.value,
       manager_ids: managerIds.value,
       media: media.value || null,
       latitude: latitude.value ? Number(latitude.value) : null,
       longitude: longitude.value ? Number(longitude.value) : null,
     })
-    myActivitiesStore.fetchActivities(true);
-    router.push({ name: 'admin-activities' })
+    myVenuesStore.fetchVenues(true);
+    router.push({ name: 'admin-venues' })
   } catch (e: any) {
-    error.value = e.response?.data?.message ?? 'Failed to create activity'
+    error.value = e.response?.data?.message ?? 'Failed to create venue'
   } finally {
     loading.value = false
   }
@@ -55,14 +55,14 @@ async function handleSubmit() {
         <ArrowLeft class="h-4 w-4" />
       </Button>
       <div>
-        <h2 class="text-xl font-bold">New Activity</h2>
+        <h2 class="text-xl font-bold">New Venue</h2>
         <p class="text-sm text-muted-foreground">Fill in the details below</p>
       </div>
     </div>
 
     <Card>
       <CardHeader>
-        <CardTitle class="text-base">Activity Details</CardTitle>
+        <CardTitle class="text-base">Venue Details</CardTitle>
       </CardHeader>
       <CardContent>
         <form class="space-y-5" @submit.prevent="handleSubmit">
@@ -112,7 +112,7 @@ async function handleSubmit() {
             <Button type="button" variant="outline" @click="router.back()">Cancel</Button>
             <Button type="submit" :disabled="loading">
               <Loader2 v-if="loading" class="mr-2 h-4 w-4 animate-spin" />
-              Create Activity
+              Create Venue
             </Button>
           </div>
         </form>
