@@ -1,9 +1,11 @@
 <script setup lang="ts">
+import 'vue-sonner/style.css'
 import { onMounted } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 import AppSidebar from './AppSidebar.vue'
 import AppHeader from './AppHeader.vue'
 import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar'
+import { Toaster } from '@/components/ui/sonner'
 
 const authStore = useAuthStore()
 
@@ -23,5 +25,6 @@ onMounted(async () => {
         <RouterView />
       </main>
     </SidebarInset>
+    <Toaster position="top-right" />
   </SidebarProvider>
 </template>

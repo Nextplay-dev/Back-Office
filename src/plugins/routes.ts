@@ -3,6 +3,9 @@ import type { VenueModel } from '@/models/VenueModel'
 import type { CategoryModel } from '@/models/CategoryModel'
 import type { UserModel } from '@/models/UserModel'
 import type { RoleModel, PermissionModel } from '@/models/RoleModel'
+import type { ResourceModel } from '@/models/ResourceModel'
+import type { AvailabilityModel } from '@/models/AvailabilityModel'
+import type { ExceptionModel } from '@/models/ExceptionModel'
 import type { PaginatedModel } from '@/models/PaginatedModel'
 
 export type VenuePayload = {
@@ -33,6 +36,24 @@ export type RolePayload = {
   name: string
   permissions?: number[]
   weight?: number
+}
+
+export type ResourcePayload = {
+  name: string
+  type: string
+  capacity: number
+}
+
+export type AvailabilityPayload = {
+  day_of_week: number
+  start_time: string
+  end_time: string
+}
+
+export type ExceptionPayload = {
+  start_at: string
+  end_at: string
+  type: 'closed' | 'maintenance'
 }
 
 export const authRoutes = {
@@ -122,6 +143,36 @@ export const roleRoutes = {
     apiClient.put<RoleModel>(`/v1/roles/${id}`, payload),
 
   delete: (id: number) => apiClient.delete(`/v1/roles/${id}`),
+}
+
+export const resourceRoutes = {
+  list: (venueId: number) => apiClient.get<ResourceModel[]>(`/v1/venues/${venueId}/resources`),
+  get: (id: number) => apiClient.get<ResourceModel>(`/v1/resources/${id}`),
+  create: (venueId: number, payload: ResourcePayload) =>
+    apiClient.post<ResourceModel>(`/v1/venues/${venueId}/resources`, payload),
+  update: (id: number, payload: Partial<ResourcePayload>) =>
+    apiClient.put<ResourceModel>(`/v1/resources/${id}`, payload),
+  delete: (id: number) => apiClient.delete(`/v1/resources/${id}`),
+}
+
+export const availabilityRoutes = {
+  list: (resourceId: number) =>
+    apiClient.get<AvailabilityModel[]>(`/v1/resources/${resourceId}/availabilities`),
+  create: (resourceId: number, payload: AvailabilityPayload) =>
+    apiClient.post<AvailabilityModel>(`/v1/resources/${resourceId}/availabilities`, payload),
+  update: (id: number, payload: Partial<AvailabilityPayload>) =>
+    apiClient.put<AvailabilityModel>(`/v1/availabilities/${id}`, payload),
+  delete: (id: number) => apiClient.delete(`/v1/availabilities/${id}`),
+}
+
+export const exceptionRoutes = {
+  list: (resourceId: number) =>
+    apiClient.get<ExceptionModel[]>(`/v1/resources/${resourceId}/exceptions`),
+  create: (resourceId: number, payload: ExceptionPayload) =>
+    apiClient.post<ExceptionModel>(`/v1/resources/${resourceId}/exceptions`, payload),
+  update: (id: number, payload: Partial<ExceptionPayload>) =>
+    apiClient.put<ExceptionModel>(`/v1/exceptions/${id}`, payload),
+  delete: (id: number) => apiClient.delete(`/v1/exceptions/${id}`),
 }
 
 export const permissionRoutes = {

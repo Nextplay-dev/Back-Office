@@ -40,7 +40,43 @@ const router = createRouter({
               path: 'venues/:id/overview',
               name: 'my-venue-overview',
               component: () => import('@/views/my/MyVenueOverview.vue'),
-              meta: { permissions: ['venue.view'] },
+              meta: { permissions: ['my-venue.view'] },
+            },
+            {
+              path: 'venues/:id/resources',
+              name: 'my-venue-resources',
+              component: () => import('@/views/my/VenueResources.vue'),
+              meta: { permissions: ['my-venue.view'] },
+            },
+            {
+              path: 'venues/:id/resources/:resourceId',
+              component: () => import('@/views/my/resources/ResourceDetailView.vue'),
+              meta: { permissions: ['my-venue.view'] },
+              children: [
+                {
+                  path: '',
+                  name: 'my-resource-detail',
+                  redirect: { name: 'my-resource-edit' }
+                },
+                {
+                  path: 'edit',
+                  name: 'my-resource-edit',
+                  component: () => import('@/views/my/resources/components/ResourceEdit.vue'),
+                  props: true
+                },
+                {
+                  path: 'availability',
+                  name: 'my-resource-availability',
+                  component: () => import('@/views/my/resources/components/ResourceAvailability.vue'),
+                  props: true
+                },
+                {
+                  path: 'exceptions',
+                  name: 'my-resource-exceptions',
+                  component: () => import('@/views/my/resources/components/ResourceExceptions.vue'),
+                  props: true
+                }
+              ]
             },
           ]
         },

@@ -17,7 +17,7 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from '@/components/ui/sidebar'
-import { ChevronRight } from 'lucide-vue-next'
+import { ChevronRight, LayoutDashboard, Box } from 'lucide-vue-next'
 import CategoryIcon from '../../CategoryIcon.vue'
 
 const route = useRoute()
@@ -32,8 +32,7 @@ onMounted(async () => {
   try {
     await myVenuesStore.fetchVenues()
 
-    // Initial open state based on current route
-    if (route.name === 'my-venue-overview') {
+    if (route.name?.toString().startsWith('my-')) {
       const id = Number(route.params.id)
       if (id) openStates.value = { [id]: true }
     }
@@ -42,9 +41,8 @@ onMounted(async () => {
   }
 })
 
-// Update open state when navigating
 watch(() => route.params.id, (newId) => {
-  if (route.name === 'my-venue-overview' && newId) {
+  if (route.name?.toString().startsWith('my-') && newId) {
     openStates.value = { [Number(newId)]: true }
   }
 })
@@ -72,17 +70,44 @@ watch(() => route.params.id, (newId) => {
                 class="ml-auto h-4 w-4 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90 text-sidebar-foreground/20" />
             </SidebarMenuButton>
           </CollapsibleTrigger>
-          <CollapsibleContent class="pl-6 pt-1">
-            <SidebarMenuSub class="border-l-2 border-primary/10 ml-3">
+          <CollapsibleContent class="pl-2 pt-1">
+            <SidebarMenuSub class="border-l-2 border-primary/10 ml-3 pe-0 me-0">
               <SidebarMenuSubItem>
                 <SidebarMenuSubButton as-child
                   :is-active="isActive('my-venue-overview') && route.params.id == String(venue.id)"
                   class="h-9 px-4 rounded-lg hover:bg-primary/5 transition-all text-xs font-medium">
                   <RouterLink :to="{ name: 'my-venue-overview', params: { id: venue.id } }">
+                    <LayoutDashboard class="h-3.5 w-3.5 mr-2 opacity-50" />
                     <span>{{ $t('components.sidebar.myVenueOverview') }}</span>
                   </RouterLink>
                 </SidebarMenuSubButton>
               </SidebarMenuSubItem>
+
+              <SidebarMenuSubItem>
+                <RouterLink :to="{ name: 'my-venue-resources', params: { id: venue.id } }">
+                  <SidebarMenuSubButton
+                    class="h-10 px-3 rounded-xl hover:bg-primary/5 group-data-[state=open]/collapsible:bg-primary/5 transition-all"
+                    :is-active="isActive('my-venue-resources') && route.params.id == String(venue.id)">
+                    <Box class=" h-3.5 w-3.5 mr-2 opacity-50" />
+                    <span>{{ $t('components.sidebar.myVenueResources') }}</span>
+                  </SidebarMenuSubButton>
+                </RouterLink>
+              </SidebarMenuSubItem>
+
+              <SidebarMenuSub class="border-l-2 border-primary/10 ml-4">
+                <SidebarMenuSubItem v-for="resource in venue.resources" :key="resource.id">
+                  <SidebarMenuSubButton as-child
+                    :is-active="isActive('my-resource-detail') && route.params.id == String(venue.id) && route.params.resourceId == String(resource.id)"
+                    class="h-9 px-4 rounded-lg hover:bg-primary/5 transition-all text-xs font-medium">
+                    <RouterLink :to="{ name: 'my-resource-detail', params: { id: venue.id, resourceId: resource.id } }">
+                      <Box class="h-3.5 w-3.5 mr-2 opacity-50" />
+                      <span>{{ resource.name }}</span>
+                    </RouterLink>
+                  </SidebarMenuSubButton>
+                </SidebarMenuSubItem>
+
+              </SidebarMenuSub>
+
             </SidebarMenuSub>
           </CollapsibleContent>
         </SidebarMenuItem>

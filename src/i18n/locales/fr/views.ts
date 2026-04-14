@@ -195,5 +195,69 @@ export default {
     icon: 'Icône',
     iconHelp: 'Recherchez des icônes parmi Material Design et Ionicons',
     color: 'Couleur',
+  },
+  myResources: {
+    list: {
+      title: 'Ressources',
+      subtitle: 'Gérez les actifs physiques comme les terrains, les pistes ou les salles.',
+      new: 'Nouvelle Ressource',
+      noResources: 'Aucune ressource pour le moment',
+      noResourcesDesc: 'Commencez par ajouter votre première ressource pour permettre les réservations.',
+      addFirstValue: 'Ajouter une première ressource',
+      table: {
+        name: 'Nom',
+        type: 'Type',
+        capacity: 'Capacité',
+        actions: 'Actions',
+      },
+      delete: {
+        title: 'Êtes-vous sûr ?',
+        description: 'Cela supprimera définitivement la ressource {name} et toutes ses données associées.',
+        confirm: 'Supprimer',
+        cancel: 'Annuler',
+      }
+    },
+    detail: {
+      back: 'Retour aux Ressources',
+      loading: 'Chargement de la ressource...',
+      tabs: {
+        general: 'Général',
+        availability: 'Disponibilité',
+        exceptions: 'Exceptions',
+      },
+      general: {
+        title: 'Détails de la Ressource',
+        name: 'Nom de la Ressource',
+        type: 'Type',
+        capacity: 'Capacité (Joueurs/Créneaux)',
+        save: 'Enregistrer les modifications',
+      },
+      availability: {
+        addWindow: 'Ajouter un créneau',
+        addWindowDesc: 'Horaires pour {day}.',
+        startTime: 'Heure de début',
+        endTime: 'Heure de fin',
+        add: 'AJOUTER',
+        removeWindow: 'Créneau supprimé',
+        success: 'Disponibilité ajoutée avec succès',
+      },
+      exceptions: {
+        addClosure: 'Ajouter une fermeture',
+        addException: 'Ajouter une exception',
+        addExceptionDesc: 'Bloquer les réservations pour cette ressource.',
+        noExceptions: 'Aucune exception active',
+        noExceptionsDesc: 'Cette ressource fonctionne normalement selon son planning hebdomadaire récurrent.',
+        type: 'Type',
+        types: {
+          closed: 'Fermeture Publique',
+          maintenance: 'Maintenance Interne',
+        },
+        start: 'Début',
+        end: 'Fin',
+        apply: 'Appliquer le blocage',
+        success: 'Exception ajoutée avec succès',
+        removed: 'Exception supprimée',
+      }
+    }
   }
 }

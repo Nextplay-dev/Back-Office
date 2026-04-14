@@ -195,5 +195,69 @@ export default {
     icon: 'Icon',
     iconHelp: 'Search for icons from Material Design and Ionicons',
     color: 'Color',
+  },
+  myResources: {
+    list: {
+      title: 'Resources',
+      subtitle: 'Manage physical assets like courts, lanes, or rooms.',
+      new: 'New Resource',
+      noResources: 'No resources yet',
+      noResourcesDesc: 'Start by adding your first resource to enable bookings.',
+      addFirstValue: 'Add first resource',
+      table: {
+        name: 'Name',
+        type: 'Type',
+        capacity: 'Capacity',
+        actions: 'Actions',
+      },
+      delete: {
+        title: 'Are you sure?',
+        description: 'This will permanently delete the resource {name} and all its associated data.',
+        confirm: 'Delete',
+        cancel: 'Cancel',
+      }
+    },
+    detail: {
+      back: 'Back to Resources',
+      loading: 'Loading resource...',
+      tabs: {
+        general: 'General',
+        availability: 'Availability',
+        exceptions: 'Exceptions',
+      },
+      general: {
+        title: 'Resource Details',
+        name: 'Resource Name',
+        type: 'Type',
+        capacity: 'Capacity (Players/Slots)',
+        save: 'Save Changes',
+      },
+      availability: {
+        addWindow: 'Add Window',
+        addWindowDesc: 'Hours for {day}.',
+        startTime: 'Start Time',
+        endTime: 'End Time',
+        add: 'ADD',
+        removeWindow: 'Window removed',
+        success: 'Availability added successfully',
+      },
+      exceptions: {
+        addClosure: 'Add Closure',
+        addException: 'Add Exception',
+        addExceptionDesc: 'Block bookings for this resource.',
+        noExceptions: 'No active exceptions',
+        noExceptionsDesc: 'This resource is operating normally according to its recurring weekly schedule.',
+        type: 'Type',
+        types: {
+          closed: 'Public Closure',
+          maintenance: 'Internal Maintenance',
+        },
+        start: 'Start',
+        end: 'End',
+        apply: 'Apply Block',
+        success: 'Exception added successfully',
+        removed: 'Exception removed',
+      }
+    }
   }
 }

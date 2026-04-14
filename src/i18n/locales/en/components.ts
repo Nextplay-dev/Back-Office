@@ -9,6 +9,9 @@ export default {
     roles: 'Roles',
     myVenues: 'My Venues',
     myVenueOverview: 'Overview',
+    myVenueResources: 'Resources',
+    myVenueAvailabilities: 'Availability',
+    myVenueExceptions: 'Exceptions',
   },
   header: {
     backOffice: 'Back Office',

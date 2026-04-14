@@ -29,6 +29,7 @@ const pageTitle = computed(() => {
 })
 
 function setLanguage(lang: 'en' | 'fr') {
+  localStorage.setItem('lang', lang)
   locale.value = lang
 }
 </script>

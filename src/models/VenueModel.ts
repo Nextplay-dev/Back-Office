@@ -1,4 +1,5 @@
 import type { CategoryModel } from './CategoryModel'
+import type { ResourceModel } from './ResourceModel'
 import type { UserModel } from './UserModel'
 
 export interface VenueModel {
@@ -10,6 +11,7 @@ export interface VenueModel {
   category_id: number | null
   category: CategoryModel | null
   managers?: UserModel[]
+  resources?: ResourceModel[]
   latitude: number | null
   longitude: number | null
   created_at: string
