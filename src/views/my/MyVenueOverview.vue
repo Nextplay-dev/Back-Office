@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import { myVenueRoutes } from '@/plugins/routes'
+import { venueRoutes } from '@/plugins/routes'
 import type { VenueModel } from '@/models/VenueModel'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -27,7 +27,7 @@ const loading = ref(true)
 async function fetchVenue(id: number) {
   loading.value = true
   try {
-    const { data } = await myVenueRoutes.get(id)
+    const { data } = await venueRoutes.get(id)
     venue.value = data
   } catch (e) {
     console.error('Failed to fetch venue overview', e)
@@ -66,8 +66,7 @@ function openInGoogleMaps() {
 
     <template v-else-if="venue">
       <div class="relative overflow-hidden rounded-3xl bg-slate-900 min-h-[320px] sm:min-h-0 sm:aspect-21/7">
-        <img v-if="venue.media" :src="venue.media" class="w-full h-full object-cover opacity-60"
-          alt="Venue Banner" />
+        <img v-if="venue.media" :src="venue.media" class="w-full h-full object-cover opacity-60" alt="Venue Banner" />
         <div v-else
           class="w-full h-full bg-linear-to-br from-primary/20 via-slate-900 to-slate-900 flex items-center justify-center">
           <Activity class="h-20 w-20 text-white/10" />
@@ -144,7 +143,7 @@ function openInGoogleMaps() {
                   <Calendar class="h-5 w-5" />
                 </div>
                 <span class="text-2xl font-black tracking-tight">{{ new Date(venue.created_at).getFullYear()
-                }}</span>
+                  }}</span>
                 <span class="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">{{
                   $t('views.dashboard.myVenueOverview.stats.founded') }}</span>
               </div>

@@ -67,11 +67,6 @@ export const myVenueRoutes = {
     if (search) params['filter[name]'] = search
     return apiClient.get<PaginatedModel<VenueModel>>('/v1/my-venues', { params })
   },
-
-  get: (id: number) => apiClient.get<VenueModel>(`/v1/my-venues/${id}`),
-
-  update: (id: number, payload: Partial<VenuePayload>) =>
-    apiClient.put<VenueModel>(`/v1/my-venues/${id}`, payload),
 }
 
 export const categoryRoutes = {
