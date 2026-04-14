@@ -9,6 +9,7 @@ export default {
     roles: 'Rôles',
     myVenues: 'Mes Établissements',
     myVenueOverview: 'Présentation',
+    myVenueActivities: 'Activités',
     myVenueResources: 'Ressources',
     myVenueAvailabilities: 'Disponibilité',
     myVenueExceptions: 'Exceptions',

@@ -271,5 +271,40 @@ export default {
         removed: 'Exception removed',
       }
     }
+  },
+  myActivities: {
+    list: {
+      title: 'Activities',
+      subtitle: 'Manage offered activities and their temporal rules.',
+      new: 'New Activity',
+      noActivities: 'No activities yet',
+      noActivitiesDesc: 'Create your first activity to start accepting bookings.',
+      addFirstValue: 'Add first activity',
+      table: {
+        name: 'Name',
+        duration: 'Duration',
+        interval: 'Interval',
+        actions: 'Actions',
+      },
+      delete: {
+        title: 'Are you sure?',
+        description: 'This will permanently delete the activity "{name}". Existing bookings will not be affected but no new ones can be created for this activity.',
+        confirm: 'Delete',
+        cancel: 'Cancel',
+      }
+    },
+    form: {
+      title: 'Activity Configuration',
+      subtitle: 'Define the rules and timing for this activity.',
+      details: 'Details',
+      detailsSubtitle: 'Basic information and identification.',
+      rules: 'Booking Rules',
+      rulesSubtitle: 'Configure temporal constraints and availability.',
+      name: 'Activity Name',
+      namePlaceholder: 'E.g. Padel 60min',
+      duration: 'Duration (minutes)',
+      interval: 'Slot Interval (minutes)',
+      rulesPlaceholder: 'Rules config (JSON)',
+    }
   }
 }

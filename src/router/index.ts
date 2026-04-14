@@ -43,6 +43,26 @@ const router = createRouter({
               meta: { permissions: ['my-venue.view'] },
             },
             {
+              path: 'venues/:id/activities',
+              name: 'my-venue-activities',
+              component: () => import('@/views/my/VenueActivities.vue'),
+              meta: { permissions: ['my-venue.view'] },
+            },
+            {
+              path: 'venues/:id/activities/create',
+              name: 'my-activity-create',
+              component: () => import('@/views/my/ActivityEditView.vue'),
+              meta: { permissions: ['my-venue.view'] },
+              props: true
+            },
+            {
+              path: 'venues/:id/activities/:activityId/edit',
+              name: 'my-activity-edit',
+              component: () => import('@/views/my/ActivityEditView.vue'),
+              meta: { permissions: ['my-venue.view'] },
+              props: true
+            },
+            {
               path: 'venues/:id/resources',
               name: 'my-venue-resources',
               component: () => import('@/views/my/VenueResources.vue'),

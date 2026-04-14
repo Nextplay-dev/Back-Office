@@ -7,6 +7,7 @@ import type { ResourceModel } from '@/models/ResourceModel'
 import type { AvailabilityModel } from '@/models/AvailabilityModel'
 import type { ExceptionModel } from '@/models/ExceptionModel'
 import type { PaginatedModel } from '@/models/PaginatedModel'
+import type { ActivityModel } from '@/models/ActivityModel'
 
 export type VenuePayload = {
   name: string
@@ -54,6 +55,13 @@ export type ExceptionPayload = {
   start_at: string
   end_at: string
   type: 'closed' | 'maintenance'
+}
+
+export type ActivityPayload = {
+  name: string
+  duration_minutes: number
+  slot_interval_minutes: number
+  rules_json?: Record<string, any>
 }
 
 export const authRoutes = {
@@ -174,6 +182,16 @@ export const exceptionRoutes = {
   update: (id: number, payload: Partial<ExceptionPayload>) =>
     apiClient.put<ExceptionModel>(`/v1/exceptions/${id}`, payload),
   delete: (id: number) => apiClient.delete(`/v1/exceptions/${id}`),
+}
+
+export const activityRoutes = {
+  list: (venueId: number) => apiClient.get<ActivityModel[]>(`/v1/venues/${venueId}/activities`),
+  get: (venueId: number, id: number) => apiClient.get<ActivityModel>(`/v1/venues/${venueId}/activities/${id}`),
+  create: (venueId: number, payload: ActivityPayload) =>
+    apiClient.post<ActivityModel>(`/v1/venues/${venueId}/activities`, payload),
+  update: (venueId: number, id: number, payload: Partial<ActivityPayload>) =>
+    apiClient.put<ActivityModel>(`/v1/venues/${venueId}/activities/${id}`, payload),
+  delete: (venueId: number, id: number) => apiClient.delete(`/v1/venues/${venueId}/activities/${id}`),
 }
 
 export const permissionRoutes = {

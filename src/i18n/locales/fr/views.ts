@@ -271,5 +271,40 @@ export default {
         removed: 'Exception supprimée',
       }
     }
+  },
+  myActivities: {
+    list: {
+      title: 'Activités',
+      subtitle: 'Gérez les activités proposées et leurs règles temporelles.',
+      new: 'Nouvelle Activité',
+      noActivities: 'Aucune activité pour le moment',
+      noActivitiesDesc: 'Créez votre première activité pour commencer à accepter des réservations.',
+      addFirstValue: 'Ajouter une première activité',
+      table: {
+        name: 'Nom',
+        duration: 'Durée',
+        interval: 'Intervalle',
+        actions: 'Actions',
+      },
+      delete: {
+        title: 'Êtes-vous sûr ?',
+        description: 'Cela supprimera définitivement l\'activité "{name}". Les réservations existantes ne seront pas affectées mais aucune nouvelle ne pourra être créée pour cette activité.',
+        confirm: 'Supprimer',
+        cancel: 'Annuler',
+      }
+    },
+    form: {
+      title: 'Configuration de l\'Activité',
+      subtitle: 'Définissez les règles et le timing de cette activité.',
+      details: 'Détails',
+      detailsSubtitle: 'Informations de base et identification.',
+      rules: 'Règles de Réservation',
+      rulesSubtitle: 'Configurez les contraintes temporelles et la disponibilité.',
+      name: 'Nom de l\'Activité',
+      namePlaceholder: 'Ex: Padel 60min',
+      duration: 'Durée (minutes)',
+      interval: 'Intervalle de créneau (minutes)',
+      rulesPlaceholder: 'Configuration des règles (JSON)',
+    }
   }
 }

@@ -17,7 +17,7 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from '@/components/ui/sidebar'
-import { ChevronRight, LayoutDashboard, Box } from 'lucide-vue-next'
+import { ChevronRight, LayoutDashboard, Box, Activity } from 'lucide-vue-next'
 import CategoryIcon from '../../CategoryIcon.vue'
 
 const route = useRoute()
@@ -79,6 +79,17 @@ watch(() => route.params.id, (newId) => {
                   <RouterLink :to="{ name: 'my-venue-overview', params: { id: venue.id } }">
                     <LayoutDashboard class="h-3.5 w-3.5 mr-2 opacity-50" />
                     <span>{{ $t('components.sidebar.myVenueOverview') }}</span>
+                  </RouterLink>
+                </SidebarMenuSubButton>
+              </SidebarMenuSubItem>
+
+              <SidebarMenuSubItem>
+                <SidebarMenuSubButton as-child
+                  :is-active="isActive('my-venue-activities') && route.params.id == String(venue.id)"
+                  class="h-9 px-4 rounded-lg hover:bg-primary/5 transition-all text-xs font-medium">
+                  <RouterLink :to="{ name: 'my-venue-activities', params: { id: venue.id } }">
+                    <Activity class="h-3.5 w-3.5 mr-2 opacity-50" />
+                    <span>{{ $t('components.sidebar.myVenueActivities') }}</span>
                   </RouterLink>
                 </SidebarMenuSubButton>
               </SidebarMenuSubItem>
