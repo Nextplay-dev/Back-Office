@@ -13,9 +13,9 @@ export default {
       subtitle: "Voici ce qui se passe sur NextPlay.",
       quickActions: 'Actions Rapides',
       actions: {
-        addActivity: 'Ajouter une Activité',
+        addVenue: 'Ajouter un Établissement',
         addCategory: 'Ajouter une Catégorie',
-        allActivities: 'Toutes les Activités',
+        allVenues: 'Tous les Établissements',
         allUsers: 'Tous les Utilisateurs',
       },
       stats: {
@@ -24,23 +24,23 @@ export default {
     },
     manager: {
       title: 'Tableau de bord Manager',
-      subtitle: 'Surveillez vos activités et tournois assignés.',
+      subtitle: 'Surveillez vos établissements et tournois assignés.',
     },
     my: {
       title: 'Bon retour, {name} !',
-      subtitle: 'Gérez vos activités et restez au courant de vos événements.',
-      assignedActivities: 'Mes Activités Assignées',
-      activitiesCount: '{count} Activités',
-      noActivities: {
-        title: 'Aucune activité pour le moment',
-        description: "Vous n'avez pas encore été assigné comme gestionnaire d'activités.",
+      subtitle: 'Gérez vos établissements et restez au courant de vos événements.',
+      assignedVenues: 'Mes Établissements Assignés',
+      venuesCount: '{count} Établissements',
+      noVenues: {
+        title: 'Aucun établissement pour le moment',
+        description: "Vous n'avez pas encore été assigné comme gestionnaire d'un établissement.",
       }
     },
-    myActivityOverview: {
-      loading: 'Chargement de la présentation de l\'activité...',
+    myVenueOverview: {
+      loading: 'Chargement de la présentation de l\'établissement...',
       navigate: 'Naviguer',
-      about: 'À propos de cette activité',
-      description: 'Bienvenue dans l\'aperçu administratif de {name}. En tant que gestionnaire, vous avez accès à des outils spécialisés pour superviser la participation, les tournois et le contenu de l\'activité.',
+      about: 'À propos de cet établissement',
+      description: 'Bienvenue dans l\'aperçu administratif de {name}. En tant que gestionnaire, vous avez accès à des outils spécialisés pour superviser la participation, les tournois et le contenu de l\'établissement.',
       stats: {
         tournaments: 'Tournois',
         managers: 'Gestionnaires',
@@ -126,14 +126,14 @@ export default {
       }
     }
   },
-  activities: {
-    title: 'Activités',
+  venues: {
+    title: 'Établissements',
     subtitle: '{count} au total',
-    new: 'Nouvelle Activité',
-    edit: 'Modifier l\'Activité',
+    new: 'Nouvel Établissement',
+    edit: 'Modifier l\'Établissement',
     list: {
-      searchPlaceholder: 'Rechercher des activités...',
-      noActivities: 'Aucune activité trouvée.',
+      searchPlaceholder: 'Rechercher des établissements...',
+      noVenues: 'Aucun établissement trouvé.',
       table: {
         id: '#',
         name: 'Nom',
@@ -144,11 +144,15 @@ export default {
         actions: 'Actions',
       },
       delete: {
-        title: 'Supprimer l\'activité ?',
-        description: '"{name}" sera supprimée définitivement.',
+        title: 'Supprimer l\'établissement ?',
+        description: '"{name}" sera supprimé définitivement.',
       },
     },
-    details: 'Détails de l\'activité',
+    details: 'Détails de l\'Établissement',
+    form: {
+      newSubtitle: 'Créer un nouvel établissement',
+      editSubtitle: 'Modifier les détails de l\'établissement',
+    },
     name: 'Nom',
     address: 'Adresse',
     category: 'Catégorie',
@@ -182,10 +186,125 @@ export default {
       },
     },
     details: 'Détails de la catégorie',
+    form: {
+      newSubtitle: 'Créer une nouvelle catégorie',
+      editSubtitle: 'Modifier les détails de la catégorie',
+    },
     name: 'Nom',
     namePlaceholder: 'Ex: Football',
     icon: 'Icône',
     iconHelp: 'Recherchez des icônes parmi Material Design et Ionicons',
     color: 'Couleur',
+  },
+  myResources: {
+    list: {
+      title: 'Ressources',
+      subtitle: 'Gérez les actifs physiques comme les terrains, les pistes ou les salles.',
+      new: 'Nouvelle Ressource',
+      noResources: 'Aucune ressource pour le moment',
+      noResourcesDesc: 'Commencez par ajouter votre première ressource pour permettre les réservations.',
+      addFirstValue: 'Ajouter une première ressource',
+      table: {
+        name: 'Nom',
+        type: 'Type',
+        capacity: 'Capacité',
+        actions: 'Actions',
+      },
+      delete: {
+        title: 'Êtes-vous sûr ?',
+        description: 'Cela supprimera définitivement la ressource {name} et toutes ses données associées.',
+        confirm: 'Supprimer',
+        cancel: 'Annuler',
+      }
+    },
+    detail: {
+      back: 'Retour aux Ressources',
+      loading: 'Chargement de la ressource...',
+      tabs: {
+        general: 'Général',
+        availability: 'Disponibilité',
+        exceptions: 'Exceptions',
+      },
+      dashboard: {
+        title: 'Tableau de bord de la ressource',
+        config: 'Configuration',
+        stats: {
+          capacity: 'Capacité',
+          type: 'Type de ressource',
+        },
+        calendar: {
+          title: 'Calendrier des réservations',
+          today: "Aujourd'hui",
+        }
+      },
+      general: {
+        title: 'Détails de la Ressource',
+        name: 'Nom de la Ressource',
+        type: 'Type',
+        capacity: 'Capacité (Joueurs/Créneaux)',
+        save: 'Enregistrer les modifications',
+      },
+      availability: {
+        addWindow: 'Ajouter un créneau',
+        addWindowDesc: 'Horaires pour {day}.',
+        startTime: 'Heure de début',
+        endTime: 'Heure de fin',
+        add: 'AJOUTER',
+        removeWindow: 'Créneau supprimé',
+        success: 'Disponibilité ajoutée avec succès',
+      },
+      exceptions: {
+        addClosure: 'Ajouter une fermeture',
+        addException: 'Ajouter une exception',
+        addExceptionDesc: 'Bloquer les réservations pour cette ressource.',
+        noExceptions: 'Aucune exception active',
+        noExceptionsDesc: 'Cette ressource fonctionne normalement selon son planning hebdomadaire récurrent.',
+        type: 'Type',
+        types: {
+          closed: 'Fermeture Publique',
+          maintenance: 'Maintenance Interne',
+        },
+        start: 'Début',
+        end: 'Fin',
+        apply: 'Appliquer le blocage',
+        success: 'Exception ajoutée avec succès',
+        removed: 'Exception supprimée',
+      }
+    }
+  },
+  myActivities: {
+    list: {
+      title: 'Activités',
+      subtitle: 'Gérez les activités proposées et leurs règles temporelles.',
+      new: 'Nouvelle Activité',
+      noActivities: 'Aucune activité pour le moment',
+      noActivitiesDesc: 'Créez votre première activité pour commencer à accepter des réservations.',
+      addFirstValue: 'Ajouter une première activité',
+      table: {
+        name: 'Nom',
+        duration: 'Durée',
+        interval: 'Intervalle',
+        actions: 'Actions',
+      },
+      delete: {
+        title: 'Êtes-vous sûr ?',
+        description: 'Cela supprimera définitivement l\'activité "{name}". Les réservations existantes ne seront pas affectées mais aucune nouvelle ne pourra être créée pour cette activité.',
+        confirm: 'Supprimer',
+        cancel: 'Annuler',
+      }
+    },
+    form: {
+      title: 'Configuration de l\'Activité',
+      subtitle: 'Définissez les règles et le timing de cette activité.',
+      details: 'Détails',
+      detailsSubtitle: 'Informations de base et identification.',
+      rules: 'Règles de Réservation',
+      rulesSubtitle: 'Configurez les contraintes temporelles et la disponibilité.',
+      name: 'Nom de l\'Activité',
+      namePlaceholder: 'Ex: Padel 60min',
+      duration: 'Durée (minutes)',
+      interval: 'Intervalle de créneau (minutes)',
+      rulesPlaceholder: 'Configuration des règles (JSON)',
+    }
   }
 }

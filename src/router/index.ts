@@ -34,13 +34,75 @@ const router = createRouter({
               path: 'dashboard',
               name: 'my-dashboard',
               component: () => import('@/views/my/MyDashboardView.vue'),
-              meta: { permissions: ['activity.view'] },
+              meta: { permissions: ['venue.view'] },
             },
             {
-              path: 'activities/:id/overview',
-              name: 'my-activity-overview',
-              component: () => import('@/views/my/MyActivityOverview.vue'),
-              meta: { permissions: ['activity.view'] },
+              path: 'venues/:id/overview',
+              name: 'my-venue-overview',
+              component: () => import('@/views/my/MyVenueOverview.vue'),
+              meta: { permissions: ['my-venue.view'] },
+            },
+            {
+              path: 'venues/:id/activities',
+              name: 'my-venue-activities',
+              component: () => import('@/views/my/VenueActivities.vue'),
+              meta: { permissions: ['my-venue.view'] },
+            },
+            {
+              path: 'venues/:id/activities/create',
+              name: 'my-activity-create',
+              component: () => import('@/views/my/ActivityEditView.vue'),
+              meta: { permissions: ['my-venue.view'] },
+              props: true
+            },
+            {
+              path: 'venues/:id/activities/:activityId/edit',
+              name: 'my-activity-edit',
+              component: () => import('@/views/my/ActivityEditView.vue'),
+              meta: { permissions: ['my-venue.view'] },
+              props: true
+            },
+            {
+              path: 'venues/:id/resources',
+              name: 'my-venue-resources',
+              component: () => import('@/views/my/VenueResources.vue'),
+              meta: { permissions: ['my-venue.view'] },
+            },
+            {
+              path: 'venues/:id/resources/:resourceId',
+              children: [
+                {
+                  path: '',
+                  name: 'my-resource-detail',
+                  component: () => import('@/views/my/resources/ResourceDetailView.vue'),
+                  props: true
+                },
+                {
+                  path: 'config',
+                  component: () => import('@/views/my/resources/ResourceEditView.vue'),
+                  meta: { permissions: ['my-venue.view'] },
+                  children: [
+                    {
+                      path: '',
+                      name: 'my-resource-edit',
+                      component: () => import('@/views/my/resources/components/ResourceEdit.vue'),
+                      props: true
+                    },
+                    {
+                      path: 'availability',
+                      name: 'my-resource-availability',
+                      component: () => import('@/views/my/resources/components/ResourceAvailability.vue'),
+                      props: true
+                    },
+                    {
+                      path: 'exceptions',
+                      name: 'my-resource-exceptions',
+                      component: () => import('@/views/my/resources/components/ResourceExceptions.vue'),
+                      props: true
+                    }
+                  ]
+                }
+              ]
             },
           ]
         },
@@ -54,22 +116,22 @@ const router = createRouter({
               meta: { permissions: ['back-office.administration.dashboard'] },
             },
             {
-              path: 'activities',
-              name: 'admin-activities',
-              component: () => import('@/views/admin/activities/ActivitiesView.vue'),
-              meta: { permissions: ['back-office.administration.activities'] },
+              path: 'venues',
+              name: 'admin-venues',
+              component: () => import('@/views/admin/venues/VenuesView.vue'),
+              meta: { permissions: ['back-office.administration.venues'] },
             },
             {
-              path: 'activities/create',
-              name: 'admin-activities-create',
-              component: () => import('@/views/admin/activities/ActivityCreateView.vue'),
-              meta: { permissions: ['activity.create'] },
+              path: 'venues/create',
+              name: 'admin-venues-create',
+              component: () => import('@/views/admin/venues/VenueCreateView.vue'),
+              meta: { permissions: ['venue.create'] },
             },
             {
-              path: 'activities/:id/edit',
-              name: 'admin-activities-edit',
-              component: () => import('@/views/admin/activities/ActivityEditView.vue'),
-              meta: { permissions: ['activity.view', 'activity.update'] },
+              path: 'venues/:id/edit',
+              name: 'admin-venues-edit',
+              component: () => import('@/views/admin/venues/VenueEditView.vue'),
+              meta: { permissions: ['venue.view', 'venue.update'] },
             },
             {
               path: 'categories',
@@ -81,13 +143,13 @@ const router = createRouter({
               path: 'categories/create',
               name: 'admin-categories-create',
               component: () => import('@/views/admin/categories/CategoryCreateView.vue'),
-              meta: { permissions: ['activity-category.create'] },
+              meta: { permissions: ['category.create'] },
             },
             {
               path: 'categories/:id/edit',
               name: 'admin-categories-edit',
               component: () => import('@/views/admin/categories/CategoryEditView.vue'),
-              meta: { permissions: ['activity-category.update'] },
+              meta: { permissions: ['category.update'] },
             },
             {
               path: 'users',

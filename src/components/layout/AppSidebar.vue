@@ -2,7 +2,7 @@
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import SidebarAdminGroup from './sidebar/SidebarAdminGroup.vue'
-import SidebarMyActivitiesGroup from './sidebar/SidebarMyActivitiesGroup.vue'
+import SidebarMyVenuesGroup from './sidebar/SidebarMyVenuesGroup.vue'
 import {
   Sidebar,
   SidebarContent,
@@ -23,14 +23,14 @@ import {
   ChevronUp,
   Zap,
 } from 'lucide-vue-next'
-import { useMyActivitiesStore } from '@/stores/myActivities'
+import { useMyVenuesStore } from '@/stores/myVenues'
 
 const router = useRouter()
 const authStore = useAuthStore()
-const myActivitiesStore = useMyActivitiesStore()
+const myVenuesStore = useMyVenuesStore()
 
 async function handleLogout() {
-  myActivitiesStore.reset()
+  myVenuesStore.reset()
   await authStore.logout()
   router.push({ name: 'login' })
 }
@@ -53,7 +53,7 @@ async function handleLogout() {
     </RouterLink>
 
     <SidebarContent>
-      <SidebarMyActivitiesGroup />
+      <SidebarMyVenuesGroup />
       <SidebarAdminGroup />
     </SidebarContent>
 
@@ -68,7 +68,8 @@ async function handleLogout() {
                   {{ authStore.user?.name?.charAt(0)?.toUpperCase() ?? 'A' }}
                 </div>
                 <div class="flex flex-col items-start min-w-0">
-                  <span class="truncate text-sm font-medium text-sidebar-foreground">{{ authStore.user?.name ?? $t('components.sidebar.admin') }}</span>
+                  <span class="truncate text-sm font-medium text-sidebar-foreground">{{ authStore.user?.name ??
+                    $t('components.sidebar.admin') }}</span>
                   <span class="truncate text-[11px] text-sidebar-foreground/50">{{ authStore.user?.email ?? '' }}</span>
                 </div>
                 <ChevronUp class="ml-auto h-4 w-4 shrink-0 text-sidebar-foreground/50" />

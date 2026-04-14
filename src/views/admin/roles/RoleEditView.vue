@@ -9,7 +9,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { ArrowLeft, Loader2, Save, Shield } from 'lucide-vue-next'
 import { Badge } from '@/components/ui/badge'
 import PermissionSelector from '@/components/PermissionSelector.vue'
+import { useRoleStore } from '@/stores/roles'
 
+const roleStore = useRoleStore()
 const router = useRouter()
 const route = useRoute()
 
@@ -60,6 +62,7 @@ async function handleSubmit() {
     } else {
       await roleRoutes.create(payload)
     }
+    roleStore.fetchRoles(true);
     router.push({ name: 'admin-roles' })
   } catch (err: any) {
     error.value = err.response?.data?.message || 'Failed to save role'

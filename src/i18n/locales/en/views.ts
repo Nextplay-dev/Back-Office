@@ -13,9 +13,9 @@ export default {
       subtitle: "Here's what's happening on NextPlay.",
       quickActions: 'Quick Actions',
       actions: {
-        addActivity: 'Add Activity',
+        addVenue: 'Add Venue',
         addCategory: 'Add Category',
-        allActivities: 'All Activities',
+        allVenues: 'All Venues',
         allUsers: 'All Users',
       },
       stats: {
@@ -24,23 +24,23 @@ export default {
     },
     manager: {
       title: 'Manager Dashboard',
-      subtitle: 'Oversee your assigned activities and tournaments.',
+      subtitle: 'Oversee your assigned venues and tournaments.',
     },
     my: {
       title: 'Welcome back, {name}!',
-      subtitle: 'Manage your activities and stay on top of your events.',
-      assignedActivities: 'My Assigned Activities',
-      activitiesCount: '{count} Activities',
-      noActivities: {
-        title: 'No activities yet',
-        description: "You haven't been assigned as a manager to any activity.",
+      subtitle: 'Manage your venues and stay on top of your events.',
+      assignedVenues: 'My Assigned Venues',
+      venuesCount: '{count} Venues',
+      noVenues: {
+        title: 'No venues yet',
+        description: "You haven't been assigned as a manager to any venue.",
       }
     },
-    myActivityOverview: {
-      loading: 'Loading activity presentation...',
+    myVenueOverview: {
+      loading: 'Loading venue presentation...',
       navigate: 'Navigate',
-      about: 'About this activity',
-      description: 'Welcome to the administrative overview of {name}. As a manager, you have access to specialized tools to oversee participation, tournaments, and activity content.',
+      about: 'About this venue',
+      description: 'Welcome to the administrative overview of {name}. As a manager, you have access to specialized tools to oversee participation, tournaments, and venue content.',
       stats: {
         tournaments: 'Tournaments',
         managers: 'Managers',
@@ -126,14 +126,14 @@ export default {
       }
     }
   },
-  activities: {
-    title: 'Activities',
+  venues: {
+    title: 'Venues',
     subtitle: '{count} total',
-    new: 'New Activity',
-    edit: 'Edit Activity',
+    new: 'New Venue',
+    edit: 'Edit Venue',
     list: {
-      searchPlaceholder: 'Search activities...',
-      noActivities: 'No activities found.',
+      searchPlaceholder: 'Search venues...',
+      noVenues: 'No venues found.',
       table: {
         id: '#',
         name: 'Name',
@@ -144,14 +144,14 @@ export default {
         actions: 'Actions',
       },
       delete: {
-        title: 'Delete activity?',
+        title: 'Delete venue?',
         description: '"{name}" will be permanently deleted.',
       },
     },
-    details: 'Activity Details',
+    details: 'Venue Details',
     form: {
-      newSubtitle: 'Create a new activity',
-      editSubtitle: 'Edit activity details',
+      newSubtitle: 'Create a new venue',
+      editSubtitle: 'Edit venue details',
     },
     name: 'Name',
     address: 'Address',
@@ -195,5 +195,116 @@ export default {
     icon: 'Icon',
     iconHelp: 'Search for icons from Material Design and Ionicons',
     color: 'Color',
+  },
+  myResources: {
+    list: {
+      title: 'Resources',
+      subtitle: 'Manage physical assets like courts, lanes, or rooms.',
+      new: 'New Resource',
+      noResources: 'No resources yet',
+      noResourcesDesc: 'Start by adding your first resource to enable bookings.',
+      addFirstValue: 'Add first resource',
+      table: {
+        name: 'Name',
+        type: 'Type',
+        capacity: 'Capacity',
+        actions: 'Actions',
+      },
+      delete: {
+        title: 'Are you sure?',
+        description: 'This will permanently delete the resource {name} and all its associated data.',
+        confirm: 'Delete',
+        cancel: 'Cancel',
+      }
+    },
+    detail: {
+      back: 'Back to Resources',
+      loading: 'Loading resource...',
+      tabs: {
+        general: 'General',
+        availability: 'Availability',
+        exceptions: 'Exceptions',
+      },
+      dashboard: {
+        title: 'Resource Dashboard',
+        config: 'Configuration',
+        stats: {
+          capacity: 'Capacity',
+          type: 'Resource Type',
+        },
+        calendar: {
+          title: 'Booking Calendar',
+          today: 'Today',
+        }
+      },
+      general: {
+        title: 'Resource Details',
+        name: 'Resource Name',
+        type: 'Type',
+        capacity: 'Capacity (Players/Slots)',
+        save: 'Save Changes',
+      },
+      availability: {
+        addWindow: 'Add Window',
+        addWindowDesc: 'Hours for {day}.',
+        startTime: 'Start Time',
+        endTime: 'End Time',
+        add: 'ADD',
+        removeWindow: 'Window removed',
+        success: 'Availability added successfully',
+      },
+      exceptions: {
+        addClosure: 'Add Closure',
+        addException: 'Add Exception',
+        addExceptionDesc: 'Block bookings for this resource.',
+        noExceptions: 'No active exceptions',
+        noExceptionsDesc: 'This resource is operating normally according to its recurring weekly schedule.',
+        type: 'Type',
+        types: {
+          closed: 'Public Closure',
+          maintenance: 'Internal Maintenance',
+        },
+        start: 'Start',
+        end: 'End',
+        apply: 'Apply Block',
+        success: 'Exception added successfully',
+        removed: 'Exception removed',
+      }
+    }
+  },
+  myActivities: {
+    list: {
+      title: 'Activities',
+      subtitle: 'Manage offered activities and their temporal rules.',
+      new: 'New Activity',
+      noActivities: 'No activities yet',
+      noActivitiesDesc: 'Create your first activity to start accepting bookings.',
+      addFirstValue: 'Add first activity',
+      table: {
+        name: 'Name',
+        duration: 'Duration',
+        interval: 'Interval',
+        actions: 'Actions',
+      },
+      delete: {
+        title: 'Are you sure?',
+        description: 'This will permanently delete the activity "{name}". Existing bookings will not be affected but no new ones can be created for this activity.',
+        confirm: 'Delete',
+        cancel: 'Cancel',
+      }
+    },
+    form: {
+      title: 'Activity Configuration',
+      subtitle: 'Define the rules and timing for this activity.',
+      details: 'Details',
+      detailsSubtitle: 'Basic information and identification.',
+      rules: 'Booking Rules',
+      rulesSubtitle: 'Configure temporal constraints and availability.',
+      name: 'Activity Name',
+      namePlaceholder: 'E.g. Padel 60min',
+      duration: 'Duration (minutes)',
+      interval: 'Slot Interval (minutes)',
+      rulesPlaceholder: 'Rules config (JSON)',
+    }
   }
 }

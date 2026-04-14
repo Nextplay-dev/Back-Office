@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref, watch, computed } from 'vue'
 import { watchDebounced, useInfiniteScroll } from '@vueuse/core'
-import { activityCategoryRoutes } from '@/plugins/routes'
-import type { ActivityCategoryModel } from '@/models/ActivityCategoryModel'
+import { categoryRoutes } from '@/plugins/routes'
+import type { CategoryModel } from '@/models/CategoryModel'
 import {
   Dialog,
   DialogContent,
@@ -25,8 +25,8 @@ const props = defineProps<{
 const emit = defineEmits(['update:modelValue'])
 
 const searchQuery = ref('')
-const categories = ref<ActivityCategoryModel[]>([])
-const selectedCategory = ref<ActivityCategoryModel | null>(null)
+const categories = ref<CategoryModel[]>([])
+const selectedCategory = ref<CategoryModel | null>(null)
 const page = ref(1)
 const lastPage = ref(1)
 const loading = ref(false)
@@ -44,7 +44,7 @@ async function fetchCategories(reset = false) {
 
   loading.value = true
   try {
-    const { data } = await activityCategoryRoutes.list(page.value, searchQuery.value)
+    const { data } = await categoryRoutes.list(page.value, searchQuery.value)
     if (reset) {
       categories.value = data.data
     } else {
@@ -75,7 +75,7 @@ watch(
     if (newId) {
       if (selectedCategory.value?.id !== newId) {
         try {
-          const { data } = await activityCategoryRoutes.get(newId)
+          const { data } = await categoryRoutes.get(newId)
           selectedCategory.value = data
         } catch {
           selectedCategory.value = null
@@ -93,7 +93,7 @@ const filteredCategories = computed(() => {
   return categories.value.filter((c) => c.id !== props.modelValue)
 })
 
-function selectCategory(cat: ActivityCategoryModel) {
+function selectCategory(cat: CategoryModel) {
   emit('update:modelValue', cat.id)
   isOpen.value = false
 }

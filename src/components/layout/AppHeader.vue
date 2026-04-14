@@ -19,16 +19,17 @@ const { t, locale } = useI18n()
 const pageTitle = computed(() => {
   const name = String(route.name)
   if (name.startsWith('admin-dashboard')) return t('components.sidebar.dashboard')
-  if (name.startsWith('admin-activities')) return t('components.sidebar.activities')
+  if (name.startsWith('admin-venues')) return t('components.sidebar.venues')
   if (name.startsWith('admin-categories')) return t('components.sidebar.categories')
   if (name.startsWith('admin-users')) return t('components.sidebar.users')
   if (name.startsWith('admin-roles')) return t('components.sidebar.roles')
   if (name.startsWith('my-dashboard')) return t('components.sidebar.dashboard')
-  if (name.startsWith('my-activity-overview')) return t('components.sidebar.myActivities')
+  if (name.startsWith('my-venue-overview')) return t('components.sidebar.myVenues')
   return t('components.sidebar.admin')
 })
 
 function setLanguage(lang: 'en' | 'fr') {
+  localStorage.setItem('lang', lang)
   locale.value = lang
 }
 </script>

@@ -3,23 +3,23 @@ export default {
     access: 'Access Back Office',
     administration: {
       dashboard: 'View Admin Dashboard',
-      activities: 'Manage Activities',
+      venues: 'Manage Venues',
       categories: 'Manage Categories',
       users: 'Manage Users',
       roles: 'Manage Roles',
     }
   },
-  activity: {
-    view: 'View Activities',
-    create: 'Create Activity',
-    update: 'Update Activity',
+  venue: {
+    view: 'View Venues',
+    create: 'Create Venue',
+    update: 'Update Venue',
     managers: {
       view: 'View Managers',
       update: 'Update Managers',
     },
-    delete: 'Delete Activity',
+    delete: 'Delete Venue',
   },
-  'activity-category': {
+  category: {
     view: 'View Categories',
     create: 'Create Category',
     update: 'Update Category',
@@ -52,8 +52,8 @@ export default {
     view: 'View My Profile',
     update: 'Update My Profile',
   },
-  'my-activity': {
-    view: 'View My Assigned Activities',
-    update: 'Update My Assigned Activities',
+  'my-venue': {
+    view: 'View My Assigned Venues',
+    update: 'Update My Assigned Venues',
   }
 }

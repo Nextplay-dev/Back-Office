@@ -3,23 +3,23 @@ export default {
     access: 'Accès au Back Office',
     administration: {
       dashboard: 'Voir le Tableau de Bord Admin',
-      activities: 'Gérer les Activités',
+      venues: 'Gérer les Établissements',
       categories: 'Gérer les Catégories',
       users: 'Gérer les Utilisateurs',
       roles: 'Gérer les Rôles',
     }
   },
-  activity: {
-    view: 'Voir les Activités',
-    create: 'Créer une Activité',
-    update: 'Modifier une Activité',
+  venue: {
+    view: 'Voir les Établissements',
+    create: 'Créer un Établissement',
+    update: 'Modifier un Établissement',
     managers: {
-      view: 'Voir les Gestionnaires d\'Activité',
-      update: 'Gérer les Gestionnaires d\'Activité',
+      view: 'Voir les Gestionnaires',
+      update: 'Gérer les Gestionnaires',
     },
-    delete: 'Supprimer une Activité',
+    delete: 'Supprimer un Établissement',
   },
-  'activity-category': {
+  category: {
     view: 'Voir les Catégories',
     create: 'Créer une Catégorie',
     update: 'Modifier une Catégorie',
@@ -52,8 +52,8 @@ export default {
     view: 'Voir Mon Profil',
     update: 'Modifier Mon Profil',
   },
-  'my-activity': {
-    view: 'Voir Mes Activités Assignées',
-    update: 'Modifier Mes Activités Assignées',
+  'my-venue': {
+    view: 'Voir Mes Établissements Assignés',
+    update: 'Modifier Mes Établissements Assignés',
   }
 }

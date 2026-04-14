@@ -1,21 +1,25 @@
 import apiClient from '@/plugins/api'
-import type { ActivityModel } from '@/models/ActivityModel'
-import type { ActivityCategoryModel } from '@/models/ActivityCategoryModel'
+import type { VenueModel } from '@/models/VenueModel'
+import type { CategoryModel } from '@/models/CategoryModel'
 import type { UserModel } from '@/models/UserModel'
 import type { RoleModel, PermissionModel } from '@/models/RoleModel'
+import type { ResourceModel } from '@/models/ResourceModel'
+import type { AvailabilityModel } from '@/models/AvailabilityModel'
+import type { ExceptionModel } from '@/models/ExceptionModel'
 import type { PaginatedModel } from '@/models/PaginatedModel'
+import type { ActivityModel } from '@/models/ActivityModel'
 
-export type ActivityPayload = {
+export type VenuePayload = {
   name: string
   address: string
-  activity_category_id: number | null
+  venue_category_id: number | null
   media: string | null
   latitude?: number | null
   longitude?: number | null
   manager_ids?: number[]
 }
 
-export type ActivityCategoryPayload = {
+export type CategoryPayload = {
   name: string
   icon: string | null
   color: string | null
@@ -35,64 +39,84 @@ export type RolePayload = {
   weight?: number
 }
 
+export type ResourcePayload = {
+  name: string
+  type: string
+  capacity: number
+}
+
+export type AvailabilityPayload = {
+  day_of_week: number
+  start_time: string
+  end_time: string
+}
+
+export type ExceptionPayload = {
+  start_at: string
+  end_at: string
+  type: 'closed' | 'maintenance'
+}
+
+export type ActivityPayload = {
+  name: string
+  duration_minutes: number
+  slot_interval_minutes: number
+  rules_json?: Record<string, any>
+}
+
 export const authRoutes = {
   login: (email: string, password: string) =>
     apiClient.post<{ token: string; user: UserModel }>('/v1/auth/login', { email, password }),
 
-  me: () => apiClient.get<UserModel>('/v1/auth/me'),
+  me: () => apiClient.get<UserModel>('/v1/me'),
 
   logout: () => apiClient.post('/v1/auth/logout'),
 }
 
-export const activityRoutes = {
+export const venueRoutes = {
   list: (page = 1, search?: string) => {
     const params: Record<string, string | number> = { page }
     if (search) params['filter[name]'] = search
-    return apiClient.get<PaginatedModel<ActivityModel>>('/v1/activities', { params })
+    return apiClient.get<PaginatedModel<VenueModel>>('/v1/venues', { params })
   },
 
-  get: (id: number) => apiClient.get<ActivityModel>(`/v1/activities/${id}`),
+  get: (id: number) => apiClient.get<VenueModel>(`/v1/venues/${id}`),
 
-  create: (payload: ActivityPayload) => apiClient.post<ActivityModel>('/v1/activities', payload),
+  create: (payload: VenuePayload) => apiClient.post<VenueModel>('/v1/venues', payload),
 
-  update: (id: number, payload: Partial<ActivityPayload>) =>
-    apiClient.put<ActivityModel>(`/v1/activities/${id}`, payload),
+  update: (id: number, payload: Partial<VenuePayload>) =>
+    apiClient.put<VenueModel>(`/v1/venues/${id}`, payload),
 
-  delete: (id: number) => apiClient.delete(`/v1/activities/${id}`),
+  delete: (id: number) => apiClient.delete(`/v1/venues/${id}`),
 }
 
-export const myActivityRoutes = {
+export const myVenueRoutes = {
   list: (page = 1, search?: string) => {
     const params: Record<string, string | number> = { page }
     if (search) params['filter[name]'] = search
-    return apiClient.get<PaginatedModel<ActivityModel>>('/v1/my-activities', { params })
+    return apiClient.get<PaginatedModel<VenueModel>>('/v1/my-venues', { params })
   },
-
-  get: (id: number) => apiClient.get<ActivityModel>(`/v1/my-activities/${id}`),
-
-  update: (id: number, payload: Partial<ActivityPayload>) =>
-    apiClient.put<ActivityModel>(`/v1/my-activities/${id}`, payload),
 }
 
-export const activityCategoryRoutes = {
+export const categoryRoutes = {
   list: (page = 1, search?: string) => {
     const params: Record<string, string | number> = { page }
     if (search) params['filter[name]'] = search
-    return apiClient.get<PaginatedModel<ActivityCategoryModel>>('/v1/activity-categories', {
+    return apiClient.get<PaginatedModel<CategoryModel>>('/v1/categories', {
       params,
     })
   },
 
   get: (id: number) =>
-    apiClient.get<ActivityCategoryModel>(`/v1/activity-categories/${id}`),
+    apiClient.get<CategoryModel>(`/v1/categories/${id}`),
 
-  create: (payload: ActivityCategoryPayload) =>
-    apiClient.post<ActivityCategoryModel>('/v1/activity-categories', payload),
+  create: (payload: CategoryPayload) =>
+    apiClient.post<CategoryModel>('/v1/categories', payload),
 
-  update: (id: number, payload: Partial<ActivityCategoryPayload>) =>
-    apiClient.put<ActivityCategoryModel>(`/v1/activity-categories/${id}`, payload),
+  update: (id: number, payload: Partial<CategoryPayload>) =>
+    apiClient.put<CategoryModel>(`/v1/categories/${id}`, payload),
 
-  delete: (id: number) => apiClient.delete(`/v1/activity-categories/${id}`),
+  delete: (id: number) => apiClient.delete(`/v1/categories/${id}`),
 }
 
 export const userRoutes = {
@@ -127,6 +151,47 @@ export const roleRoutes = {
     apiClient.put<RoleModel>(`/v1/roles/${id}`, payload),
 
   delete: (id: number) => apiClient.delete(`/v1/roles/${id}`),
+}
+
+export const resourceRoutes = {
+  list: (venueId: number) => apiClient.get<ResourceModel[]>(`/v1/venues/${venueId}/resources`),
+  get: (id: number) => apiClient.get<ResourceModel>(`/v1/resources/${id}`),
+  create: (venueId: number, payload: ResourcePayload) =>
+    apiClient.post<ResourceModel>(`/v1/venues/${venueId}/resources`, payload),
+  update: (id: number, payload: Partial<ResourcePayload>) =>
+    apiClient.put<ResourceModel>(`/v1/resources/${id}`, payload),
+  delete: (id: number) => apiClient.delete(`/v1/resources/${id}`),
+  bookings: (id: number) => apiClient.get<any[]>(`/v1/resources/${id}/bookings`),
+}
+
+export const availabilityRoutes = {
+  list: (resourceId: number) =>
+    apiClient.get<AvailabilityModel[]>(`/v1/resources/${resourceId}/availabilities`),
+  create: (resourceId: number, payload: AvailabilityPayload) =>
+    apiClient.post<AvailabilityModel>(`/v1/resources/${resourceId}/availabilities`, payload),
+  update: (id: number, payload: Partial<AvailabilityPayload>) =>
+    apiClient.put<AvailabilityModel>(`/v1/availabilities/${id}`, payload),
+  delete: (id: number) => apiClient.delete(`/v1/availabilities/${id}`),
+}
+
+export const exceptionRoutes = {
+  list: (resourceId: number) =>
+    apiClient.get<ExceptionModel[]>(`/v1/resources/${resourceId}/exceptions`),
+  create: (resourceId: number, payload: ExceptionPayload) =>
+    apiClient.post<ExceptionModel>(`/v1/resources/${resourceId}/exceptions`, payload),
+  update: (id: number, payload: Partial<ExceptionPayload>) =>
+    apiClient.put<ExceptionModel>(`/v1/exceptions/${id}`, payload),
+  delete: (id: number) => apiClient.delete(`/v1/exceptions/${id}`),
+}
+
+export const activityRoutes = {
+  list: (venueId: number) => apiClient.get<ActivityModel[]>(`/v1/venues/${venueId}/activities`),
+  get: (venueId: number, id: number) => apiClient.get<ActivityModel>(`/v1/venues/${venueId}/activities/${id}`),
+  create: (venueId: number, payload: ActivityPayload) =>
+    apiClient.post<ActivityModel>(`/v1/venues/${venueId}/activities`, payload),
+  update: (venueId: number, id: number, payload: Partial<ActivityPayload>) =>
+    apiClient.put<ActivityModel>(`/v1/venues/${venueId}/activities/${id}`, payload),
+  delete: (venueId: number, id: number) => apiClient.delete(`/v1/venues/${venueId}/activities/${id}`),
 }
 
 export const permissionRoutes = {
