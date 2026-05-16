@@ -52,6 +52,16 @@ export default {
     noResults: 'Aucun utilisateur trouvé pour "{query}"',
     selectedCount: '{count} Gestionnaires Sélectionnés',
   },
+  activitySelector: {
+    noActivities: 'Aucune activité autorisée pour le moment',
+    manageAssignments: 'Gérer les activités autorisées',
+    title: 'Autoriser des activités',
+    description: 'Sélectionnez les activités qui peuvent être jouées sur cette ressource.',
+    searchPlaceholder: 'Rechercher une activité...',
+    loading: 'Recherche d\'activités...',
+    noResults: 'Aucune activité trouvée pour "{query}"',
+    selectedCount: '{count} Activités Sélectionnées',
+  },
   roleSelector: {
     unauthorizedTitle: 'Rôle non autorisé',
     unauthorizedDescription: 'Vous ne pouvez pas attribuer ce rôle car il contient des permissions que vous ne possédez pas.',

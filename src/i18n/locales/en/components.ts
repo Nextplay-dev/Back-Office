@@ -52,6 +52,16 @@ export default {
     noResults: 'No users found for "{query}"',
     selectedCount: '{count} Managers Selected',
   },
+  activitySelector: {
+    noActivities: 'No activities allowed yet',
+    manageAssignments: 'Manage Allowed Activities',
+    title: 'Allow Activities',
+    description: 'Select the activities that can be played on this resource.',
+    searchPlaceholder: 'Search activity name...',
+    loading: 'Searching for activities...',
+    noResults: 'No activities found for "{query}"',
+    selectedCount: '{count} Activities Selected',
+  },
   roleSelector: {
     unauthorizedTitle: 'Unauthorized Role',
     unauthorizedDescription: 'You cannot assign this role because it contains permissions that you do not hold.',

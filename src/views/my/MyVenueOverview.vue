@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted, watch, computed } from 'vue'
 import { useRoute } from 'vue-router'
-import { venueRoutes } from '@/plugins/routes'
 import type { VenueModel } from '@/models/VenueModel'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -10,25 +9,76 @@ import CategoryIcon from '@/components/CategoryIcon.vue'
 import MapDisplay from '@/components/MapDisplay.vue'
 import {
   MapPin,
-  User,
   Calendar,
-  Trophy,
   ExternalLink,
   Loader2,
   Navigation,
-  Image as ImageIcon,
-  Activity
+  Activity,
+  ChevronLeft,
+  ChevronRight
 } from 'lucide-vue-next'
+import { venueRoutes, resourceRoutes } from '@/plugins/routes'
+import dayjs from 'dayjs'
+import { useIntervalFn, useBreakpoints, breakpointsTailwind } from '@vueuse/core'
+import TimeGridCalendar from '@/components/Calendar/TimeGridCalendar.vue'
 
 const route = useRoute()
 const venue = ref<VenueModel | null>(null)
 const loading = ref(true)
+
+const RESOURCE_COLORS = [
+  '#ef4444', '#3b82f6', '#10b981', '#f59e0b',
+  '#8b5cf6', '#ec4899', '#14b8a6', '#f97316'
+]
+const resources = ref<any[]>([])
+const bookings = ref<any[]>([])
+
+const selectedDate = ref(dayjs())
+const breakpoints = useBreakpoints(breakpointsTailwind)
+const isMobile = breakpoints.smaller('md')
+const viewDaysCount = computed(() => isMobile.value ? 1 : 3)
+const viewDays = ref<dayjs.Dayjs[]>([])
+
+function generateDays() {
+  const days = []
+  let current = selectedDate.value.startOf('day')
+
+  for (let i = 0; i < viewDaysCount.value; i++) {
+    days.push(current.add(i, 'day'))
+  }
+  viewDays.value = days
+}
+
+function nextDays() {
+  selectedDate.value = selectedDate.value.add(viewDaysCount.value, 'days')
+  generateDays()
+}
+
+function prevDays() {
+  selectedDate.value = selectedDate.value.subtract(viewDaysCount.value, 'days')
+  generateDays()
+}
 
 async function fetchVenue(id: number) {
   loading.value = true
   try {
     const { data } = await venueRoutes.get(id)
     venue.value = data
+
+    const resData = await resourceRoutes.list(id)
+    resources.value = resData.data.map((r, index) => ({
+      ...r,
+      color: RESOURCE_COLORS[index % RESOURCE_COLORS.length]
+    }))
+
+    const allBookingsPromises = resources.value.map(async (res) => {
+      const bookData = await resourceRoutes.bookings(res.id)
+      return bookData.data.map(b => ({ ...b, resource: res, color: res.color }))
+    })
+
+    const allBookingsArray = await Promise.all(allBookingsPromises)
+    bookings.value = allBookingsArray.flat()
+
   } catch (e) {
     console.error('Failed to fetch venue overview', e)
   } finally {
@@ -38,6 +88,7 @@ async function fetchVenue(id: number) {
 
 onMounted(() => {
   fetchVenue(Number(route.params.id))
+  generateDays()
 })
 
 watch(() => route.params.id, (newId) => {
@@ -45,6 +96,14 @@ watch(() => route.params.id, (newId) => {
     fetchVenue(Number(newId))
   }
 })
+
+watch(() => viewDaysCount.value, () => generateDays())
+
+useIntervalFn(() => {
+  if (route.params.id) {
+    fetchVenue(Number(route.params.id))
+  }
+}, 30000)
 
 function openInGoogleMaps() {
   if (!venue.value) return
@@ -101,51 +160,58 @@ function openInGoogleMaps() {
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card class="md:col-span-2 rounded-3xl border-none shadow-sm bg-linear-to-br from-card to-muted/30">
-          <CardHeader>
+        <Card class="md:col-span-2 rounded-3xl border-none shadow-sm flex flex-col min-h-[600px]">
+          <CardHeader
+            class="flex flex-col md:flex-row md:items-center justify-between pb-4 space-y-4 md:space-y-0 shrink-0">
             <CardTitle class="text-lg font-bold flex items-center gap-2">
-              <ImageIcon class="h-5 w-5 text-primary" />
-              {{ $t('views.dashboard.myVenueOverview.about') }}
+              <Calendar class="h-5 w-5 text-primary" />
+              Venue Schedule
             </CardTitle>
+            <div class="flex flex-col sm:flex-row sm:items-center gap-3">
+              <span class="text-sm font-medium text-muted-foreground bg-muted p-1 px-3 rounded-md text-center">
+                {{ selectedDate.format('MMM D') }} {{ viewDaysCount > 1 ? '- ' + selectedDate.add(viewDaysCount - 1,
+                  'day').format('MMM D, YYYY') : selectedDate.format('YYYY') }}
+              </span>
+              <div class="flex items-center justify-center gap-2">
+                <div class="flex border rounded-md">
+                  <Button variant="ghost" size="icon" class="h-8 w-8 rounded-none border-r" @click="prevDays">
+                    <ChevronLeft class="h-4 w-4" />
+                  </Button>
+                  <Button variant="ghost" size="icon" class="h-8 w-8 rounded-none" @click="nextDays">
+                    <ChevronRight class="h-4 w-4" />
+                  </Button>
+                </div>
+                <Button variant="outline" size="sm" @click="selectedDate = dayjs(); generateDays()">
+                  Today
+                </Button>
+              </div>
+            </div>
           </CardHeader>
-          <CardContent class="space-y-6">
-            <p class="text-muted-foreground leading-relaxed">
-              {{ $t('views.dashboard.myVenueOverview.description', { name: venue.name }) }}
-            </p>
+          <CardContent class="p-6 flex-1 flex flex-col lg:flex-row gap-6 min-h-0 pt-0">
+            <div class="flex-1 min-h-[500px] h-full">
+              <TimeGridCalendar :days="viewDays" :bookings="bookings" :start-hour="6" :end-hour="24"
+                scroll-to-current-hour>
+                <template #booking="{ booking }">
+                  <div class="flex justify-between items-start">
+                    <span class="text-[9px] font-bold leading-none">{{ dayjs(booking.start_at).format('HH:mm') }} - {{
+                      dayjs(booking.end_at).format('HH:mm') }}</span>
+                  </div>
+                  <p class="text-[10px] font-bold truncate mt-1">{{ booking.activity?.name || 'Booking' }}</p>
+                  <div class="flex items-center gap-1 text-[8px] text-muted-foreground truncate opacity-80 mt-0.5">
+                    <span class="font-semibold">{{ booking.resource?.name }}</span>
+                  </div>
+                </template>
+              </TimeGridCalendar>
+            </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <div
-                class="p-4 rounded-2xl bg-background border shadow-sm flex flex-col items-center text-center gap-1 group hover:border-primary/30 transition-colors">
-                <div
-                  class="h-10 w-10 rounded-full bg-primary/10 text-primary flex items-center justify-center mb-1 group-hover:scale-110 transition-transform">
-                  <Trophy class="h-5 w-5" />
-                </div>
-                <span class="text-2xl font-black tracking-tight">{{ venue.tournaments_count }}</span>
-                <span class="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">{{
-                  $t('views.dashboard.myVenueOverview.stats.tournaments') }}</span>
+            <div class="w-full lg:w-48 shrink-0 flex flex-col space-y-3 p-4 bg-muted/20 rounded-xl border">
+              <h3 class="text-xs font-bold uppercase text-muted-foreground tracking-wider mb-2">Resources</h3>
+              <div v-for="res in resources" :key="res.id" class="flex items-center gap-3">
+                <div class="w-3 h-3 rounded-full shrink-0" :style="{ backgroundColor: res.color }"></div>
+                <span class="text-sm font-medium truncate">{{ res.name }}</span>
               </div>
-
-              <div
-                class="p-4 rounded-2xl bg-background border shadow-sm flex flex-col items-center text-center gap-1 group hover:border-primary/30 transition-colors">
-                <div
-                  class="h-10 w-10 rounded-full bg-blue-500/10 text-blue-500 flex items-center justify-center mb-1 group-hover:scale-110 transition-transform">
-                  <User class="h-5 w-5" />
-                </div>
-                <span class="text-2xl font-black tracking-tight">{{ venue.managers?.length || 0 }}</span>
-                <span class="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">{{
-                  $t('views.dashboard.myVenueOverview.stats.managers') }}</span>
-              </div>
-
-              <div
-                class="p-4 rounded-2xl bg-background border shadow-sm flex flex-col items-center text-center gap-1 group hover:border-primary/30 transition-colors">
-                <div
-                  class="h-10 w-10 rounded-full bg-orange-500/10 text-orange-500 flex items-center justify-center mb-1 group-hover:scale-110 transition-transform">
-                  <Calendar class="h-5 w-5" />
-                </div>
-                <span class="text-2xl font-black tracking-tight">{{ new Date(venue.created_at).getFullYear()
-                  }}</span>
-                <span class="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">{{
-                  $t('views.dashboard.myVenueOverview.stats.founded') }}</span>
+              <div v-if="!resources.length" class="text-xs text-muted-foreground italic">
+                No resources found.
               </div>
             </div>
           </CardContent>

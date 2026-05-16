@@ -1,3 +1,4 @@
+import type { ActivityModel } from './ActivityModel'
 import type { VenueModel } from './VenueModel'
 
 export type ResourceModel = {
@@ -9,4 +10,5 @@ export type ResourceModel = {
   created_at: string
   updated_at: string
   venue?: VenueModel
+  activities?: ActivityModel[]
 }

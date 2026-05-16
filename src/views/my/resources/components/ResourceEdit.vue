@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { resourceRoutes } from '@/plugins/routes'
 import type { ResourceModel } from '@/models/ResourceModel'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -10,9 +10,11 @@ import { Loader2, Save } from 'lucide-vue-next'
 import { toast } from 'vue-sonner'
 
 import { useI18n } from 'vue-i18n'
+import MultiActivitySelector from '@/components/MultiActivitySelector.vue'
 
 const props = defineProps<{
   resource: ResourceModel
+  venueId: number
 }>()
 
 const { t } = useI18n()
@@ -20,10 +22,24 @@ const emit = defineEmits(['updated'])
 
 const submitting = ref(false)
 const form = ref({
-  name: props.resource.name,
-  type: props.resource.type,
-  capacity: props.resource.capacity,
+  name: '',
+  type: '',
+  capacity: 1,
+  activity_ids: [] as number[],
 })
+
+watch(
+  () => props.resource,
+  (resource) => {
+    form.value = {
+      name: resource.name,
+      type: resource.type,
+      capacity: resource.capacity,
+      activity_ids: resource.activities?.map(activity => activity.id) ?? [],
+    }
+  },
+  { immediate: true, deep: true },
+)
 
 async function handleSubmit() {
   submitting.value = true
@@ -57,6 +73,20 @@ async function handleSubmit() {
         <div class="space-y-2">
           <Label for="capacity">{{ $t('views.myResources.detail.general.capacity') }} *</Label>
           <Input id="capacity" type="number" v-model="form.capacity" required />
+        </div>
+
+        <div class="space-y-2 pt-2">
+          <div class="space-y-1">
+            <Label>{{ $t('views.myResources.detail.general.activities') }}</Label>
+            <p class="text-xs text-muted-foreground">
+              {{ $t('views.myResources.detail.general.activitiesSubtitle') }}
+            </p>
+          </div>
+          <MultiActivitySelector
+            v-model="form.activity_ids"
+            :venue-id="venueId"
+            :initial-activities="resource.activities"
+          />
         </div>
         
         <div class="flex justify-end pt-2">

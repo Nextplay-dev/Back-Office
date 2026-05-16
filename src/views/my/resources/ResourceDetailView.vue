@@ -177,7 +177,8 @@ useIntervalFn(() => {
             </CardTitle>
             <div class="flex flex-col sm:flex-row sm:items-center gap-3">
               <span class="text-sm font-medium text-muted-foreground bg-muted p-1 px-3 rounded-md text-center">
-                {{ selectedDate.format('MMM D') }} {{ viewDaysCount > 1 ? '- ' + selectedDate.add(viewDaysCount - 1, 'day').format('MMM D, YYYY') : selectedDate.format('YYYY') }}
+                {{ selectedDate.format('MMM D') }} {{ viewDaysCount > 1 ? '- ' + selectedDate.add(viewDaysCount - 1,
+                  'day').format('MMM D, YYYY') : selectedDate.format('YYYY') }}
               </span>
               <div class="flex items-center justify-center gap-2">
                 <div class="flex border rounded-md">

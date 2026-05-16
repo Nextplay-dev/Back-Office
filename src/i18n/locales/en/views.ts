@@ -242,6 +242,8 @@ export default {
         name: 'Resource Name',
         type: 'Type',
         capacity: 'Capacity (Players/Slots)',
+        activities: 'Allowed Activities',
+        activitiesSubtitle: 'Choose which activities can be booked on this resource.',
         save: 'Save Changes',
       },
       availability: {

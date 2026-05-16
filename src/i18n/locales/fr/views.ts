@@ -242,6 +242,8 @@ export default {
         name: 'Nom de la Ressource',
         type: 'Type',
         capacity: 'Capacité (Joueurs/Créneaux)',
+        activities: 'Activités Autorisées',
+        activitiesSubtitle: 'Choisissez quelles activités peuvent être réservées sur cette ressource.',
         save: 'Enregistrer les modifications',
       },
       availability: {

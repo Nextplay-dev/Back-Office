@@ -98,8 +98,9 @@ onMounted(() => {
             :style="{ top: `${(hour - startHour) * hourHeight}px`, height: `${hourHeight}px` }" />
 
           <div v-for="booking in getBookingsForDay(day)" :key="booking.id"
-            class="absolute left-1 right-1 p-2 rounded-lg bg-app-primary/10 text-app-primary border-l-4 border-app-primary shadow-sm z-10 overflow-hidden group hover:z-20 transition-all cursor-pointer"
-            :style="getBookingStyle(booking)" @click="$emit('booking-click', booking)">
+            class="absolute left-1 right-1 p-2 rounded-lg shadow-sm z-10 overflow-hidden group hover:z-20 transition-all cursor-pointer"
+            :class="!booking.color ? 'bg-app-primary/10 text-app-primary border-l-4 border-app-primary' : 'border-l-4'"
+            :style="[getBookingStyle(booking), booking.color ? { borderLeftColor: booking.color, backgroundColor: booking.color + '1A', color: booking.color } : {}]" @click="$emit('booking-click', booking)">
             <slot name="booking" :booking="booking">
               <div class="flex justify-between items-start">
                 <span class="text-[9px] font-bold leading-none">{{ dayjs(booking.start_at).format('HH:mm') }} - {{

@@ -54,7 +54,8 @@ onMounted(fetchResource)
 <template>
   <div class="mx-auto max-w-4xl space-y-6">
     <div class="flex items-center gap-3">
-      <Button variant="ghost" size="sm" @click="router.push({ name: 'my-resource-detail', params: { id: venueId, resourceId } })">
+      <Button variant="ghost" size="sm"
+        @click="router.push({ name: 'my-resource-detail', params: { id: venueId, resourceId } })">
         <ArrowLeft class="h-4 w-4" />
       </Button>
       <div>
@@ -80,7 +81,7 @@ onMounted(fetchResource)
       </TabsList>
 
       <div v-if="resource" class="mt-6">
-        <RouterView :resource="resource" :resource-id="resource.id" @updated="fetchResource" />
+        <RouterView :resource="resource" :resource-id="resource.id" :venue-id="venueId" @updated="fetchResource" />
       </div>
       <div v-else class="flex items-center justify-center p-12">
         <Loader2 class="h-6 w-6 animate-spin" />

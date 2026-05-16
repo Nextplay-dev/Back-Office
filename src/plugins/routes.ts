@@ -43,6 +43,7 @@ export type ResourcePayload = {
   name: string
   type: string
   capacity: number
+  activity_ids?: number[]
 }
 
 export type AvailabilityPayload = {
@@ -185,7 +186,15 @@ export const exceptionRoutes = {
 }
 
 export const activityRoutes = {
-  list: (venueId: number) => apiClient.get<ActivityModel[]>(`/v1/venues/${venueId}/activities`),
+  list: (venueId: number, search?: string) => {
+    const params: Record<string, string> = {}
+
+    if (search) {
+      params['filter[name]'] = search
+    }
+
+    return apiClient.get<ActivityModel[]>(`/v1/venues/${venueId}/activities`, { params })
+  },
   get: (venueId: number, id: number) => apiClient.get<ActivityModel>(`/v1/venues/${venueId}/activities/${id}`),
   create: (venueId: number, payload: ActivityPayload) =>
     apiClient.post<ActivityModel>(`/v1/venues/${venueId}/activities`, payload),
