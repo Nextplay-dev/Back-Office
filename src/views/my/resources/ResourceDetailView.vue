@@ -287,6 +287,33 @@ useIntervalFn(() => {
                   : 'N/A' }}</p>
               </div>
             </div>
+
+            <div v-if="selectedBooking?.guests?.length" class="space-y-3 pt-4 border-t">
+              <p class="text-[10px] font-bold text-muted-foreground uppercase flex items-center gap-1.5">
+                <Users class="h-3 w-3" />
+                Invited Players
+              </p>
+              <div class="grid gap-2">
+                <div v-for="guest in selectedBooking.guests" :key="guest.id" class="flex items-center justify-between bg-muted/20 p-2.5 rounded-xl border border-muted-foreground/10">
+                  <div class="flex items-center gap-2.5">
+                    <div class="w-7 h-7 rounded-full bg-muted flex items-center justify-center shrink-0 border border-muted-foreground/10">
+                      <User class="h-3.5 w-3.5 text-muted-foreground" />
+                    </div>
+                    <div>
+                      <p class="text-xs font-semibold leading-tight text-slate-800 dark:text-slate-100">{{ guest.user?.name || guest.email }}</p>
+                      <p class="text-[9px] text-muted-foreground leading-none mt-0.5">{{ guest.user ? 'Registered Player' : 'Email Invitation' }}</p>
+                    </div>
+                  </div>
+                  <Badge :class="{
+                    'bg-green-100 text-green-700 hover:bg-green-100 dark:bg-green-950 dark:text-green-300 dark:hover:bg-green-950 border-none': guest.status === 'accepted',
+                    'bg-yellow-100 text-yellow-700 hover:bg-yellow-100 dark:bg-yellow-950 dark:text-yellow-300 dark:hover:bg-yellow-950 border-none': guest.status === 'pending',
+                    'bg-red-100 text-red-700 hover:bg-red-100 dark:bg-red-950 dark:text-red-300 dark:hover:bg-red-950 border-none': guest.status === 'rejected',
+                  }" class="h-5 capitalize text-[9px] font-semibold px-2 py-0">
+                    {{ guest.status }}
+                  </Badge>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 

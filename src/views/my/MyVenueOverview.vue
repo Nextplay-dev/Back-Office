@@ -15,8 +15,20 @@ import {
   Navigation,
   Activity,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  Clock,
+  User,
+  CreditCard,
+  Users
 } from 'lucide-vue-next'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from '@/components/ui/dialog'
 import { venueRoutes, resourceRoutes } from '@/plugins/routes'
 import dayjs from 'dayjs'
 import { useIntervalFn, useBreakpoints, breakpointsTailwind } from '@vueuse/core'
@@ -32,6 +44,14 @@ const RESOURCE_COLORS = [
 ]
 const resources = ref<any[]>([])
 const bookings = ref<any[]>([])
+
+const selectedBooking = ref<any>(null)
+const detailDialogOpen = ref(false)
+
+function handleBookingClick(booking: any) {
+  selectedBooking.value = booking
+  detailDialogOpen.value = true
+}
 
 const selectedDate = ref(dayjs())
 const breakpoints = useBreakpoints(breakpointsTailwind)
@@ -190,7 +210,7 @@ function openInGoogleMaps() {
           <CardContent class="p-6 flex-1 flex flex-col lg:flex-row gap-6 min-h-0 pt-0">
             <div class="flex-1 min-h-[500px] h-full">
               <TimeGridCalendar :days="viewDays" :bookings="bookings" :start-hour="6" :end-hour="24"
-                scroll-to-current-hour>
+                scroll-to-current-hour @booking-click="handleBookingClick">
                 <template #booking="{ booking }">
                   <div class="flex justify-between items-start">
                     <span class="text-[9px] font-bold leading-none">{{ dayjs(booking.start_at).format('HH:mm') }} - {{
@@ -233,5 +253,111 @@ function openInGoogleMaps() {
       </div>
 
     </template>
+
+    <Dialog v-model:open="detailDialogOpen">
+      <DialogContent class="sm:max-w-md overflow-hidden p-0 gap-0">
+        <DialogHeader class="p-6 pb-0">
+          <div class="flex items-center gap-2 mb-2">
+            <Badge variant="outline" class="h-6">{{ selectedBooking?.status }}</Badge>
+            <Badge v-if="selectedBooking?.payment?.status === 'paid'"
+              class="bg-green-100 text-green-700 hover:bg-green-100 h-6 border-none">Paid</Badge>
+          </div>
+          <DialogTitle class="text-2xl font-bold flex items-center gap-2">
+            <Activity class="h-5 w-5 text-primary" />
+            {{ selectedBooking?.activity?.name || 'Resource Booking' }}
+          </DialogTitle>
+          <DialogDescription>
+            Booking ID: #{{ selectedBooking?.id }}
+          </DialogDescription>
+        </DialogHeader>
+
+        <div class="p-6 space-y-6">
+          <div class="grid grid-cols-2 gap-6">
+            <div class="space-y-1">
+              <p class="text-[10px] font-bold text-muted-foreground uppercase flex items-center gap-1.5">
+                <Calendar class="h-3 w-3" />
+                Date
+              </p>
+              <p class="text-sm font-semibold">{{ dayjs(selectedBooking?.start_at).format('MMMM D, YYYY') }}</p>
+            </div>
+            <div class="space-y-1">
+              <p class="text-[10px] font-bold text-muted-foreground uppercase flex items-center gap-1.5">
+                <Clock class="h-3 w-3" />
+                Time Slot
+              </p>
+              <p class="text-sm font-semibold">{{ dayjs(selectedBooking?.start_at).format('HH:mm') }} - {{
+                dayjs(selectedBooking?.end_at).format('HH:mm') }}</p>
+            </div>
+          </div>
+
+          <div class="space-y-4 pt-4 border-t">
+            <div class="flex items-start gap-4">
+              <div class="w-8 h-8 rounded-full bg-muted flex items-center justify-center shrink-0">
+                <User class="h-4 w-4 text-muted-foreground" />
+              </div>
+              <div class="space-y-0.5">
+                <p class="text-[10px] font-bold text-muted-foreground uppercase">Customer</p>
+                <p class="text-sm font-semibold">{{ selectedBooking?.user?.name || 'Unknown User' }}</p>
+                <p class="text-xs text-muted-foreground">{{ selectedBooking?.user?.email }}</p>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-4">
+              <div class="w-8 h-8 rounded-full bg-muted flex items-center justify-center shrink-0">
+                <Users class="h-4 w-4 text-muted-foreground" />
+              </div>
+              <div class="space-y-0.5">
+                <p class="text-[10px] font-bold text-muted-foreground uppercase">Capacity Used</p>
+                <p class="text-sm font-semibold">{{ selectedBooking?.units }} Players / Slots</p>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-4">
+              <div class="w-8 h-8 rounded-full bg-muted flex items-center justify-center shrink-0">
+                <CreditCard class="h-4 w-4 text-muted-foreground" />
+              </div>
+              <div class="space-y-0.5">
+                <p class="text-[10px] font-bold text-muted-foreground uppercase">Revenue</p>
+                <p class="text-sm font-semibold">{{ selectedBooking?.payment?.amount ?
+                  `${selectedBooking.payment.amount} €`
+                  : 'N/A' }}</p>
+              </div>
+            </div>
+
+            <div v-if="selectedBooking?.guests?.length" class="space-y-3 pt-4 border-t">
+              <p class="text-[10px] font-bold text-muted-foreground uppercase flex items-center gap-1.5">
+                <Users class="h-3 w-3" />
+                Invited Players
+              </p>
+              <div class="grid gap-2">
+                <div v-for="guest in selectedBooking.guests" :key="guest.id" class="flex items-center justify-between bg-muted/20 p-2.5 rounded-xl border border-muted-foreground/10">
+                  <div class="flex items-center gap-2.5">
+                    <div class="w-7 h-7 rounded-full bg-muted flex items-center justify-center shrink-0 border border-muted-foreground/10">
+                      <User class="h-3.5 w-3.5 text-muted-foreground" />
+                    </div>
+                    <div>
+                      <p class="text-xs font-semibold leading-tight text-slate-800 dark:text-slate-100">{{ guest.user?.name || guest.email }}</p>
+                      <p class="text-[9px] text-muted-foreground leading-none mt-0.5">{{ guest.user ? 'Registered Player' : 'Email Invitation' }}</p>
+                    </div>
+                  </div>
+                  <Badge :class="{
+                    'bg-green-100 text-green-700 hover:bg-green-100 dark:bg-green-950 dark:text-green-300 dark:hover:bg-green-950 border-none': guest.status === 'accepted',
+                    'bg-yellow-100 text-yellow-700 hover:bg-yellow-100 dark:bg-yellow-950 dark:text-yellow-300 dark:hover:bg-yellow-950 border-none': guest.status === 'pending',
+                    'bg-red-100 text-red-700 hover:bg-red-100 dark:bg-red-950 dark:text-red-300 dark:hover:bg-red-950 border-none': guest.status === 'rejected',
+                  }" class="h-5 capitalize text-[9px] font-semibold px-2 py-0">
+                    {{ guest.status }}
+                  </Badge>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <DialogFooter class="p-6 bg-muted/30 border-t">
+          <Button variant="outline" class="w-full sm:w-auto" @click="detailDialogOpen = false">Close</Button>
+          <Button class="w-full sm:w-auto">Manage Booking</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   </div>
 </template>
