@@ -62,5 +62,11 @@ export default {
     create: 'Créer un Signalement de Bug',
     update: 'Modifier un Signalement de Bug',
     delete: 'Supprimer un Signalement de Bug',
+  },
+  'venue-tournament': {
+    view: 'Voir les Tournois de l\'Établissement',
+    create: 'Créer un Tournoi de l\'Établissement',
+    update: 'Modifier un Tournoi de l\'Établissement',
+    delete: 'Supprimer un Tournoi de l\'Établissement',
   }
 }

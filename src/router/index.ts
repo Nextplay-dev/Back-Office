@@ -63,6 +63,27 @@ const router = createRouter({
               props: true
             },
             {
+              path: 'venues/:id/tournaments',
+              name: 'my-venue-tournaments',
+              component: () => import('@/views/my/VenueTournaments.vue'),
+              meta: { permissions: ['venue-tournament.view'] },
+              props: true
+            },
+            {
+              path: 'venues/:id/tournaments/create',
+              name: 'my-venue-tournament-create',
+              component: () => import('@/views/my/VenueTournamentEditView.vue'),
+              meta: { permissions: ['venue-tournament.create'] },
+              props: true
+            },
+            {
+              path: 'venues/:id/tournaments/:tournamentId/edit',
+              name: 'my-venue-tournament-edit',
+              component: () => import('@/views/my/VenueTournamentEditView.vue'),
+              meta: { permissions: ['venue-tournament.update'] },
+              props: true
+            },
+            {
               path: 'venues/:id/resources',
               name: 'my-venue-resources',
               component: () => import('@/views/my/VenueResources.vue'),

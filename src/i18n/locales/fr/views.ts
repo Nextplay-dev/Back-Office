@@ -331,5 +331,43 @@ export default {
         info: 'Page {current} sur {last}',
       }
     }
+  },
+  myTournaments: {
+    list: {
+      title: 'Tournois',
+      subtitle: 'Gérez les tournois et les événements pour cet établissement.',
+      new: 'Nouveau Tournoi',
+      noTournaments: 'Aucun tournoi pour le moment',
+      noTournamentsDesc: 'Créez votre premier tournoi pour commencer.',
+      addFirstValue: 'Ajouter un premier tournoi',
+      table: {
+        picture: 'Image',
+        title: 'Titre',
+        activity: 'Activité',
+        description: 'Description',
+        actions: 'Actions',
+      },
+      delete: {
+        title: 'Êtes-vous sûr ?',
+        description: 'Cela supprimera définitivement le tournoi "{title}".',
+        confirm: 'Supprimer',
+        cancel: 'Annuler',
+      }
+    },
+    form: {
+      title: 'Configuration du Tournoi',
+      subtitle: 'Configurez les détails de votre tournoi.',
+      newSubtitle: 'Créer un nouveau tournoi',
+      editSubtitle: 'Modifier les détails du tournoi',
+      name: 'Titre du Tournoi',
+      namePlaceholder: 'Ex: Summer Padel Cup',
+      picture: 'URL de l\'image',
+      picturePlaceholder: 'https://exemple.com/image.png',
+      activity: 'Activité',
+      activityPlaceholder: 'Sélectionnez une activité',
+      description: 'Description',
+      descriptionPlaceholder: 'Décrivez les règles du tournoi, le calendrier, les prix...',
+      save: 'Enregistrer le Tournoi',
+    }
   }
 }

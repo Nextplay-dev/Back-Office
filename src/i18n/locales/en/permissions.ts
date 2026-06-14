@@ -62,5 +62,11 @@ export default {
     create: 'Create Bug Report',
     update: 'Update Bug Report',
     delete: 'Delete Bug Report',
+  },
+  'venue-tournament': {
+    view: 'View Venue Tournaments',
+    create: 'Create Venue Tournament',
+    update: 'Update Venue Tournament',
+    delete: 'Delete Venue Tournament',
   }
 }

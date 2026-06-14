@@ -331,5 +331,43 @@ export default {
         info: 'Page {current} of {last}',
       }
     }
+  },
+  myTournaments: {
+    list: {
+      title: 'Tournaments',
+      subtitle: 'Manage tournaments and events for this venue.',
+      new: 'New Tournament',
+      noTournaments: 'No tournaments yet',
+      noTournamentsDesc: 'Create your first tournament to get started.',
+      addFirstValue: 'Add first tournament',
+      table: {
+        picture: 'Picture',
+        title: 'Title',
+        activity: 'Activity',
+        description: 'Description',
+        actions: 'Actions',
+      },
+      delete: {
+        title: 'Are you sure?',
+        description: 'This will permanently delete the tournament "{title}".',
+        confirm: 'Delete',
+        cancel: 'Cancel',
+      }
+    },
+    form: {
+      title: 'Tournament Configuration',
+      subtitle: 'Configure your tournament details.',
+      newSubtitle: 'Create a new tournament',
+      editSubtitle: 'Edit tournament details',
+      name: 'Tournament Title',
+      namePlaceholder: 'E.g. Summer Padel Cup',
+      picture: 'Picture URL',
+      picturePlaceholder: 'https://example.com/image.png',
+      activity: 'Activity',
+      activityPlaceholder: 'Select an activity',
+      description: 'Description',
+      descriptionPlaceholder: 'Describe the tournament rules, schedule, prizes...',
+      save: 'Save Tournament',
+    }
   }
 }

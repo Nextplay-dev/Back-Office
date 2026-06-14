@@ -14,6 +14,7 @@ export default {
     myVenueResources: 'Resources',
     myVenueAvailabilities: 'Availability',
     myVenueExceptions: 'Exceptions',
+    myVenueTournaments: 'Tournaments',
   },
   header: {
     backOffice: 'Back Office',

@@ -215,3 +215,15 @@ export const bugReportRoutes = {
   },
   delete: (id: number) => apiClient.delete(`/v1/bug-reports/${id}`),
 }
+
+export const venueTournamentRoutes = {
+  list: (venueId: number, page = 1, search?: string) => {
+    const params: Record<string, string | number> = { page }
+    if (search) params['filter[title]'] = search
+    return apiClient.get<PaginatedModel<any>>(`/v1/venues/${venueId}/tournaments`, { params })
+  },
+  get: (id: number) => apiClient.get<any>(`/v1/venues/tournaments/${id}`),
+  create: (venueId: number, payload: any) => apiClient.post<any>(`/v1/venues/${venueId}/tournaments`, payload),
+  update: (id: number, payload: any) => apiClient.put<any>(`/v1/venues/tournaments/${id}`, payload),
+  delete: (id: number) => apiClient.delete(`/v1/venues/tournaments/${id}`),
+}

@@ -17,11 +17,13 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from '@/components/ui/sidebar'
-import { ChevronRight, LayoutDashboard, Box, Activity } from 'lucide-vue-next'
+import { ChevronRight, LayoutDashboard, Box, Activity, Trophy } from 'lucide-vue-next'
+import { useAuthStore } from '@/stores/auth'
 import CategoryIcon from '../../CategoryIcon.vue'
 
 const route = useRoute()
 const myVenuesStore = useMyVenuesStore()
+const authStore = useAuthStore()
 const openStates = ref<Record<number, boolean>>({})
 
 function isActive(name: string) {
@@ -90,6 +92,17 @@ watch(() => route.params.id, (newId) => {
                   <RouterLink :to="{ name: 'my-venue-activities', params: { id: venue.id } }">
                     <Activity class="h-3.5 w-3.5 mr-2 opacity-50" />
                     <span>{{ $t('components.sidebar.myVenueActivities') }}</span>
+                  </RouterLink>
+                </SidebarMenuSubButton>
+              </SidebarMenuSubItem>
+
+              <SidebarMenuSubItem v-if="authStore.canAccess('venue-tournament.view')">
+                <SidebarMenuSubButton as-child
+                  :is-active="isActive('my-venue-tournaments') && route.params.id == String(venue.id)"
+                  class="h-9 px-4 rounded-lg hover:bg-primary/5 transition-all text-xs font-medium">
+                  <RouterLink :to="{ name: 'my-venue-tournaments', params: { id: venue.id } }">
+                    <Trophy class="h-3.5 w-3.5 mr-2 opacity-50" />
+                    <span>{{ $t('components.sidebar.myVenueTournaments') }}</span>
                   </RouterLink>
                 </SidebarMenuSubButton>
               </SidebarMenuSubItem>
