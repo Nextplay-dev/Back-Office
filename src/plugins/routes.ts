@@ -227,3 +227,12 @@ export const venueTournamentRoutes = {
   update: (id: number, payload: any) => apiClient.put<any>(`/v1/venues/tournaments/${id}`, payload),
   delete: (id: number) => apiClient.delete(`/v1/venues/tournaments/${id}`),
 }
+
+export const bookingRoutes = {
+  create: (payload: { resource_id: number; activity_id: number; start_at: string; end_at: string; units?: number }) =>
+    apiClient.post<any>('/v1/bookings', payload),
+  availableSlots: (venueId: number, activityId: number, from: string, to: string) =>
+    apiClient.get<any[]>(`/v1/venues/${venueId}/activities/${activityId}/available-slots`, {
+      params: { from, to }
+    }),
+}

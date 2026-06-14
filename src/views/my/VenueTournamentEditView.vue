@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import { venueTournamentRoutes, activityRoutes } from '@/plugins/routes'
+import { venueTournamentRoutes, activityRoutes, bookingRoutes } from '@/plugins/routes'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -14,8 +14,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { ArrowLeft, Loader2, Save, Trophy, Image, Activity } from 'lucide-vue-next'
+import { ArrowLeft, Loader2, Save, Trophy, Image, Activity, Calendar } from 'lucide-vue-next'
 import { toast } from 'vue-sonner'
+import dayjs from '@/plugins/dayjs'
 
 const router = useRouter()
 const route = useRoute()
@@ -34,8 +35,16 @@ const form = ref({
   title: '',
   picture_url: '',
   activity_id: '',
-  description: ''
+  description: '',
+  spot_count: 16
 })
+
+const bookingId = ref<number | null>(null)
+const existingBooking = ref<any>(null)
+const selectedDate = ref(dayjs().format('YYYY-MM-DD'))
+const availableSlots = ref<any[]>([])
+const selectedSlotIndex = ref<string>('')
+const loadingSlots = ref(false)
 
 async function loadData() {
   fetching.value = true
@@ -49,8 +58,11 @@ async function loadData() {
         title: data.title,
         picture_url: data.picture_url || '',
         activity_id: data.activity_id ? String(data.activity_id) : '',
-        description: data.description || ''
+        description: data.description || '',
+        spot_count: data.spot_count !== undefined && data.spot_count !== null ? Number(data.spot_count) : 16
       }
+      bookingId.value = data.booking_id
+      existingBooking.value = data.booking
     }
   } catch (err: any) {
     error.value = 'Failed to load data'
@@ -60,16 +72,64 @@ async function loadData() {
   }
 }
 
+async function fetchSlots() {
+  if (!form.value.activity_id || !selectedDate.value) {
+    availableSlots.value = []
+    selectedSlotIndex.value = ''
+    return
+  }
+  loadingSlots.value = true
+  try {
+    const from = dayjs(selectedDate.value).startOf('day').toISOString()
+    const to = dayjs(selectedDate.value).endOf('day').toISOString()
+    const { data } = await bookingRoutes.availableSlots(venueId, Number(form.value.activity_id), from, to)
+    availableSlots.value = data
+    selectedSlotIndex.value = ''
+  } catch (err) {
+    console.error(err)
+  } finally {
+    loadingSlots.value = false
+  }
+}
+
+watch([selectedDate, () => form.value.activity_id], fetchSlots)
+
 async function handleSubmit() {
   loading.value = true
   error.value = null
   errors.value = {}
 
+  let finalBookingId = bookingId.value
+
+  if (selectedSlotIndex.value !== '') {
+    const slot = availableSlots.value[Number(selectedSlotIndex.value)]
+    if (slot && slot.resources_id && slot.resources_id.length > 0) {
+      try {
+        const bookingPayload = {
+          resource_id: slot.resources_id[0],
+          activity_id: Number(form.value.activity_id),
+          start_at: slot.start_at,
+          end_at: slot.end_at,
+          units: 1
+        }
+        const { data: newBooking } = await bookingRoutes.create(bookingPayload)
+        finalBookingId = newBooking.id
+      } catch (err: any) {
+        error.value = err.response?.data?.message || 'Failed to create booking'
+        toast.error(error.value)
+        loading.value = false
+        return
+      }
+    }
+  }
+
   const payload = {
     title: form.value.title,
     picture_url: form.value.picture_url || null,
     activity_id: form.value.activity_id ? Number(form.value.activity_id) : null,
-    description: form.value.description || null
+    description: form.value.description || null,
+    booking_id: finalBookingId,
+    spot_count: form.value.spot_count ? Number(form.value.spot_count) : null
   }
 
   try {
@@ -150,6 +210,55 @@ onMounted(loadData)
                 </SelectContent>
               </Select>
               <p v-if="errors.activity_id" class="text-xs text-destructive">{{ errors.activity_id[0] }}</p>
+            </div>
+
+            <div class="space-y-2">
+              <Label for="spot_count">Total Capacity (Spots)</Label>
+              <Input id="spot_count" type="number" v-model="form.spot_count" placeholder="e.g. 16"
+                min="1" required class="rounded-xl" />
+              <p v-if="errors.spot_count" class="text-xs text-destructive">{{ errors.spot_count[0] }}</p>
+            </div>
+
+            <div v-if="form.activity_id" class="border-t border-border/60 pt-4 space-y-4">
+              <div class="flex items-center gap-2 mb-2">
+                <Calendar class="h-4 w-4 text-primary" />
+                <h3 class="font-bold text-sm">Select Slot Booking</h3>
+              </div>
+
+              <div v-if="existingBooking" class="bg-primary/5 border border-primary/20 rounded-xl p-4 flex flex-col gap-1 text-sm">
+                <span class="font-semibold text-primary">Current Booking Details:</span>
+                <span>Date: {{ dayjs(existingBooking.start_at).format('YYYY-MM-DD') }}</span>
+                <span>Time: {{ dayjs(existingBooking.start_at).format('HH:mm') }} - {{ dayjs(existingBooking.end_at).format('HH:mm') }}</span>
+                <span v-if="existingBooking.resource" class="text-xs text-muted-foreground">Resource: {{ existingBooking.resource.name }}</span>
+                <span class="text-xs text-muted-foreground mt-2 italic">* Select a new slot below to reschedule. Otherwise, the existing booking will be kept.</span>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="space-y-2">
+                  <Label for="booking_date">Booking Date</Label>
+                  <Input id="booking_date" type="date" v-model="selectedDate" class="rounded-xl" />
+                </div>
+
+                <div class="space-y-2">
+                  <Label for="booking_slot">Available Time Slots</Label>
+                  <div v-if="loadingSlots" class="flex items-center h-10 px-3 text-sm text-muted-foreground">
+                    <Loader2 class="h-4 w-4 animate-spin mr-2" /> Loading slots...
+                  </div>
+                  <div v-else-if="availableSlots.length === 0" class="flex items-center h-10 px-3 text-sm text-destructive bg-destructive/10 border border-destructive/20 rounded-xl">
+                    No slots available on this date
+                  </div>
+                  <Select v-else v-model="selectedSlotIndex">
+                    <SelectTrigger id="booking_slot" class="rounded-xl">
+                      <SelectValue placeholder="Choose a slot..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem v-for="(slot, idx) in availableSlots" :key="idx" :value="String(idx)">
+                        {{ dayjs(slot.start_at).format('HH:mm') }} - {{ dayjs(slot.end_at).format('HH:mm') }} ({{ slot.resources_id.length }} available)
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
             </div>
 
             <div class="space-y-2">
