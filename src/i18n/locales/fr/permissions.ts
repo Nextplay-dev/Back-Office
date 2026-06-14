@@ -7,6 +7,7 @@ export default {
       categories: 'Gérer les Catégories',
       users: 'Gérer les Utilisateurs',
       roles: 'Gérer les Rôles',
+      'bug-reports': 'Gérer les Signalements de Bugs',
     }
   },
   venue: {
@@ -55,5 +56,11 @@ export default {
   'my-venue': {
     view: 'Voir Mes Établissements Assignés',
     update: 'Modifier Mes Établissements Assignés',
+  },
+  'bug-report': {
+    view: 'Voir les Signalements de Bugs',
+    create: 'Créer un Signalement de Bug',
+    update: 'Modifier un Signalement de Bug',
+    delete: 'Supprimer un Signalement de Bug',
   }
 }

@@ -7,4 +7,6 @@ export interface UserModel {
   highest_role_weight: number
   created_at: string
   updated_at: string
+  bio?: string
+  picture_profile_url?: string
 }

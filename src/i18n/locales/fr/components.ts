@@ -7,6 +7,7 @@ export default {
     categories: 'Catégories',
     users: 'Utilisateurs',
     roles: 'Rôles',
+    bugReports: 'Signalements de bugs',
     myVenues: 'Mes Établissements',
     myVenueOverview: 'Présentation',
     myVenueActivities: 'Activités',

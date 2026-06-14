@@ -22,7 +22,9 @@ const form = ref({
   email: '',
   password: '',
   password_confirmation: '',
-  roles: [] as string[]
+  roles: [] as string[],
+  bio: '',
+  picture_profile_url: ''
 })
 
 onMounted(() => {
@@ -88,6 +90,19 @@ async function handleSubmit() {
               <Label for="email">{{ $t('views.users.email') }}</Label>
               <Input id="email" type="email" v-model="form.email" :placeholder="$t('common.placeholders.email')" required />
               <p v-if="errors.email" class="text-xs text-destructive">{{ errors.email[0] }}</p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-4">
+            <div class="space-y-2">
+              <Label for="picture_profile_url">Photo de profil (URL)</Label>
+              <Input id="picture_profile_url" v-model="form.picture_profile_url" placeholder="https://example.com/photo.jpg" />
+              <p v-if="errors.picture_profile_url" class="text-xs text-destructive">{{ errors.picture_profile_url[0] }}</p>
+            </div>
+            <div class="space-y-2">
+              <Label for="bio">Bio</Label>
+              <Input id="bio" v-model="form.bio" placeholder="Bio de l'utilisateur" />
+              <p v-if="errors.bio" class="text-xs text-destructive">{{ errors.bio[0] }}</p>
             </div>
           </div>
 

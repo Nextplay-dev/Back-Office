@@ -187,6 +187,12 @@ const router = createRouter({
               component: () => import('@/views/admin/roles/RoleEditView.vue'),
               meta: { permissions: ['role.update'] },
             },
+            {
+              path: 'bug-reports',
+              name: 'admin-bugReports',
+              component: () => import('@/views/admin/bug-reports/BugReportsView.vue'),
+              meta: { permissions: ['back-office.administration.bug-reports'] },
+            },
           ]
         }
       ],

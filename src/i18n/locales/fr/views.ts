@@ -308,5 +308,28 @@ export default {
       interval: 'Intervalle de créneau (minutes)',
       rulesPlaceholder: 'Configuration des règles (JSON)',
     }
+  },
+  bugReports: {
+    title: 'Signalements de bugs',
+    subtitle: '{count} signalements au total',
+    list: {
+      searchPlaceholder: 'Rechercher par message...',
+      noBugReports: 'Aucun signalement de bug trouvé.',
+      table: {
+        id: '#',
+        user: 'Utilisateur',
+        email: 'Email',
+        message: 'Message',
+        date: 'Date de création',
+        actions: 'Actions',
+      },
+      delete: {
+        title: 'Supprimer le signalement ?',
+        description: 'Le signalement de bug de "{name}" sera supprimé définitivement.',
+      },
+      pagination: {
+        info: 'Page {current} sur {last}',
+      }
+    }
   }
 }

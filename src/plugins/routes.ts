@@ -206,3 +206,12 @@ export const activityRoutes = {
 export const permissionRoutes = {
   list: () => apiClient.get<PermissionModel[]>('/v1/permissions'),
 }
+
+export const bugReportRoutes = {
+  list: (page = 1, search?: string) => {
+    const params: Record<string, string | number> = { page }
+    if (search) params['filter[message]'] = search
+    return apiClient.get<PaginatedModel<any>>('/v1/bug-reports', { params })
+  },
+  delete: (id: number) => apiClient.delete(`/v1/bug-reports/${id}`),
+}

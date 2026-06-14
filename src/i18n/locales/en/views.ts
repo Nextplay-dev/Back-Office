@@ -308,5 +308,28 @@ export default {
       interval: 'Slot Interval (minutes)',
       rulesPlaceholder: 'Rules config (JSON)',
     }
+  },
+  bugReports: {
+    title: 'Bug Reports',
+    subtitle: '{count} total',
+    list: {
+      searchPlaceholder: 'Search by message...',
+      noBugReports: 'No bug reports found.',
+      table: {
+        id: '#',
+        user: 'User',
+        email: 'Email',
+        message: 'Message',
+        date: 'Created At',
+        actions: 'Actions',
+      },
+      delete: {
+        title: 'Delete bug report?',
+        description: 'Bug report from "{name}" will be permanently deleted.',
+      },
+      pagination: {
+        info: 'Page {current} of {last}',
+      }
+    }
   }
 }

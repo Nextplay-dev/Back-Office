@@ -28,7 +28,9 @@ const form = ref({
   email: '',
   password: '',
   password_confirmation: '',
-  roles: [] as string[]
+  roles: [] as string[],
+  bio: '',
+  picture_profile_url: ''
 })
 
 const roleWeight = ref<number>(0);
@@ -52,6 +54,8 @@ async function loadUser() {
     form.value.name = data.name
     form.value.email = data.email
     form.value.roles = data.roles || []
+    form.value.bio = data.bio || ''
+    form.value.picture_profile_url = data.picture_profile_url || ''
     roleWeight.value = data.highest_role_weight
   } catch (err: any) {
     error.value = 'Failed to load user data'
@@ -68,7 +72,9 @@ async function handleSubmit() {
   const payload: any = {
     name: form.value.name,
     email: form.value.email,
-    roles: form.value.roles
+    roles: form.value.roles,
+    bio: form.value.bio || null,
+    picture_profile_url: form.value.picture_profile_url || null
   }
 
   if (form.value.password) {
@@ -136,6 +142,21 @@ onMounted(loadUser)
               <Input id="email" type="email" v-model="form.email" :placeholder="$t('common.placeholders.email')"
                 required :readonly="readonly" />
               <p v-if="errors.email" class="text-xs text-destructive">{{ errors.email[0] }}</p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div class="space-y-2">
+              <Label for="picture_profile_url">Photo de profil (URL)</Label>
+              <Input id="picture_profile_url" v-model="form.picture_profile_url" placeholder="https://example.com/photo.jpg"
+                :readonly="readonly" />
+              <p v-if="errors.picture_profile_url" class="text-xs text-destructive">{{ errors.picture_profile_url[0] }}</p>
+            </div>
+            <div class="space-y-2">
+              <Label for="bio">Bio</Label>
+              <Input id="bio" v-model="form.bio" placeholder="Bio de l'utilisateur"
+                :readonly="readonly" />
+              <p v-if="errors.bio" class="text-xs text-destructive">{{ errors.bio[0] }}</p>
             </div>
           </div>
 

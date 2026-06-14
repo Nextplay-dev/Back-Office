@@ -7,6 +7,7 @@ export default {
       categories: 'Manage Categories',
       users: 'Manage Users',
       roles: 'Manage Roles',
+      'bug-reports': 'Manage Bug Reports',
     }
   },
   venue: {
@@ -55,5 +56,11 @@ export default {
   'my-venue': {
     view: 'View My Assigned Venues',
     update: 'Update My Assigned Venues',
+  },
+  'bug-report': {
+    view: 'View Bug Reports',
+    create: 'Create Bug Report',
+    update: 'Update Bug Report',
+    delete: 'Delete Bug Report',
   }
 }
