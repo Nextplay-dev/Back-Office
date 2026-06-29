@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted, watch, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { Button } from '@/components/ui/button'
@@ -31,7 +31,7 @@ const route = useRoute()
 const router = useRouter()
 const authStore = useAuthStore()
 
-const venueId = Number(route.params.id)
+const venueId = computed(() => Number(route.params.id))
 const tournaments = ref<any[]>([])
 const currentPage = ref(1)
 const lastPage = ref(1)
@@ -43,7 +43,7 @@ const deletingId = ref<number | null>(null)
 async function loadTournaments() {
   loading.value = true
   try {
-    const { data } = await venueTournamentRoutes.list(venueId, currentPage.value, search.value || undefined)
+    const { data } = await venueTournamentRoutes.list(venueId.value, currentPage.value, search.value || undefined)
     tournaments.value = data.data
     lastPage.value = data.meta.last_page
     total.value = data.meta.total
@@ -78,7 +78,7 @@ watch(search, () => {
   }, 400)
 })
 
-onMounted(loadTournaments)
+watch(venueId, loadTournaments, { immediate: true })
 </script>
 
 <template>
