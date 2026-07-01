@@ -66,7 +66,7 @@ async function loadData() {
     }
   } catch (err: any) {
     error.value = 'Failed to load data'
-    toast.error(error.value)
+    toast.error(error.value || '')
   } finally {
     fetching.value = false
   }
@@ -116,7 +116,7 @@ async function handleSubmit() {
         finalBookingId = newBooking.id
       } catch (err: any) {
         error.value = err.response?.data?.message || 'Failed to create booking'
-        toast.error(error.value)
+        toast.error(error.value || '')
         loading.value = false
         return
       }
