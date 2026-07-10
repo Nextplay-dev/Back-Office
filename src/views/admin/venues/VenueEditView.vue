@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import CategorySelector from '@/components/CategorySelector.vue'
 import MultiUserSelector from '@/components/MultiUserSelector.vue'
 import { Checkbox } from '@/components/ui/checkbox'
+import { Textarea } from '@/components/ui/textarea'
 import { ArrowLeft, Loader2, AlertCircle } from 'lucide-vue-next'
 import { useAuthStore } from '@/stores/auth'
 import { useMyVenuesStore } from '@/stores/myVenues'
@@ -21,6 +22,7 @@ const venueId = Number(route.params.id)
 
 const name = ref('')
 const address = ref('')
+const description = ref('')
 const media = ref('')
 const categoryId = ref<number | null>(null)
 const managerIds = ref<number[] | undefined>()
@@ -48,6 +50,7 @@ onMounted(async () => {
     const { data: venue } = await venueRoutes.get(venueId)
     name.value = venue.name
     address.value = venue.address
+    description.value = venue.description ?? ''
     media.value = venue.media ?? ''
     categoryId.value = venue.category_id ? Number(venue.category_id) : null
     managerIds.value = venue.managers?.map((m: any) => m.id)
@@ -69,6 +72,7 @@ async function handleSubmit() {
     await venueRoutes.update(venueId, {
       name: name.value,
       address: address.value,
+      description: description.value || null,
       venue_category_id: categoryId.value,
       manager_ids: managerIds.value,
       media: media.value || null,
@@ -117,6 +121,11 @@ async function handleSubmit() {
           <div class="space-y-2">
             <Label for="address">{{ $t('views.venues.address') }} *</Label>
             <Input id="address" v-model="address" required :readonly="readonly" />
+          </div>
+
+          <div class="space-y-2">
+            <Label for="description">{{ $t('views.venues.description') }}</Label>
+            <Textarea id="description" v-model="description" :readonly="readonly" />
           </div>
 
           <div class="space-y-2">

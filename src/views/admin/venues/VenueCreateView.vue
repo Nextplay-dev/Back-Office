@@ -10,6 +10,7 @@ import CategorySelector from '@/components/CategorySelector.vue'
 import { ArrowLeft, Loader2, AlertCircle } from 'lucide-vue-next'
 import MultiUserSelector from '@/components/MultiUserSelector.vue'
 import { Checkbox } from '@/components/ui/checkbox'
+import { Textarea } from '@/components/ui/textarea'
 import { useMyVenuesStore } from '@/stores/myVenues'
 
 const myVenuesStore = useMyVenuesStore();
@@ -17,6 +18,7 @@ const router = useRouter()
 
 const name = ref('')
 const address = ref('')
+const description = ref('')
 const media = ref('')
 const categoryId = ref<number | null>(null)
 const managerIds = ref<number[]>([])
@@ -35,6 +37,7 @@ async function handleSubmit() {
     await venueRoutes.create({
       name: name.value,
       address: address.value,
+      description: description.value || null,
       venue_category_id: categoryId.value,
       manager_ids: managerIds.value,
       media: media.value || null,
@@ -79,6 +82,11 @@ async function handleSubmit() {
           <div class="space-y-2">
             <Label for="address">{{ $t('views.venues.address') }} *</Label>
             <Input id="address" v-model="address" required />
+          </div>
+
+          <div class="space-y-2">
+            <Label for="description">{{ $t('views.venues.description') }}</Label>
+            <Textarea id="description" v-model="description" />
           </div>
 
           <div class="space-y-2">

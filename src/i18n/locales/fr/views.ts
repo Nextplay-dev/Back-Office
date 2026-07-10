@@ -155,6 +155,7 @@ export default {
     },
     name: 'Nom',
     address: 'Adresse',
+    description: 'Description',
     category: 'Catégorie',
     categoryPlaceholder: 'Sélectionnez une catégorie',
     managers: 'Gestionnaires',

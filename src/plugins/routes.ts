@@ -19,6 +19,7 @@ export type VenuePayload = {
   manager_ids?: number[]
   is_virtual?: boolean
   external_booking_url?: string | null
+  description?: string | null
 }
 
 export type CategoryPayload = {

@@ -155,6 +155,7 @@ export default {
     },
     name: 'Name',
     address: 'Address',
+    description: 'Description',
     category: 'Category',
     categoryPlaceholder: 'Select a category',
     managers: 'Managers',

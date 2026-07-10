@@ -17,6 +17,7 @@ export interface VenueModel {
   is_virtual?: boolean
   external_booking_url?: string | null
   external_booking_clicks_count?: number
+  description?: string | null
   created_at: string
   updated_at: string
 }
