@@ -8,6 +8,7 @@ import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import CategorySelector from '@/components/CategorySelector.vue'
 import MultiUserSelector from '@/components/MultiUserSelector.vue'
+import { Checkbox } from '@/components/ui/checkbox'
 import { ArrowLeft, Loader2, AlertCircle } from 'lucide-vue-next'
 import { useAuthStore } from '@/stores/auth'
 import { useMyVenuesStore } from '@/stores/myVenues'
@@ -26,6 +27,9 @@ const managerIds = ref<number[] | undefined>()
 const initialManagers = ref<any[]>([])
 const latitude = ref<string>('')
 const longitude = ref<string>('')
+const isVirtual = ref(false)
+const externalBookingUrl = ref('')
+const externalBookingClicksCount = ref(0)
 const loading = ref(false)
 const saving = ref(false)
 const error = ref('')
@@ -50,6 +54,9 @@ onMounted(async () => {
     initialManagers.value = venue.managers || []
     latitude.value = venue.latitude ? String(venue.latitude) : ''
     longitude.value = venue.longitude ? String(venue.longitude) : ''
+    isVirtual.value = venue.is_virtual ?? false
+    externalBookingUrl.value = venue.external_booking_url ?? ''
+    externalBookingClicksCount.value = venue.external_booking_clicks_count ?? 0
   } finally {
     loading.value = false
   }
@@ -67,6 +74,8 @@ async function handleSubmit() {
       media: media.value || null,
       latitude: latitude.value ? Number(latitude.value) : null,
       longitude: longitude.value ? Number(longitude.value) : null,
+      is_virtual: isVirtual.value,
+      external_booking_url: isVirtual.value ? (externalBookingUrl.value || null) : null,
     })
     myVenuesStore.fetchVenues(true);
     router.push({ name: 'admin-venues' })
@@ -125,6 +134,23 @@ async function handleSubmit() {
             <Label for="media">{{ $t('views.venues.media') }}</Label>
             <Input id="media" v-model="media" type="url" :placeholder="$t('views.venues.mediaPlaceholder')"
               :readonly="readonly" />
+          </div>
+
+          <div class="flex items-center space-x-2 pt-2">
+            <Checkbox id="is_virtual" :checked="isVirtual" @update:checked="isVirtual = ($event === true)" :model-value="isVirtual" @update:model-value="isVirtual = ($event === true)" :disabled="readonly" />
+            <Label for="is_virtual" class="cursor-pointer">{{ $t('views.venues.isVirtual') }}</Label>
+          </div>
+
+          <div v-if="isVirtual" class="space-y-2">
+            <Label for="external_booking_url">{{ $t('views.venues.externalBookingUrl') }}</Label>
+            <Input id="external_booking_url" v-model="externalBookingUrl" type="url" placeholder="https://…" :readonly="readonly" required />
+          </div>
+
+          <div v-if="isVirtual" class="space-y-2">
+            <Label>{{ $t('views.venues.externalBookingClicks') }}</Label>
+            <div class="text-sm font-semibold py-2 px-3 bg-muted/40 border border-border/60 rounded-lg inline-block">
+              {{ externalBookingClicksCount }} clicks
+            </div>
           </div>
 
           <div class="grid grid-cols-2 gap-4">

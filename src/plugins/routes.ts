@@ -17,6 +17,8 @@ export type VenuePayload = {
   latitude?: number | null
   longitude?: number | null
   manager_ids?: number[]
+  is_virtual?: boolean
+  external_booking_url?: string | null
 }
 
 export type CategoryPayload = {
@@ -235,4 +237,12 @@ export const bookingRoutes = {
     apiClient.get<any[]>(`/v1/venues/${venueId}/activities/${activityId}/available-slots`, {
       params: { from, to }
     }),
+}
+
+export const analyticsRoutes = {
+  getOverview: (page = 1, action?: string) => {
+    const params: Record<string, string | number> = { page }
+    if (action) params['action'] = action
+    return apiClient.get<any>('/v1/analytics', { params })
+  },
 }

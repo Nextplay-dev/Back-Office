@@ -8,6 +8,7 @@ export default {
     users: 'Users',
     roles: 'Roles',
     bugReports: 'Bug Reports',
+    analytics: 'Analytics',
     myVenues: 'My Venues',
     myVenueOverview: 'Overview',
     myVenueActivities: 'Activities',

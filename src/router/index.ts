@@ -214,6 +214,12 @@ const router = createRouter({
               component: () => import('@/views/admin/bug-reports/BugReportsView.vue'),
               meta: { permissions: ['back-office.administration.bug-reports'] },
             },
+            {
+              path: 'analytics',
+              name: 'admin-analytics',
+              component: () => import('@/views/admin/analytics/AnalyticsView.vue'),
+              meta: { permissions: ['back-office.administration.analytics'] },
+            },
           ]
         }
       ],

@@ -14,6 +14,9 @@ export interface VenueModel {
   resources?: ResourceModel[]
   latitude: number | null
   longitude: number | null
+  is_virtual?: boolean
+  external_booking_url?: string | null
+  external_booking_clicks_count?: number
   created_at: string
   updated_at: string
 }

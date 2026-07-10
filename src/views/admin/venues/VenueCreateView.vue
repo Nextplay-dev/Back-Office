@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import CategorySelector from '@/components/CategorySelector.vue'
 import { ArrowLeft, Loader2, AlertCircle } from 'lucide-vue-next'
 import MultiUserSelector from '@/components/MultiUserSelector.vue'
+import { Checkbox } from '@/components/ui/checkbox'
 import { useMyVenuesStore } from '@/stores/myVenues'
 
 const myVenuesStore = useMyVenuesStore();
@@ -21,6 +22,8 @@ const categoryId = ref<number | null>(null)
 const managerIds = ref<number[]>([])
 const latitude = ref<string>('')
 const longitude = ref<string>('')
+const isVirtual = ref(false)
+const externalBookingUrl = ref('')
 const loading = ref(false)
 const error = ref('')
 
@@ -37,6 +40,8 @@ async function handleSubmit() {
       media: media.value || null,
       latitude: latitude.value ? Number(latitude.value) : null,
       longitude: longitude.value ? Number(longitude.value) : null,
+      is_virtual: isVirtual.value,
+      external_booking_url: isVirtual.value ? (externalBookingUrl.value || null) : null,
     })
     myVenuesStore.fetchVenues(true);
     router.push({ name: 'admin-venues' })
@@ -55,50 +60,60 @@ async function handleSubmit() {
         <ArrowLeft class="h-4 w-4" />
       </Button>
       <div>
-        <h2 class="text-xl font-bold">New Venue</h2>
-        <p class="text-sm text-muted-foreground">Fill in the details below</p>
+        <h2 class="text-xl font-bold">{{ $t('views.venues.new') }}</h2>
+        <p class="text-sm text-muted-foreground">{{ $t('views.venues.form.newSubtitle') }}</p>
       </div>
     </div>
 
     <Card>
       <CardHeader>
-        <CardTitle class="text-base">Venue Details</CardTitle>
+        <CardTitle class="text-base">{{ $t('views.venues.details') }}</CardTitle>
       </CardHeader>
       <CardContent>
         <form class="space-y-5" @submit.prevent="handleSubmit">
           <div class="space-y-2">
-            <Label for="name">Name *</Label>
-            <Input id="name" v-model="name" placeholder="e.g. Stade Jean-Bouin" required />
+            <Label for="name">{{ $t('views.venues.name') }} *</Label>
+            <Input id="name" v-model="name" required />
           </div>
 
           <div class="space-y-2">
-            <Label for="address">Address *</Label>
-            <Input id="address" v-model="address" placeholder="e.g. 26 Av. du Général Sarrail, Paris" required />
+            <Label for="address">{{ $t('views.venues.address') }} *</Label>
+            <Input id="address" v-model="address" required />
           </div>
 
           <div class="space-y-2">
-            <Label for="category">Category</Label>
-            <CategorySelector v-model="categoryId" placeholder="Select a category" />
+            <Label for="category">{{ $t('views.venues.category') }}</Label>
+            <CategorySelector v-model="categoryId" :placeholder="$t('views.venues.categoryPlaceholder')" />
           </div>
 
           <div class="space-y-2">
-            <Label>Managers</Label>
+            <Label>{{ $t('views.venues.managers') }}</Label>
             <MultiUserSelector v-model="managerIds" />
           </div>
 
           <div class="space-y-2">
-            <Label for="media">Media URL</Label>
-            <Input id="media" v-model="media" type="url" placeholder="https://…" />
+            <Label for="media">{{ $t('views.venues.media') }}</Label>
+            <Input id="media" v-model="media" type="url" :placeholder="$t('views.venues.mediaPlaceholder')" />
+          </div>
+
+          <div class="flex items-center space-x-2 pt-2">
+            <Checkbox id="is_virtual" :checked="isVirtual" @update:checked="isVirtual = ($event === true)" :model-value="isVirtual" @update:model-value="isVirtual = ($event === true)" />
+            <Label for="is_virtual" class="cursor-pointer">{{ $t('views.venues.isVirtual') }}</Label>
+          </div>
+
+          <div v-if="isVirtual" class="space-y-2">
+            <Label for="external_booking_url">{{ $t('views.venues.externalBookingUrl') }}</Label>
+            <Input id="external_booking_url" v-model="externalBookingUrl" type="url" placeholder="https://…" required />
           </div>
 
           <div class="grid grid-cols-2 gap-4">
             <div class="space-y-2">
-              <Label for="latitude">Latitude</Label>
-              <Input id="latitude" v-model="latitude" type="number" step="any" placeholder="e.g. 48.8566" />
+              <Label for="latitude">{{ $t('views.venues.latitude') }}</Label>
+              <Input id="latitude" v-model="latitude" type="number" step="any" :placeholder="$t('views.venues.latitudePlaceholder')" />
             </div>
             <div class="space-y-2">
-              <Label for="longitude">Longitude</Label>
-              <Input id="longitude" v-model="longitude" type="number" step="any" placeholder="e.g. 2.3522" />
+              <Label for="longitude">{{ $t('views.venues.longitude') }}</Label>
+              <Input id="longitude" v-model="longitude" type="number" step="any" :placeholder="$t('views.venues.longitudePlaceholder')" />
             </div>
           </div>
 
@@ -109,10 +124,10 @@ async function handleSubmit() {
           </div>
 
           <div class="flex justify-end gap-3 pt-2">
-            <Button type="button" variant="outline" @click="router.back()">Cancel</Button>
+            <Button type="button" variant="outline" @click="router.back()">{{ $t('common.actions.cancel') }}</Button>
             <Button type="submit" :disabled="loading">
               <Loader2 v-if="loading" class="mr-2 h-4 w-4 animate-spin" />
-              Create Venue
+              {{ $t('views.venues.new') }}
             </Button>
           </div>
         </form>

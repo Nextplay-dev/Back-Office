@@ -164,6 +164,9 @@ export default {
     latitudePlaceholder: 'e.g. 48.8566',
     longitude: 'Longitude',
     longitudePlaceholder: 'e.g. 2.3522',
+    isVirtual: 'Virtual Venue (bookings are managed externally)',
+    externalBookingUrl: 'External Booking URL',
+    externalBookingClicks: 'External Booking Clicks',
   },
   categories: {
     title: 'Categories',
@@ -369,5 +372,27 @@ export default {
       descriptionPlaceholder: 'Describe the tournament rules, schedule, prizes...',
       save: 'Save Tournament',
     }
+  },
+  analytics: {
+    title: 'Analytics & Statistics',
+    subtitle: 'Global tracking of user actions and platform usage',
+    totalEvents: 'Total Events',
+    uniqueUsers: 'Unique Active Users',
+    eventDistribution: 'Action Type Distribution',
+    actionTimeline: 'Actions Timeline (Last 30 Days)',
+    venueClicks: 'External Booking Clicks per Venue',
+    venueName: 'Venue',
+    clicksCount: 'Clicks Count',
+    logsTitle: 'Recent Event Logs',
+    filterAll: 'All Actions',
+    table: {
+      user: 'User',
+      action: 'Action',
+      date: 'Date',
+      details: 'Details (Metadata)',
+    },
+    noLogs: 'No event logs found.',
+    detailsTitle: 'Event Metadata',
+    close: 'Close',
   }
 }
