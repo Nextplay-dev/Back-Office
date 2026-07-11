@@ -27,7 +27,6 @@ import {
   CheckCircle,
   XCircle,
   Play,
-  ExternalLink,
   ChevronLeft,
   ChevronRight,
   Eye,
@@ -391,8 +390,7 @@ function getReviewFieldValue(reviewId: number, fieldKey: string, field: any): an
 function collectReviewData(review: any): Record<string, any> {
   const edits = pendingReviewEdits.value[review.id] || {}
   const changed: Record<string, any> = {}
-  for (const [key, field] of Object.entries(review.fields || {})) {
-    const f = field as any
+  for (const key of Object.keys(review.fields || {})) {
     const editedValue = edits[key]
     if (editedValue !== undefined) {
       changed[key] = editedValue
@@ -693,8 +691,8 @@ onUnmounted(() => {
                       <input
                         v-if="field.type === 'text' || field.type === 'url'"
                         :type="field.type"
-                        :value="getReviewFieldValue(review.id, key, field)"
-                        @input="pendingReviewEdits[review.id][key] = ($event.target as HTMLInputElement).value"
+                        :value="getReviewFieldValue(review.id, String(key), field)"
+                        @input="pendingReviewEdits[review.id][String(key)] = ($event.target as HTMLInputElement).value"
                         class="flex h-8 w-full rounded-md border border-input bg-transparent px-3 py-1 text-xs shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
                       />
                       <div v-else-if="field.type === 'category'" class="w-full">
@@ -705,8 +703,8 @@ onUnmounted(() => {
                       </div>
                       <textarea
                         v-else-if="field.type === 'textarea'"
-                        :value="getReviewFieldValue(review.id, key, field)"
-                        @input="pendingReviewEdits[review.id][key] = ($event.target as HTMLTextAreaElement).value"
+                        :value="getReviewFieldValue(review.id, String(key), field)"
+                        @input="pendingReviewEdits[review.id][String(key)] = ($event.target as HTMLTextAreaElement).value"
                         class="flex min-h-[60px] w-full rounded-md border border-input bg-transparent px-3 py-1 text-xs shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
                       />
                       <div
@@ -714,25 +712,25 @@ onUnmounted(() => {
                         class="flex flex-wrap gap-1"
                       >
                         <div
-                          v-for="(tag, ti) in (pendingReviewEdits[review.id]?.[key] ?? field.value)"
+                          v-for="(tag, ti) in (pendingReviewEdits[review.id]?.[String(key)] ?? field.value)"
                           :key="ti"
                           class="inline-flex items-center gap-1 rounded-md border px-2 py-0.5 text-xs"
                         >
                           <input
                             :value="tag"
-                            @input="updateTag(review.id, key, ti, ($event.target as HTMLInputElement).value)"
+                            @input="updateTag(review.id, String(key), Number(ti), ($event.target as HTMLInputElement).value)"
                             class="w-20 bg-transparent border-none outline-none p-0 text-xs"
                           />
                           <button
                             type="button"
                             class="text-muted-foreground hover:text-foreground"
-                            @click="removeTag(review.id, key, ti)"
+                            @click="removeTag(review.id, String(key), Number(ti))"
                           >&times;</button>
                         </div>
                         <button
                           type="button"
                           class="inline-flex items-center rounded-md border border-dashed px-2 py-0.5 text-xs text-muted-foreground hover:text-foreground"
-                          @click="addTag(review.id, key)"
+                          @click="addTag(review.id, String(key))"
                         >+</button>
                       </div>
                       <span v-else class="text-foreground pt-1.5">{{ field.value }}</span>
