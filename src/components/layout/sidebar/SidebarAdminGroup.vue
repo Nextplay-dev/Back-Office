@@ -10,6 +10,7 @@ import {
   Shield,
   Bug,
   BarChart3,
+  Workflow,
 } from 'lucide-vue-next'
 import {
   SidebarGroup,
@@ -31,6 +32,7 @@ const adminNavItems = [
   { title: 'Roles', icon: Shield, name: 'admin-roles', permission: 'back-office.administration.roles' },
   { title: 'Bug Reports', icon: Bug, name: 'admin-bugReports', permission: 'back-office.administration.bug-reports' },
   { title: 'Analytics', icon: BarChart3, name: 'admin-analytics', permission: 'back-office.administration.analytics' },
+  { title: 'Workflows', icon: Workflow, name: 'admin-workflows', permission: 'back-office.administration.workflows' },
 ]
 
 const filteredAdminNavItems = computed(() => {

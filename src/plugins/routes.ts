@@ -9,10 +9,16 @@ import type { ExceptionModel } from '@/models/ExceptionModel'
 import type { PaginatedModel } from '@/models/PaginatedModel'
 import type { ActivityModel } from '@/models/ActivityModel'
 
+export type OpeningHourPayload = {
+  day_of_week: number
+  opens_at: string
+  closes_at: string
+}
+
 export type VenuePayload = {
   name: string
   address: string
-  venue_category_id: number | null
+  category_id: number | null
   media: string | null
   latitude?: number | null
   longitude?: number | null
@@ -20,6 +26,9 @@ export type VenuePayload = {
   is_virtual?: boolean
   external_booking_url?: string | null
   description?: string | null
+  phone?: string | null
+  website?: string | null
+  opening_hours?: OpeningHourPayload[]
 }
 
 export type CategoryPayload = {
@@ -246,4 +255,21 @@ export const analyticsRoutes = {
     if (action) params['action'] = action
     return apiClient.get<any>('/v1/analytics', { params })
   },
+}
+
+export const workflowRoutes = {
+  list: (page = 1) => apiClient.get<any>('/v1/workflows', { params: { page } }),
+  get: (id: number) => apiClient.get<any>(`/v1/workflows/${id}`),
+  available: () => apiClient.get<any[]>('/v1/workflows/available'),
+  pendingReviews: () => apiClient.get<any[]>('/v1/workflows/pending-reviews'),
+  start: (payload: { class: string; params: Record<string, any> }) => apiClient.post<any>('/v1/workflows', payload),
+  signal: (id: number, signal: 'approve' | 'reject', data?: Record<string, any>) => apiClient.post<any>(`/v1/workflows/${id}/signal`, { signal, data }),
+  abort: (id: number) => apiClient.post<any>(`/v1/workflows/${id}/abort`),
+  delete: (id: number) => apiClient.delete(`/v1/workflows/${id}`),
+}
+
+export const locationRoutes = {
+  citiesAutocomplete: (query: string) => apiClient.get<any>('/v1/locations/cities/autocomplete', { params: { query } }),
+  placesAutocomplete: (query: string) => apiClient.get<any>('/v1/locations/places/autocomplete', { params: { query } }),
+  placeDetails: (placeId: string) => apiClient.get<any>(`/v1/locations/places/${placeId}`),
 }

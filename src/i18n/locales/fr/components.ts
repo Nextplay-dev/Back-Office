@@ -9,6 +9,7 @@ export default {
     roles: 'Rôles',
     bugReports: 'Signalements de bugs',
     analytics: 'Analyses & Statistiques',
+    workflows: 'Flux de travaux (Workflows)',
     myVenues: 'Mes Établissements',
     myVenueOverview: 'Présentation',
     myVenueActivities: 'Activités',

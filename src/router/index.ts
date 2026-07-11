@@ -220,6 +220,12 @@ const router = createRouter({
               component: () => import('@/views/admin/analytics/AnalyticsView.vue'),
               meta: { permissions: ['back-office.administration.analytics'] },
             },
+            {
+              path: 'workflows',
+              name: 'admin-workflows',
+              component: () => import('@/views/admin/workflows/WorkflowsView.vue'),
+              meta: { permissions: ['back-office.administration.workflows'] },
+            },
           ]
         }
       ],

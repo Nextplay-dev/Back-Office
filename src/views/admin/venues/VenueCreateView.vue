@@ -20,15 +20,27 @@ const name = ref('')
 const address = ref('')
 const description = ref('')
 const media = ref('')
+const phone = ref('')
+const website = ref('')
 const categoryId = ref<number | null>(null)
 const managerIds = ref<number[]>([])
 const latitude = ref<string>('')
 const longitude = ref<string>('')
 const isVirtual = ref(false)
 const externalBookingUrl = ref('')
+const openingHours = ref<{ day_of_week: number; opens_at: string; closes_at: string }[]>([])
 const loading = ref(false)
 const error = ref('')
 
+const dayLabels = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche']
+
+function addHourSlot() {
+  openingHours.value.push({ day_of_week: 0, opens_at: '09:00:00', closes_at: '18:00:00' })
+}
+
+function removeHourSlot(index: number) {
+  openingHours.value.splice(index, 1)
+}
 
 async function handleSubmit() {
   error.value = ''
@@ -38,13 +50,16 @@ async function handleSubmit() {
       name: name.value,
       address: address.value,
       description: description.value || null,
-      venue_category_id: categoryId.value,
+      category_id: categoryId.value,
       manager_ids: managerIds.value,
       media: media.value || null,
+      phone: phone.value || null,
+      website: website.value || null,
       latitude: latitude.value ? Number(latitude.value) : null,
       longitude: longitude.value ? Number(longitude.value) : null,
       is_virtual: isVirtual.value,
       external_booking_url: isVirtual.value ? (externalBookingUrl.value || null) : null,
+      opening_hours: openingHours.value.length > 0 ? openingHours.value : undefined,
     })
     myVenuesStore.fetchVenues(true);
     router.push({ name: 'admin-venues' })
@@ -99,9 +114,47 @@ async function handleSubmit() {
             <MultiUserSelector v-model="managerIds" />
           </div>
 
+          <div class="grid grid-cols-2 gap-4">
+            <div class="space-y-2">
+              <Label for="phone">{{ $t('views.venues.phone') }}</Label>
+              <Input id="phone" v-model="phone" type="tel" placeholder="+33 1 23 45 67 89" />
+            </div>
+            <div class="space-y-2">
+              <Label for="website">{{ $t('views.venues.website') }}</Label>
+              <Input id="website" v-model="website" type="url" placeholder="https://…" />
+            </div>
+          </div>
+
           <div class="space-y-2">
             <Label for="media">{{ $t('views.venues.media') }}</Label>
             <Input id="media" v-model="media" type="url" :placeholder="$t('views.venues.mediaPlaceholder')" />
+          </div>
+
+          <div class="space-y-3">
+            <div class="flex items-center justify-between">
+              <Label>{{ $t('views.venues.openingHours') }}</Label>
+              <Button type="button" variant="outline" size="sm" @click="addHourSlot">
+                {{ $t('views.venues.addSlot') }}
+              </Button>
+            </div>
+            <div v-for="(slot, index) in openingHours" :key="index" class="flex items-end gap-2">
+              <div class="flex-1 space-y-1">
+                <Label class="text-xs">{{ $t('views.venues.day') }}</Label>
+                <select v-model="slot.day_of_week"
+                  class="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors">
+                  <option v-for="(label, d) in dayLabels" :key="d" :value="d">{{ label }}</option>
+                </select>
+              </div>
+              <div class="flex-1 space-y-1">
+                <Label class="text-xs">{{ $t('views.venues.opensAt') }}</Label>
+                <Input v-model="slot.opens_at" type="time" step="1" />
+              </div>
+              <div class="flex-1 space-y-1">
+                <Label class="text-xs">{{ $t('views.venues.closesAt') }}</Label>
+                <Input v-model="slot.closes_at" type="time" step="1" />
+              </div>
+              <Button type="button" variant="ghost" size="sm" class="mb-0.5" @click="removeHourSlot(index)">×</Button>
+            </div>
           </div>
 
           <div class="flex items-center space-x-2 pt-2">

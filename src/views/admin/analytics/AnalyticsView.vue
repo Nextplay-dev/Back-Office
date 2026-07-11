@@ -39,6 +39,7 @@ import {
 const stats = ref({ total_events: 0, unique_users: 0 })
 const topActions = ref<any[]>([])
 const venueClicks = ref<any[]>([])
+const venueVisits = ref<any[]>([])
 const logs = ref<any[]>([])
 const currentPage = ref(1)
 const lastPage = ref(1)
@@ -56,6 +57,7 @@ async function loadAnalytics() {
     stats.value = data.stats
     topActions.value = data.top_actions
     venueClicks.value = data.venue_clicks
+    venueVisits.value = data.venue_visits
     logs.value = data.logs.data
     lastPage.value = data.logs.last_page
     totalLogs.value = data.logs.total
@@ -134,35 +136,67 @@ onMounted(loadAnalytics)
     </div>
 
     <div class="grid gap-6 lg:grid-cols-3">
-      <Card class="lg:col-span-1 border-border/60 shadow-sm">
-        <CardHeader class="bg-muted/10">
-          <CardTitle class="text-base font-bold flex items-center gap-2">
-            <ExternalLink class="h-4 w-4 text-primary" />
-            {{ $t('views.analytics.venueClicks') }}
-          </CardTitle>
-        </CardHeader>
-        <CardContent class="p-0">
-          <Table>
-            <TableHeader>
-              <TableRow class="bg-muted/30">
-                <TableHead>{{ $t('views.analytics.venueName') }}</TableHead>
-                <TableHead class="text-right w-24">{{ $t('views.analytics.clicksCount') }}</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow v-for="venue in venueClicks" :key="venue.id" class="hover:bg-muted/20">
-                <TableCell class="font-semibold">{{ venue.name }}</TableCell>
-                <TableCell class="text-right font-mono font-bold">{{ venue.clicks_count }}</TableCell>
-              </TableRow>
-              <TableRow v-if="!venueClicks.length">
-                <TableCell colspan="2" class="text-center py-6 text-xs text-muted-foreground">
-                  No clicks recorded yet.
-                </TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
+      <div class="lg:col-span-1 flex flex-col gap-6">
+        <Card class="border-border/60 shadow-sm">
+          <CardHeader class="bg-muted/10">
+            <CardTitle class="text-base font-bold flex items-center gap-2">
+              <ExternalLink class="h-4 w-4 text-primary" />
+              {{ $t('views.analytics.venueClicks') }}
+            </CardTitle>
+          </CardHeader>
+          <CardContent class="p-0">
+            <Table>
+              <TableHeader>
+                <TableRow class="bg-muted/30">
+                  <TableHead>{{ $t('views.analytics.venueName') }}</TableHead>
+                  <TableHead class="text-right w-24">{{ $t('views.analytics.clicksCount') }}</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                <TableRow v-for="venue in venueClicks" :key="venue.id" class="hover:bg-muted/20">
+                  <TableCell class="font-semibold">{{ venue.name }}</TableCell>
+                  <TableCell class="text-right font-mono font-bold">{{ venue.clicks_count }}</TableCell>
+                </TableRow>
+                <TableRow v-if="!venueClicks.length">
+                  <TableCell colspan="2" class="text-center py-6 text-xs text-muted-foreground">
+                    No clicks recorded yet.
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
+
+        <Card class="border-border/60 shadow-sm">
+          <CardHeader class="bg-muted/10">
+            <CardTitle class="text-base font-bold flex items-center gap-2">
+              <Eye class="h-4 w-4 text-primary" />
+              {{ $t('views.analytics.venueVisits') }}
+            </CardTitle>
+          </CardHeader>
+          <CardContent class="p-0">
+            <Table>
+              <TableHeader>
+                <TableRow class="bg-muted/30">
+                  <TableHead>{{ $t('views.analytics.venueName') }}</TableHead>
+                  <TableHead class="text-right w-24">{{ $t('views.analytics.visitsCount') }}</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                <TableRow v-for="venue in venueVisits" :key="venue.id" class="hover:bg-muted/20">
+                  <TableCell class="font-semibold">{{ venue.name }}</TableCell>
+                  <TableCell class="text-right font-mono font-bold">{{ venue.visits_count }}</TableCell>
+                </TableRow>
+                <TableRow v-if="!venueVisits.length">
+                  <TableCell colspan="2" class="text-center py-6 text-xs text-muted-foreground">
+                    No visits recorded yet.
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
+      </div>
 
       <Card class="lg:col-span-2 border-border/60 shadow-sm">
         <CardHeader class="flex flex-row items-center justify-between space-y-0 bg-muted/10 pb-4">
@@ -175,7 +209,8 @@ onMounted(loadAnalytics)
               <SelectContent>
                 <SelectItem value="all">{{ $t('views.analytics.filterAll') }}</SelectItem>
                 <SelectItem value="venue.click_external_booking">venue.click_external_booking</SelectItem>
-                <SelectItem value="auth.register">auth.register</SelectItem>
+                <SelectItem value="venue_visit">venue_visit</SelectItem>
+                <SelectItem value="user_registered">user_registered</SelectItem>
               </SelectContent>
             </Select>
           </div>
